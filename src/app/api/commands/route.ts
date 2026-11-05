@@ -2,6 +2,8 @@ import { z } from "zod";
 import { getAccount } from "@/lib/session";
 import { serverSupabase } from "@/lib/supabase/server";
 import { parseCommand } from "@/lib/domain/commands";
+import { profileRegionProblem } from "@/lib/wilayah";
+import type { ProfileDocument } from "@/lib/domain/types";
 import { guardianToken, tokenHash, tokenLink } from "@/lib/security";
 import { siteUrl } from "@/lib/config";
 import { HttpError,sameOrigin,requestBody,json,errorResponse,databaseError } from "@/lib/http";
@@ -14,6 +16,11 @@ export async function POST(request:Request) {
     if(!account) throw new HttpError("Silakan masuk kembali.",401);
     if(account.status!=="active" || account.role!=="teacher") throw new HttpError("Akun tidak dapat mengubah catatan les.",403);
     const payload=parseCommand(body.action,body.payload);
+    // Wilayah hanya diperiksa saat MENULIS profil; pembacaan direktori tidak diperketat agar profil lama tidak hilang.
+    if(body.action==="profile.save"||body.action==="profile.submit") {
+      const problem=await profileRegionProblem((payload as {document:ProfileDocument}).document);
+      if(problem) throw new HttpError(problem);
+    }
     let shareUrl:string|undefined;
     if(body.action==="guardian.create") {
       const token=guardianToken(process.env.GUARDIAN_TOKEN_SECRET ?? "",account.workspace_id,body.requestId);
