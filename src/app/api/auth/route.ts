@@ -2,6 +2,8 @@ import { z } from "zod";
 import { serverSupabase,authFlowSupabase,rememberSession,forgetSession } from "@/lib/supabase/server";
 import { siteUrl } from "@/lib/config";
 import { HttpError, sameOrigin, requestBody, json, errorResponse } from "@/lib/http";
+import { clientIp, enforce, recordFailure } from "@/lib/rate-limit";
+import { logEvent } from "@/lib/log";
 
 const input=z.object({mode:z.enum(["login","signup","forgot","resend","logout","logout-all","reset"]),email:z.email().optional(),password:z.string().max(256).optional(),name:z.string().trim().min(2).max(100).optional()});
 
@@ -9,6 +11,12 @@ export async function POST(request:Request) {
   try {
     sameOrigin(request);
     const body=input.parse(await requestBody(request));
+    const ip=clientIp(request);
+    // Daftar, lupa kata sandi, kirim ulang, dan reset memicu email atau mengubah kredensial: setiap panggilan dihitung.
+    if(body.mode==="signup"||body.mode==="forgot"||body.mode==="resend"||body.mode==="reset") {
+      await enforce("recover.ip",ip);
+      if(body.email) await enforce("recover.email",body.email);
+    }
     const supabase=body.mode==="logout"||body.mode==="logout-all"||body.mode==="reset"?await serverSupabase():await authFlowSupabase();
     if(body.mode==="logout" || body.mode==="logout-all") {
       await supabase.auth.signOut({scope:body.mode==="logout-all"?"global":"local"});
@@ -45,10 +53,19 @@ export async function POST(request:Request) {
       if(error) throw new HttpError("Pendaftaran belum berhasil. Periksa isian atau coba lagi nanti.");
       return json({message:"Periksa email untuk mengonfirmasi akun sebelum mulai mencatat murid."});
     }
+    // Login: yang dihitung hanya percobaan GAGAL, jadi login berhasil berulang tidak mengunci guru.
+    const account=`${body.email}|${ip}`;
+    await enforce("login.ip",ip,{record:false});
+    await enforce("login.account",account,{record:false});
     const {data,error}=await supabase.auth.signInWithPassword({email:body.email,password:body.password});
-    if(error) throw new HttpError("Email atau kata sandi belum sesuai, atau email belum diverifikasi.",401);
+    if(error) {
+      await Promise.all([recordFailure("login.ip",ip),recordFailure("login.account",account)]);
+      logEvent("warn","auth.login_failed",{email:body.email,reason:error.code??error.name});
+      throw new HttpError("Email atau kata sandi belum sesuai, atau email belum diverifikasi.",401);
+    }
     if(!data.session)throw new HttpError("Sesi belum dapat dimulai.",401);
     await rememberSession(data.session);
+    logEvent("info","auth.login",{userId:data.user.id});
     return json({redirect:"/dashboard"});
   } catch(error) { return errorResponse(error); }
 }

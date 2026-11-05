@@ -140,12 +140,31 @@ try {
     await assert.rejects(snapshot(rina));
     await assert.rejects(command(rina, "student.create", { name: "Murid baru", level: "SD" }));
   });
+  await check("pembatas percobaan memblokir di batas, pulih setelah jendela, dan tidak terbuka bagi pengguna biasa", async () => {
+    const hash = () => createHash("sha256").update(randomUUID()).digest("hex");
+    const rate = async (key, record = true) => JSON.parse(await pool.query("select public.rate_check('test.dbcheck', $1, 3, 60, $2::boolean)", [key, record]));
+    const key = hash();
+    for (let i = 0; i < 3; i++) assert.equal((await rate(key)).allowed, true);
+    const blocked = await rate(key);
+    assert.equal(blocked.allowed, false);
+    assert.ok(blocked.retry_after >= 1 && blocked.retry_after <= 60);
+    assert.equal((await rate(hash())).allowed, true, "kunci lain tidak terpengaruh");
+    // Hanya memeriksa tidak menghabiskan jatah (dipakai login: hanya percobaan gagal yang dihitung).
+    const peek = hash();
+    for (let i = 0; i < 5; i++) assert.equal((await rate(peek, false)).allowed, true);
+    // Setelah jendela berlalu, percobaan dihitung ulang.
+    await pool.query("update private.rate_events set at = at - interval '2 minutes' where bucket = 'test.dbcheck' and key_hash = $1", [key]);
+    assert.equal((await rate(key)).allowed, true);
+    // Guru dan pengunjung tidak boleh memanggilnya langsung.
+    await assert.rejects(queryAs(rina, "select public.rate_check('test.dbcheck', $1, 3, 60, true)", [hash()]));
+    await assert.rejects(queryAs(null, "select public.rate_check('test.dbcheck', $1, 3, 60, true)", [hash()]));
+  });
   console.log(`\n${count} database checks passed.`);
 } catch (error) {
   console.error(`FAIL database: ${error.message}`);
   process.exitCode = 1;
 } finally {
-  try { await pool.query("delete from auth.users where id = any($1::uuid[])", [actors.map(actor => actor.id)]); }
+  try { await pool.query("delete from private.rate_events where bucket = 'test.dbcheck'"); await pool.query("delete from auth.users where id = any($1::uuid[])", [actors.map(actor => actor.id)]); }
   catch { /* On a connection failure there may be nothing to clean up. */ }
   await pool.end();
 }
