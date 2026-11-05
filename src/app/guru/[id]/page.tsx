@@ -1,10 +1,50 @@
+import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin,MessageCircle } from "lucide-react";
-import { PublicHeader,PublicFooter,Badge } from "@/components/ui";
+import type { Metadata } from "next";
+import { MapPin,MessageCircle,ShieldCheck } from "lucide-react";
+import { PublicHeader,PublicFooter,Badge,avatarTone } from "@/components/ui";
 import { publicTeachers } from "@/lib/public-data";
+import { teacherSummary } from "@/lib/teacher-summary";
+import { whatsappLink,contactMessage } from "@/lib/whatsapp";
 import { rupiah } from "@/lib/format";
 import { AdBeacon,WhatsappLink } from "@/components/ad-beacon";
 export const dynamic="force-dynamic";
 
-export default async function PublicProfile({params}:{params:Promise<{id:string}>}){const {id}=await params;const {teachers,unavailable}=await publicTeachers();if(unavailable)return <><PublicHeader/><main id="main" className="public-main"><p className="notice warning">Profil belum dapat dimuat. Coba lagi sebentar.</p></main></>;const teacher=teachers.find(t=>t.id===id);if(!teacher)notFound();const profile=teacher.document;let phone=profile.phone.replace(/\D/g,"");if(phone.startsWith("0"))phone="62"+phone.slice(1);const contact=`https://wa.me/${phone}?text=${encodeURIComponent(`Halo ${profile.name}, saya ingin menanyakan layanan les Anda dari Les Privat.`)}`;return <><PublicHeader/><main id="main" className="public-main stack"><AdBeacon profile={teacher.id}/><Link href="/cari" className="text-link">← Kembali ke direktori</Link><section className="profile-hero row"><div className="avatar large">{profile.name.slice(0,1)}</div><div className="grow"><h1>{profile.name}</h1><p className="row muted" style={{marginTop:10}}><MapPin size={16} aria-hidden="true"/>{profile.regency}, {profile.province}</p></div><Badge tone={teacher.accepting?"green":"amber"}>{teacher.accepting?"Menerima murid baru":"Sedang tidak menerima murid"}</Badge></section><div className="grid-2"><section className="stack"><div className="card"><h2 style={{marginBottom:16}}>Tentang guru</h2><p style={{whiteSpace:"pre-wrap"}}>{profile.about}</p></div><div className="card"><h2 style={{marginBottom:20}}>Penawaran les</h2><div className="stack-sm">{profile.offers.map((offer,index)=><article className="offer row between" key={index}><div><h3>{offer.subject} · {offer.level}</h3><p className="record-meta">{offer.mode==="online"?"Online":"Tatap muka"} · {offer.duration} menit</p></div><p className="record-name">{rupiah(offer.price)}<span className="muted" style={{fontWeight:400,fontSize:".8rem"}}> / pertemuan</span></p></article>)}</div></div></section><aside className="stack" style={{alignSelf:"start"}}><div className="card stack"><h2>Diskusikan kebutuhan les</h2><p className="muted" style={{fontSize:".9rem"}}>Hubungi guru untuk menanyakan jadwal, materi, dan kesepakatan les. Pesan dikirim sendiri melalui WhatsApp.</p>{!teacher.accepting&&<p className="notice warning">Guru sedang tidak menerima murid baru. Anda tetap dapat menanyakan ketersediaan di waktu lain.</p>}<WhatsappLink profile={teacher.id} href={contact}><MessageCircle size={18} aria-hidden="true"/>Hubungi melalui WhatsApp</WhatsappLink></div><div className="card"><h2 style={{marginBottom:16}}>Area layanan tatap muka</h2>{profile.areas.length?<ul style={{paddingLeft:20}}>{profile.areas.map((area,index)=><li key={index}>{[area.district,area.regency,area.province].filter(Boolean).join(", ")}</li>)}</ul>:<p className="muted">Lihat penawaran online yang tersedia.</p>}</div></aside></div></main><PublicFooter/></>;}
+const load=cache(async()=>publicTeachers());
+
+// Judul dan deskripsi inilah yang tampil sebagai pratinjau saat tautan dibagikan ke WhatsApp.
+export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{
+  const {id}=await params;const {teachers}=await load();const teacher=teachers.find(t=>t.id===id);
+  if(!teacher)return {title:"Profil guru"};
+  const s=teacherSummary(teacher.document,{});
+  const subjects=s.subjects.slice(0,3).join(", ");
+  const title=`${teacher.document.name} — guru les${subjects?` ${subjects}`:""}`;
+  const description=[s.fromPrice!==null?`Mulai ${rupiah(s.fromPrice)} / pertemuan.`:"",teacher.document.about.slice(0,140)].filter(Boolean).join(" ");
+  return {title,description,openGraph:{title,description,type:"profile",locale:"id_ID",siteName:"Les Privat"}};
+}
+
+export default async function PublicProfile({params}:{params:Promise<{id:string}>}){
+  const {id}=await params;const {teachers,unavailable}=await load();
+  if(unavailable)return <><PublicHeader/><main id="main" className="public-main"><p className="notice warning">Profil belum dapat dimuat. Coba lagi sebentar.</p></main></>;
+  const teacher=teachers.find(t=>t.id===id);if(!teacher)notFound();
+  const profile=teacher.document;const s=teacherSummary(profile,{});
+  const contact=whatsappLink(profile.phone,contactMessage(profile.name,s.subjects[0]));
+  const wa=contact?<WhatsappLink profile={teacher.id} href={contact} className="btn wa big"><MessageCircle size={20} aria-hidden="true"/>Hubungi lewat WhatsApp</WhatsappLink>:<p className="notice warning">Guru belum mencantumkan nomor WhatsApp.</p>;
+  return <><PublicHeader/><main id="main" className={`public-main stack${contact?" has-wa-bar":""}`}><AdBeacon profile={teacher.id}/>
+    <Link href="/cari" className="text-link">← Cari guru lainnya</Link>
+    <section className="profile-hero stack" aria-labelledby="nama-guru">
+      <div className="row"><div className="avatar large" data-tone={avatarTone(profile.name)}>{profile.name.slice(0,1).toUpperCase()}</div><div className="grow"><h1 id="nama-guru">{profile.name}</h1><p className="area-line muted" style={{marginTop:8}}><MapPin size={16} aria-hidden="true"/>Tinggal di {profile.regency}, {profile.province}</p></div><Badge tone={teacher.accepting?"green":"amber"}>{teacher.accepting?"Menerima murid baru":"Sedang penuh"}</Badge></div>
+      <div className="facts"><div className="fact"><span className="stat-label">Tarif mulai</span><strong>{s.fromPrice===null?"Tanyakan ke guru":`${rupiah(s.fromPrice)} / pertemuan`}</strong></div><div className="fact"><span className="stat-label">Cara belajar</span><strong>{s.modes.map(m=>m==="online"?"Online":"Tatap muka").join(" & ")||"-"}</strong></div><div className="fact"><span className="stat-label">Wilayah mengajar</span><strong>{s.areas.length?s.areas.slice(0,2).join(", ")+(s.areas.length>2?` +${s.areas.length-2}`:""):"Online dari mana saja"}</strong></div></div>
+      <div className="row">{wa}</div>
+    </section>
+    <div className="grid-2"><section className="stack">
+      <div className="card"><h2 style={{marginBottom:14}}>Tentang guru</h2><p style={{whiteSpace:"pre-wrap"}}>{profile.about}</p></div>
+      <div className="card"><h2 style={{marginBottom:18}}>Les yang diajarkan</h2><div className="stack-sm">{profile.offers.map((offer,index)=><article className="offer row between" key={index}><div><h3>{offer.subject} · {offer.level}</h3><p className="record-meta">{offer.mode==="online"?"Online":"Tatap muka"} · {offer.duration} menit</p></div><p className="from-price"><strong>{rupiah(offer.price)}</strong><span className="muted" style={{fontSize:".8rem"}}> / pertemuan</span></p></article>)}</div></div>
+    </section><aside className="stack" style={{alignSelf:"start"}}>
+      <div className="card"><h2 style={{marginBottom:14}}>Wilayah yang bisa didatangi</h2>{profile.areas.length?<ul style={{paddingLeft:20,margin:0}}>{profile.areas.map((area,index)=><li key={index}>{[area.district,area.regency,area.province].filter(Boolean).join(", ")}</li>)}</ul>:<p className="muted">Guru ini mengajar online, bisa dari mana saja.</p>}</div>
+      <div className="card stack-sm"><h2 className="row"><ShieldCheck size={20} aria-hidden="true"/>Sebelum mulai les</h2><p className="muted" style={{fontSize:".92rem"}}>Iklan ini sudah ditinjau tim Les Privat sebelum tayang. Tanyakan jadwal dan kesepakatan langsung ke guru. Pembayaran diatur antara Anda dan guru, di luar Les Privat.</p>{!teacher.accepting&&<p className="notice warning">Guru sedang penuh. Anda tetap bisa menanyakan ketersediaan di waktu lain.</p>}</div>
+    </aside></div>
+    {contact&&<div className="wa-bar"><WhatsappLink profile={teacher.id} href={contact} className="btn wa"><MessageCircle size={20} aria-hidden="true"/>Hubungi lewat WhatsApp</WhatsappLink></div>}
+  </main><PublicFooter/></>;
+}

@@ -16,6 +16,6 @@ export function AdBeacon({profile}:{profile:string}){
 }
 
 // Tautan WhatsApp biasa yang juga mencatat klik; tautan tetap terbuka walau pencatatan gagal.
-export function WhatsappLink({profile,href,children}:{profile:string;href:string;children:React.ReactNode}){
-  return <a href={href} target="_blank" rel="noopener noreferrer" className="btn" onClick={()=>send(profile,"wa_click")}>{children}</a>;
+export function WhatsappLink({profile,href,children,className="btn wa"}:{profile:string;href:string;children:React.ReactNode;className?:string}){
+  return <a href={href} target="_blank" rel="noopener noreferrer" className={className} onClick={()=>send(profile,"wa_click")}>{children}</a>;
 }

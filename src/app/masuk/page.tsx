@@ -10,4 +10,4 @@ const notices: Record<string, string> = {
   email: "Konfirmasi email diterima. Jika email lama dan baru sama-sama sudah dikonfirmasi, masuklah dengan email baru; jika belum, email lama tetap berlaku."
 };
 
-export default async function Page({searchParams}:{searchParams:Promise<{pesan?:string}>}){const {pesan}=await searchParams;return <><PublicHeader/><main id="main" className="auth-page"><div className="auth-intro"><p className="eyebrow">Untuk guru les mandiri</p><h1>Kelola iklan Anda.<br/>Dapatkan murid baru.</h1><p className="muted">Lihat status iklan, bagikan tautan profil, dan pantau berapa orang yang melihatnya.</p></div><AuthForm notice={pesan?notices[pesan]:undefined}/></main></>;}
+export default async function Page({searchParams}:{searchParams:Promise<{pesan?:string}>}){const {pesan}=await searchParams;return <><PublicHeader/><main id="main" className="auth-page"><div className="auth-intro"><p className="eyebrow">Untuk guru les privat</p><h1>Selamat datang kembali.</h1><p className="lead">Lihat status iklan Anda, bagikan tautannya, dan pantau berapa orang yang membukanya.</p></div><AuthForm notice={pesan?notices[pesan]:undefined}/></main></>;}

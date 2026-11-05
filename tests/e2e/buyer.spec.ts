@@ -46,7 +46,7 @@ test("pencari melihat daerah mengajar yang cocok (bukan tempat tinggal), harga m
   const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
   const plain=visible(await (await visitor.get(`/cari?q=${name}`)).text());
   expect(plain).toContain("Tinggal di Kota Bekasi");
-  expect(plain).toContain("Mengajar tatap muka di Beji, Kota Depok");
+  expect(plain).toContain("Bisa datang ke Beji, Kota Depok");
   expect(plain).toContain("Mulai Rp 60.000 / pertemuan");        // termurah dari dua penawaran, bukan yang pertama
   expect(plain).toContain("Matematika");expect(plain).toContain("Fisika");
   expect(plain).toContain("Online");expect(plain).toContain("Tatap muka");
@@ -72,16 +72,23 @@ test("halaman cari: filter lengkap dilipat secara bawaan dan terbuka bila filter
   await visitor.dispose();
 });
 
-test("halaman depan mengutamakan pencari: kotak cari, tautan populer, dan pintu untuk guru",async()=>{
+test("halaman depan: ajakan mendaftar untuk guru lebih dulu, pencari tepat di bawahnya, header tanpa Masuk/Daftar",async()=>{
   const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
   const html=await (await visitor.get("/")).text();
   const text=visible(html);
+  const header=html.match(/<header class="public-header">[\s\S]*?<\/header>/)?.[0]??"";
+  expect(header).toContain('href="/cari"');
+  expect(header).not.toContain('href="/masuk"');                  // arahan: bilah navigasi tanpa Masuk
+  expect(header).not.toContain('href="/daftar"');                 // dan tanpa Buat profil guru
+  expect(text).toContain("Punya les privat? Biar orang tua yang menemukan Anda.");
+  expect(text).toContain("Ingin mendaftarkan diri? Langsung saja.");
+  expect(text).toContain("Daftarkan diri Anda");
+  expect(html).toContain('href="/daftar"');
+  expect(text).toContain("Sudah punya akun?");                    // guru lama tetap punya jalan masuk
+  expect(html).toContain('href="/masuk"');
   expect(html).toContain('role="search"');
   expect(html).toContain('action="/cari"');
-  expect(text).toContain("Temukan guru les privat di daerah Anda");
   expect(html).toContain("/cari?q=Matematika");
-  expect(text).toContain("Pasang iklan les Anda");
-  expect(text.indexOf("Temukan guru les privat")).toBeLessThan(text.indexOf("Pasang iklan les Anda"));   // pencari lebih dulu
-  expect(text).toContain("Buat profil guru");
+  expect(text.indexOf("Punya les privat?")).toBeLessThan(text.indexOf("Mencari guru les untuk anak Anda?"));   // guru dulu, lalu pencari
   await visitor.dispose();
 });

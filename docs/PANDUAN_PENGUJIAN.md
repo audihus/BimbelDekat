@@ -32,7 +32,7 @@ Jalankan berurutan. Server dev (langkah 5) harus hidup untuk tes e2e.
 | Perintah | Yang diuji | Hasil yang diharapkan |
 | --- | --- | --- |
 | `npm run typecheck` | Kesalahan tipe TypeScript | Tanpa keluaran error |
-| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan | `Tests 96 passed` |
+| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan, tautan WhatsApp | `Tests 102 passed` |
 | `npm run test:db` | Basis data nyata: hak akses, jatah, hapus akun, ekspor, moderasi, pembatas, statistik iklan | `18 database checks passed` |
 | `npx playwright test` | Aplikasi nyata lewat HTTP: login, isolasi data, pembatas, aksi akun, admin | `passed` untuk semua |
 | `npm run build` | Build produksi | Selesai tanpa error |
@@ -128,18 +128,19 @@ Di Chrome: tekan `F12`, klik ikon ponsel (Toggle device toolbar), pilih lebar se
 3. Tambah pertemuan pukul **23.30** di akun WIB: harus tetap di tanggal yang sama (bukan hari berikutnya). Ganti zona waktu akun ke WITA di **Akun**: pertemuan yang sama kini muncul pukul 00.30 hari berikutnya.
 4. Ubah alamat menjadi `/jadwal?bulan=ngawur`: halaman tetap tampil (bulan ini).
 
-### J. Tampilan pencari guru (tanpa login, utama)
-1. Buka `http://127.0.0.1:3000/` di jendela pribadi. Harus terlihat: judul "Temukan guru les privat di daerah Anda" dengan kotak cari **di atas**, tautan pelajaran populer, daftar "Guru di direktori", lalu bagian untuk guru ("Pasang iklan les Anda") **di bawah**.
-2. Ketik "Matematika", pilih provinsi lalu kabupaten/kota, klik **Cari guru**. Harus terlihat: halaman hasil dengan filter yang sama terisi.
-3. Pada kartu guru: tempat tinggal, lencana Online/Tatap muka, tag pelajaran dan jenjang, "Mulai Rp … / pertemuan". Cari tatap muka di kota tempat guru **bersedia mengajar** (bukan tempat tinggalnya): kartu menyorot "Mengajar di …".
-4. Di ponsel (375 px): formulir hanya memuat pelajaran, provinsi, kabupaten/kota, lalu **Filter lainnya** dilipat; hasil pertama terlihat tanpa menggulir jauh. Klik **Filter lainnya**: jenjang, cara belajar, dan kecamatan muncul. Header: "Les Privat" satu baris, tombol **Buat profil** tidak terpotong.
+### J. Halaman depan, pencari guru, dan profil guru (tanpa login)
+1. Buka `http://127.0.0.1:3000/` di jendela pribadi. Header hanya berisi logo dan **Cari guru** (tidak ada tombol Masuk atau Buat profil). Urutan halaman: ajakan untuk guru ("Punya les privat? Biar orang tua yang menemukan Anda." + tombol **Daftarkan diri Anda**), kotak cari tepat di bawahnya, tiga langkah, daftar guru, lalu ajakan daftar kedua. **Sudah punya akun? Masuk** ada di bawah tombol daftar dan di footer.
+2. Klik **Daftarkan diri Anda**: halaman daftar terbuka. Ketik "Matematika" di kotak cari, pilih provinsi lalu kabupaten/kota, klik **Cari guru**: hasil dengan filter yang sama terisi.
+3. Kartu guru: tempat tinggal, lencana Online/Tatap muka, tag pelajaran dan jenjang, "Mulai Rp … / pertemuan", tombol **Lihat profil** dan **WhatsApp**. Cari tatap muka di kota tempat guru **bersedia mengajar** (bukan tempat tinggalnya): kartu menyorot "Mengajar di …".
+4. Di ponsel (375 px): formulir hanya memuat pelajaran, provinsi, kabupaten/kota, lalu **Filter lainnya** dilipat. Klik **Filter lainnya**: jenjang, cara belajar, dan kecamatan muncul.
 5. Buka `/cari?regency=Kota%20Depok` (tanpa provinsi): provinsi terisi otomatis, tanpa tulisan "tidak dikenali".
-6. Klik **Lihat profil**, lalu **Hubungi melalui WhatsApp**.
+6. Klik **Lihat profil**: ada tarif mulai, cara belajar, wilayah, tombol **Hubungi lewat WhatsApp**. **Di ponsel** tombol hijau itu menempel di bagian bawah layar saat menggulir. Tekan tombol: WhatsApp terbuka dengan pesan pembuka yang sudah terisi (menyebut nama guru dan pelajarannya).
+7. Pratinjau tautan: tempel alamat profil guru ke obrolan WhatsApp (ke diri sendiri atau grup uji). Harus muncul kartu dengan judul dan deskripsi. Catatan: di komputer lokal WhatsApp tidak dapat mengambil gambar dari `127.0.0.1`; gambar baru bisa dipastikan setelah aplikasi tayang di alamat umum dan `NEXT_PUBLIC_SITE_URL` diisi alamat itu.
 
 ### I. Beranda berfokus iklan
 1. Akun guru baru tanpa profil: Beranda berstatus *Iklan Anda belum dibuat*, tombol **Buat iklan**; bagian Catatan les hanya satu keterangan singkat (tanpa angka nol).
 2. Setelah mengajukan: *Iklan sedang diperiksa*. Setelah pengelola menyetujui: *Iklan Anda tayang*, muncul **Bagikan iklan Anda** (tautan, *Salin tautan*, *Bagikan lewat WhatsApp*).
-3. Klik **Salin tautan**, tempel di jendela pribadi (tanpa login): halaman profil publik terbuka. Klik **Hubungi melalui WhatsApp** (WhatsApp terbuka di tab baru).
+3. Klik **Salin tautan**, tempel di jendela pribadi (tanpa login): halaman profil publik terbuka. Klik **Hubungi lewat WhatsApp** (WhatsApp terbuka di tab baru).
 4. Muat ulang Beranda guru: *Profil dilihat* bertambah **satu** (memuat ulang profil di tab yang sama tidak menambah lagi), *WhatsApp ditekan* bertambah satu.
 5. Tambahkan satu murid di **Murid**: bagian Catatan les di Beranda menampilkan ringkasannya, tetapi status iklan tetap di atas.
 

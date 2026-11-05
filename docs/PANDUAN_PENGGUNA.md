@@ -352,7 +352,7 @@ Setelah profil terbit, tersedia tombol:
 
 ### 11.5 Tombol WhatsApp
 
-Tombol "Hubungi melalui WhatsApp" hanya **membuka percakapan** dengan teks pembuka. Pengunjung sendiri yang mengirim pesannya. Klik tombol bukan berarti ada murid baru. Setiap klik ikut dihitung di *Kinerja iklan* pada Beranda.
+Tombol "Hubungi lewat WhatsApp" hanya **membuka percakapan** dengan teks pembuka. Pengunjung sendiri yang mengirim pesannya. Klik tombol bukan berarti ada murid baru. Setiap klik ikut dihitung di *Kinerja iklan* pada Beranda.
 
 ---
 
@@ -376,7 +376,7 @@ Cara kerja pencarian:
 - Guru yang **sedang tidak menerima murid** tetap tampil dengan label kuning. Anda masih bisa menanyakan ketersediaan di lain waktu.
 - Jika tidak ada hasil, kurangi filter wilayah atau pilih online.
 
-Klik **Lihat profil** untuk membaca deskripsi, penawaran (pelajaran, jenjang, durasi, tarif per pertemuan), dan area layanan. Klik **Hubungi melalui WhatsApp** untuk menanyakan jadwal dan kesepakatan. Pesan Anda kirim sendiri.
+Klik **Lihat profil** untuk membaca deskripsi, penawaran (pelajaran, jenjang, durasi, tarif per pertemuan), dan area layanan. Klik **Hubungi lewat WhatsApp** untuk menanyakan jadwal dan kesepakatan. Pesan Anda kirim sendiri.
 
 ## 13. Panduan untuk wali: membuka ringkasan les
 
