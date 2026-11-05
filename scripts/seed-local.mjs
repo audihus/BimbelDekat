@@ -1,11 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { resilientFetch } from "../src/lib/supabase/resilient-fetch.ts";
 
 process.loadEnvFile(".env.local");
 const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
 if(url!=="http://127.0.0.1:55321") throw new Error("Data contoh hanya boleh ditambahkan ke Supabase lokal proyek ini.");
-const options={auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}};
+// Docker Desktop di Windows kadang menahan permintaan pertama ("fetch failed"); pembungkus ini mengulanginya.
+const options={global:{fetch:resilientFetch()},auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}};
 const admin=createClient(url,process.env.SUPABASE_SECRET_KEY,options);
 const password="ContohLesPrivat!2026";
 const samples=[{email:"rina@example.test",name:"Rina (contoh)",role:"teacher"},{email:"budi@example.test",name:"Budi (contoh)",role:"teacher"},{email:"admin@example.test",name:"Pengelola (contoh)",role:"admin"}];
