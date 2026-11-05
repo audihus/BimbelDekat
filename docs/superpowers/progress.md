@@ -24,3 +24,10 @@ Bukti yang dijalankan di mesin ini (Supabase lokal, Docker Desktop):
 - **Pengujian terakhir:** 53 tes unit lolos; 17 pemeriksaan DB lolos; typecheck bersih; 16 dari 16 tes e2e lolos dalam satu run penuh (2,6 menit). Pada run penuh sebelumnya, 2 tes e2e dan 1 tes DB gagal karena gangguan Docker lalu lolos saat diulang; jadi hasil satu run belum menjamin run berikutnya. Lint: 3 error dan 2 peringatan lama, tidak ada dari kode baru. Uji mutasi: menghapus pencabutan tautan dari `request_account_deletion` membuat tes DB gagal; dipulihkan lalu hijau.
 
 Belum dikerjakan dan belum terbukti: kode pemulihan sekali pakai (FR14, ditunda), penjadwalan produksi penghapusan akun (hosting belum diputuskan), uji pemulihan cadangan, alur lupa-kata-sandi lewat browser (belum ada tes otomatis; ada di panduan uji manual), tampilan ponsel, tinjauan keamanan independen. Jangan menyatakan aplikasi aman atau terverifikasi menyeluruh.
+
+### Tambahan 5 November 2026: akar masalah gangguan Docker
+
+- **Pengukuran sebelum:** lewat `127.0.0.1:55321` dari Windows, 6 dari 14 permintaan macet (termasuk 5 berturut-turut); langsung di dalam jaringan Docker, 0 dari 14. Jadi Supabase sehat dan yang bermasalah adalah penerus port Docker Desktop ke Windows. Perintah `wsl -d docker-desktop` juga kehabisan waktu (`WSAETIMEDOUT`).
+- **Dugaan dan perubahan:** `~/.wslconfig` membatasi WSL ke `memory=1GB` (Docker hanya melihat ±0,9 GiB) padahal RAM komputer 13,9 GB. Dinaikkan ke `memory=4GB` (cadangan: `~/.wslconfig.bak-2026-11-05`), `wsl --shutdown`, Docker Desktop dibuka ulang; Docker kini melihat 3,83 GiB.
+- **Pengukuran sesudah:** 0 dari 14 macet lewat port host (±8 ms); pola "diam 10 detik" 0 dari 14 (dulu 3 dari 7); seed berhasil sekali jalan; 53 tes unit, 17 cek DB, 16 dari 16 tes e2e lolos dalam 35 detik (dulu 2,6 menit).
+- **Batas kepastian:** pengukuran sesudah dilakukan dalam sekitar 15 menit setelah restart, dan gejala dulu cenderung memburuk saat Docker menyala lama. Penyebab terbukti secara korelasi (satu perubahan, hasil sebelum/sesudah), bukan lewat membaca memori VM langsung. Lapisan pengulangan di `resilient-fetch.ts` dipertahankan sebagai cadangan.

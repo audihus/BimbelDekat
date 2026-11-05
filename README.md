@@ -28,7 +28,7 @@ Langkah lengkap beserta daftar uji manual di browser ada di [panduan pengujian](
 - `npx playwright test`: pemeriksaan integrasi lewat HTTP (login, isolasi data, pembatas, aksi akun, halaman pengelola); memerlukan Supabase lokal dan konfigurasi `.env.local`.
 - `node scripts/process-deletions.mjs`: menghapus akun yang permintaan penghapusannya sudah lewat 7 hari (belum dijadwalkan otomatis).
 
-Di Windows, Docker Desktop kadang menahan atau me-reset permintaan pertama ke Supabase lokal. Kode lokal sudah mengulang permintaan, tetapi tes sesekali masih gagal sekali lalu lolos saat diulang.
+Di Windows, Docker Desktop kadang menahan atau me-reset permintaan ke Supabase lokal ("fetch failed" atau "aborted due to timeout"). Penyebab di mesin pengembang: `~/.wslconfig` membatasi WSL hanya `memory=1GB`, sehingga penerus port Docker ke Windows tersendat; setelah dinaikkan ke `4GB` (lalu `wsl --shutdown` dan buka ulang Docker Desktop), macet hilang pada pengukuran. Bila terulang, naikkan batas itu. Kode lokal juga mengulang permintaan sebagai lapisan kedua.
 
 ## Pekerjaan yang belum selesai
 

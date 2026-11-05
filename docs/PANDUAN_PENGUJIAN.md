@@ -38,7 +38,9 @@ Jalankan berurutan. Server dev (langkah 5) harus hidup untuk tes e2e.
 | `npm run build` | Build produksi | Selesai tanpa error |
 | `npm run lint` | Gaya dan kebiasaan kode | Lihat catatan di bawah |
 
-**Jika tes gagal sesekali lalu lolos saat diulang:** itu hampir pasti gangguan Docker Desktop di Windows (permintaan pertama ke Supabase kadang tertahan atau di-reset), bukan bug. Ulangi sekali. Jika gagal **dua kali di tempat yang sama**, laporkan pesan lengkapnya.
+**Jika tes gagal sesekali lalu lolos saat diulang:** itu hampir pasti gangguan Docker Desktop di Windows (permintaan ke Supabase kadang tertahan atau di-reset), bukan bug. Ulangi sekali. Jika gagal **dua kali di tempat yang sama**, laporkan pesan lengkapnya.
+
+**Pencegahan (penting):** pastikan `C:\Users\<nama>\.wslconfig` tidak membatasi memori terlalu kecil. Di komputer ini batas `memory=1GB` membuat 6 dari 14 permintaan macet; setelah dinaikkan ke `memory=4GB`, 0 dari 14 macet dan seluruh tes e2e turun dari 2,6 menit menjadi 35 detik. Setelah mengubahnya jalankan `wsl --shutdown` lalu buka ulang Docker Desktop (semua container ikut berhenti sebentar).
 
 **Catatan lint:** ada 3 error dan 2 peringatan lama (sebelum pekerjaan ini) di `dashboard`, `murid/[id]`, `guardian-view`, `command-form`, dan `postcss.config.mjs`. Itu belum diperbaiki karena di luar permintaan; bukan berasal dari kode baru.
 
