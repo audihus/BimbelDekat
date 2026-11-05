@@ -32,4 +32,4 @@ Di Windows, Docker Desktop kadang menahan atau me-reset permintaan ke Supabase l
 
 ## Pekerjaan yang belum selesai
 
-Alur pemulihan dengan kode sekali pakai, sumber pilihan wilayah lengkap, foto profil, saluran lapor profil/bantuan, penjadwalan otomatis penghapusan akun, serta pemulihan cadangan masih harus diselesaikan dan diuji. Pengujian browser menyeluruh baru berupa daftar uji manual; belum ada tes otomatis di browser. Belum ada tinjauan keamanan independen, sehingga aplikasi belum boleh dipakai dengan data nyata. Penyedia email produksi, biaya, konfigurasi Vercel/Supabase produksi, dan deployment belum ditetapkan.
+Alur pemulihan dengan kode sekali pakai, foto profil, saluran lapor profil/bantuan, penjadwalan otomatis penghapusan akun, serta pemulihan cadangan masih harus diselesaikan dan diuji. Pengujian browser menyeluruh baru berupa daftar uji manual; belum ada tes otomatis di browser. Belum ada tinjauan keamanan independen, sehingga aplikasi belum boleh dipakai dengan data nyata. Penyedia email produksi, biaya, konfigurasi Vercel/Supabase produksi, dan deployment belum ditetapkan.
