@@ -8,11 +8,16 @@ import { supabaseConfig } from "@/lib/config";
 import { siteUrl } from "@/lib/config";
 import { tokenHash } from "@/lib/security";
 import { openTokens,sealTokens } from "@/lib/session-crypto";
+import { isLoopbackUrl,resilientFetch } from "./resilient-fetch";
+
+// Hanya Supabase lokal yang memakai percobaan ulang; produksi memakai fetch bawaan.
+const transport=(url:string)=>isLoopbackUrl(url)?{global:{fetch:resilientFetch()}}:{};
 
 export async function authFlowSupabase() {
   const jar = await cookies();
   const { url, key } = supabaseConfig();
   return createServerClient(url,key,{
+    ...transport(url),
     cookies: {
       getAll: () => jar.getAll(),
       setAll(values) {
@@ -58,12 +63,12 @@ export async function forgetSession(all=false){
 
 export function isolatedSupabase() {
   const {url,key}=supabaseConfig();
-  return createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+  return createClient(url,key,{...transport(url),auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 }
 
 export function adminSupabase() {
   const {url}=supabaseConfig();
   const key=process.env.SUPABASE_SECRET_KEY;
   if(!key) throw new Error("Konfigurasi server Supabase belum tersedia.");
-  return createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+  return createClient(url,key,{...transport(url),auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 }

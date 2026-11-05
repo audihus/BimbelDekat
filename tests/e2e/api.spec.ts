@@ -1,11 +1,12 @@
 import { test,expect,request,type APIRequestContext } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
+import { resilientFetch } from "../../src/lib/supabase/resilient-fetch";
 
 process.loadEnvFile(".env.local");
 const url=process.env.NEXT_PUBLIC_SUPABASE_URL!;
 if(url!=="http://127.0.0.1:55321")throw new Error("Pengujian hanya boleh memakai Supabase lokal.");
-const admin=createClient(url,process.env.SUPABASE_SECRET_KEY!,{auth:{persistSession:false,autoRefreshToken:false}});
+const admin=createClient(url,process.env.SUPABASE_SECRET_KEY!,{global:{fetch:resilientFetch()},auth:{persistSession:false,autoRefreshToken:false}});
 const password="KataSandiUjiLokal!2026";
 const origin={Origin:"http://127.0.0.1:3000"};
 const users:{id:string;email:string}[]=[];
@@ -26,11 +27,16 @@ test("sesi browser hanya cookie acak HttpOnly; origin asing ditolak",async()=>{
 
 test("akses lewat aplikasi menjaga isolasi dan menolak pemilik dari formulir",async()=>{
   const alice=await signup(),bob=await signup();const a=await login(alice),b=await login(bob);
-  const response=await command(a,"student.create",{name:"Murid hanya milik Alice",level:"SD"});expect(response.status()).toBe(200);const id=(await response.json()).result.id;
+  const secretName=`Murid-${randomUUID().slice(0,8)}`,secretNote=`Catatan-${randomUUID().slice(0,8)}`;
+  const response=await command(a,"student.create",{name:secretName,level:"SD",notes:secretNote});expect(response.status()).toBe(200);const id=(await response.json()).result.id;
   const denied=await command(b,"student.update",{id,name:"Dicoba Bob",level:"SD"});expect(denied.status()).toBe(400);
   const spoof=await command(a,"student.create",{name:"Pemilik palsu",level:"SD",workspace_id:randomUUID()});expect(spoof.status()).toBe(400);
   const ownPage=await a.get("/dashboard");expect(ownPage.status()).toBe(200);
-  const otherPage=await b.get(`/murid/${id}`);expect(otherPage.status()).toBe(404);
+  // Kontrol positif: pemilik melihat datanya. Tanpa ini, asersi "tidak bocor" bisa lolos karena halaman salah.
+  const ownDetail=await (await a.get(`/murid/${id}`)).text();expect(ownDetail).toContain(secretName);expect(ownDetail).toContain(secretNote);
+  // Invarian yang penting adalah data tidak terbuka. Kode status bukan jaminan: Next.js mengalirkan halaman
+  // (loading.tsx) sehingga notFound() dapat tetap berstatus 200.
+  const otherDetail=await (await b.get(`/murid/${id}`)).text();expect(otherDetail).not.toContain(secretName);expect(otherDetail).not.toContain(secretNote);
   await a.dispose();await b.dispose();
 });
 
