@@ -259,6 +259,28 @@ try {
     await assert.rejects(moderate(admin2, id, "tak-dikenal", "x"));
     assert.deepEqual(await queryAs(admin2, "select id from public.students"), [], "admin tetap tidak membaca catatan privat guru");
   });
+  await check("statistik iklan: hanya server yang mencatat, hanya profil tayang yang dihitung, guru hanya melihat angkanya sendiri", async () => {
+    const asService = statement => sql(`begin; set local role service_role; ${statement}; commit;`);
+    const record = (id, kind) => asService(`select public.record_ad_event(${literal(id)}::uuid, ${literal(kind)})`);
+    const profileIdOf = actor => pool.query("select p.id from public.teacher_profiles p join public.workspaces w on w.id = p.workspace_id where w.owner_id = $1", [actor.id]);
+    const franId = await profileIdOf(fran), carlId = await profileIdOf(carl);   // fran tayang; carl tersembunyi sejak minta hapus akun
+    for (let i = 0; i < 3; i++) await record(franId, "view");
+    await record(franId, "wa_click");
+    await record(carlId, "view");                  // profil tidak tayang: diabaikan, tidak error
+    await record(randomUUID(), "view");            // ID ngawur: diabaikan, tidak error
+    await assert.rejects(record(franId, "bukan-jenis"), "jenis peristiwa harus dikenal");
+    assert.equal(await pool.query("select count(*) from public.ad_stats where profile_id <> $1::uuid", [franId]), "0", "tidak ada baris untuk profil tak tayang atau ID ngawur");
+    const mine = await rpc(fran, "public.ad_stats_summary()");
+    assert.deepEqual([mine.last7.views, mine.last7.wa_clicks, mine.last30.views], [3, 1, 3]);
+    assert.equal(mine.days.length, 7);
+    assert.equal(mine.days.at(-1).views, 3, "hari ini ada di ujung deret");
+    await assert.rejects(rpc(carl, "public.ad_stats_summary()"), "akun menunggu penghapusan tidak membuka statistik (carl sedang menunggu sejak tes ekspor)");
+    assert.equal((await rpc(admin2, "public.ad_stats_summary()")).last7.views, 0, "admin tidak mendapat jalur ke angka guru");
+    await assert.rejects(rpc(null, "public.ad_stats_summary()"), "pengunjung tidak punya sesi");
+    await assert.rejects(rpc(rina, "public.record_ad_event($1::uuid, 'view')", [franId]), "guru tidak boleh menambah angka sendiri/orang lain");
+    await assert.rejects(rpc(null, "public.record_ad_event($1::uuid, 'view')", [franId]), "pengunjung tidak boleh memanggil langsung");
+    await assert.rejects(queryAs(fran, "select * from public.ad_stats"), "tabel tidak terbuka langsung");
+  });
   console.log(`\n${count} database checks passed.`);
 } catch (error) {
   console.error(`FAIL database: ${error.message}`);

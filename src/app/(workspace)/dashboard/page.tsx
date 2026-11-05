@@ -1,8 +1,79 @@
 import Link from "next/link";
-import { Users,CalendarDays,BookOpen,Wallet,ArrowRight,Plus } from "lucide-react";
+import { Users,CalendarDays,BookOpen,Wallet,ArrowRight,Plus,CheckCircle2,Circle,Eye,MessageCircle } from "lucide-react";
 import { requireWorkspace } from "@/lib/session";
+import { serverSupabase } from "@/lib/supabase/server";
+import { siteUrl } from "@/lib/config";
 import { rupiah } from "@/lib/format";
+import { adChecklist,adStatus } from "@/lib/ad-checklist";
 import { Badge,Empty } from "@/components/ui";
+import { CommandForm } from "@/components/command-form";
 import { LessonList } from "@/components/lesson-list";
+import { ShareAd } from "@/components/share-ad";
 
-export default async function Dashboard(){const {account,data}=await requireWorkspace();const active=data.students.filter(s=>!s.archived);const scheduled=data.lessons.filter(l=>l.status==="scheduled"&&Date.parse(l.ends_at)>=Date.now());const due=data.packages.reduce((total,p)=>total+BigInt(p.due),0n);const low=data.packages.filter(p=>!p.closed_at&&p.remaining<=1&&active.some(s=>s.id===p.student_id));return <div className="stack"><div className="page-heading row between"><div><p className="eyebrow">Ruang kerja Anda</p><h1 style={{marginTop:8}}>Halo, {account.display_name.split(" ")[0]}.</h1><p>Berikut ringkasan kegiatan les yang sudah Anda catat.</p></div><Link href="/murid#tambah" className="btn"><Plus size={17} aria-hidden="true"/>Tambah murid</Link></div><div className="grid-4">{[{label:"Murid aktif",value:String(active.length),icon:Users},{label:"Jadwal mendatang",value:String(scheduled.length),icon:CalendarDays},{label:"Paket hampir habis",value:String(low.length),icon:BookOpen},{label:"Sisa pembayaran",value:rupiah(due.toString()),icon:Wallet}].map(item=><div className="card" key={item.label}><div className="row between"><p className="stat-label">{item.label}</p><span className="stat-icon"><item.icon size={18} aria-hidden="true"/></span></div><p className="stat-value" style={{marginTop:12,fontSize:item.label==="Sisa pembayaran"?"1.5rem":undefined}}>{item.value}</p></div>)}</div><div className="grid-2"><section className="card"><div className="card-header"><h2>Pertemuan mendatang</h2><Link href="/jadwal" className="text-link">Semua jadwal</Link></div><LessonList lessons={scheduled.slice(0,5)} students={data.students} packages={data.packages} timezone={account.timezone} compact/></section><section className="card"><div className="card-header"><h2>Perlu diperhatikan</h2><Badge tone="amber">{low.length} paket</Badge></div>{low.length?<div className="record-list">{low.map(pack=><Link key={pack.id} href={`/murid/${pack.student_id}`} className="record"><span className="avatar"><BookOpen size={19} aria-hidden="true"/></span><div className="grow"><p className="record-name">{data.students.find(s=>s.id===pack.student_id)?.name}</p><p className="record-meta">{pack.name} · {pack.remaining===0?"Jatah habis":"Tersisa 1 pertemuan"}</p></div><ArrowRight size={17} aria-hidden="true"/></Link>)}</div>:<Empty title="Belum ada paket yang perlu diperpanjang">Paket dengan sisa satu pertemuan atau sudah habis akan muncul di sini.</Empty>}</section></div><section className="card row between"><div><h2>Bagikan layanan mengajar Anda</h2><p className="muted" style={{marginTop:6,fontSize:".9rem"}}>Lengkapi profil untuk diajukan ke direktori guru.</p></div><Link href="/profil" className="btn secondary">Kelola profil <ArrowRight size={16} aria-hidden="true"/></Link></section></div>;}
+interface AdStats { last7:{views:number;wa_clicks:number}; last30:{views:number;wa_clicks:number} }
+// Statistik hanya pelengkap: bila gagal dimuat, Beranda tetap tampil tanpa angka.
+async function loadStats():Promise<AdStats|null>{
+  try { const {data,error}=await (await serverSupabase()).rpc("ad_stats_summary"); return error?null:data as AdStats; }
+  catch { return null; }
+}
+
+export default async function Dashboard(){
+  const {account,data}=await requireWorkspace();
+  const profile=data.profile;
+  const status=adStatus(profile);
+  const checklist=adChecklist(profile?.draft??null);
+  const live=status.key==="live"&&profile;
+  const stats=live?await loadStats():null;
+  const active=data.students.filter(s=>!s.archived);
+  const scheduled=data.lessons.filter(l=>l.status==="scheduled"&&Date.parse(l.ends_at)>=Date.parse(new Date().toISOString()));
+  const due=data.packages.reduce((total,p)=>total+BigInt(p.due),0n);
+  const low=data.packages.filter(p=>!p.closed_at&&p.remaining<=1&&active.some(s=>s.id===p.student_id));
+  const name=profile?.published?.name||profile?.draft.name||account.display_name;
+  return <div className="stack">
+    <div className="page-heading"><p className="eyebrow">Beranda</p><h1 style={{marginTop:8}}>Halo, {account.display_name.split(" ")[0]}.</h1><p>Pantau iklan Anda dan bagikan ke calon murid.</p></div>
+
+    <section className={`card status-card ${status.tone} stack`} aria-labelledby="status-iklan">
+      <div className="row between"><h2 id="status-iklan">{status.title}</h2><Badge tone={status.tone}>{live?"Tayang":"Iklan"}</Badge></div>
+      <p className="muted">{status.detail}</p>
+      <div className="row">
+        {status.action&&<Link className="btn" href={status.action.href}>{status.action.label} <ArrowRight size={16} aria-hidden="true"/></Link>}
+        {live&&<CommandForm inline action="profile.accepting" fixed={{accepting:!profile.accepting}} buttonLabel={profile.accepting?"Tandai tidak menerima murid":"Tandai menerima murid"} tone="secondary"/>}
+      </div>
+    </section>
+
+    <div className="grid-2">
+      <section className="card stack" aria-labelledby="kelengkapan">
+        <div className="row between"><h2 id="kelengkapan">Kelengkapan iklan</h2><span className="number" style={{fontWeight:700}}>{checklist.percent}%</span></div>
+        <div className="progress" role="progressbar" aria-valuenow={checklist.percent} aria-valuemin={0} aria-valuemax={100} aria-label="Kelengkapan iklan"><span style={{width:`${checklist.percent}%`}}/></div>
+        <ul className="check-list">{checklist.items.map(item=><li key={item.key}>{item.done?<CheckCircle2 size={18} className="done" aria-label="Selesai"/>:<Circle size={18} className="todo" aria-label="Belum"/>}<span>{item.label}{!item.done&&<span className="hint">{item.hint}</span>}</span></li>)}</ul>
+        {!checklist.complete&&<Link href="/profil" className="text-link">Lengkapi di Iklan saya</Link>}
+      </section>
+
+      <section className="card stack" aria-labelledby="kinerja">
+        <h2 id="kinerja">Kinerja iklan</h2>
+        {live?(stats?<>
+          <div className="grid-2" style={{gap:12}}>
+            <div className="offer"><p className="stat-label row"><Eye size={15} aria-hidden="true"/>Profil dilihat (7 hari)</p><p className="stat-value">{stats.last7.views}</p></div>
+            <div className="offer"><p className="stat-label row"><MessageCircle size={15} aria-hidden="true"/>WhatsApp ditekan (7 hari)</p><p className="stat-value">{stats.last7.wa_clicks}</p></div>
+          </div>
+          <p className="muted" style={{fontSize:".85rem"}}>30 hari terakhir: {stats.last30.views} dilihat, {stats.last30.wa_clicks} klik WhatsApp.</p>
+          <p className="muted" style={{fontSize:".78rem"}}>Angka perkiraan: kunjungan Anda sendiri dan mesin pencari bisa ikut terhitung, dan klik WhatsApp belum tentu menjadi murid.</p>
+        </>:<p className="muted">Angka belum dapat dimuat. Coba muat ulang halaman.</p>)
+        :<Empty title="Belum ada angka">Angka muncul setelah iklan Anda tayang di pencarian.</Empty>}
+      </section>
+    </div>
+
+    {live&&<section className="card stack" aria-labelledby="bagikan"><h2 id="bagikan">Bagikan iklan Anda</h2><p className="muted" style={{fontSize:".9rem"}}>Kirim tautan ini ke grup orang tua, status WhatsApp, atau media sosial. Orang yang membukanya langsung melihat profil dan tombol hubungi Anda.</p><ShareAd url={`${siteUrl()}/guru/${profile.id}`} name={name}/></section>}
+
+    <section className="card stack" aria-labelledby="catatan">
+      <div className="row between"><div><p className="eyebrow">Opsional</p><h2 id="catatan" style={{marginTop:4}}>Catatan les</h2></div><Link href="/murid#tambah" className="btn secondary"><Plus size={16} aria-hidden="true"/>Tambah murid</Link></div>
+      {active.length?<>
+        <div className="grid-4">{[{label:"Murid aktif",value:String(active.length),icon:Users},{label:"Jadwal mendatang",value:String(scheduled.length),icon:CalendarDays},{label:"Paket hampir habis",value:String(low.length),icon:BookOpen},{label:"Sisa pembayaran",value:rupiah(due.toString()),icon:Wallet}].map(item=><div className="offer" key={item.label}><div className="row between"><p className="stat-label">{item.label}</p><span className="stat-icon"><item.icon size={18} aria-hidden="true"/></span></div><p className="stat-value" style={{marginTop:8,fontSize:item.label==="Sisa pembayaran"?"1.3rem":undefined}}>{item.value}</p></div>)}</div>
+        <div className="grid-2">
+          <div><div className="card-header"><h3>Pertemuan mendatang</h3><Link href="/jadwal" className="text-link">Kalender jadwal</Link></div><LessonList lessons={scheduled.slice(0,3)} students={data.students} packages={data.packages} timezone={account.timezone} compact/></div>
+          <div><div className="card-header"><h3>Perlu diperhatikan</h3><Badge tone="amber">{low.length} paket</Badge></div>{low.length?<div className="record-list">{low.map(pack=><Link key={pack.id} href={`/murid/${pack.student_id}`} className="record"><span className="avatar"><BookOpen size={19} aria-hidden="true"/></span><div className="grow"><p className="record-name">{data.students.find(s=>s.id===pack.student_id)?.name}</p><p className="record-meta">{pack.name} · {pack.remaining===0?"Jatah habis":"Tersisa 1 pertemuan"}</p></div><ArrowRight size={17} aria-hidden="true"/></Link>)}</div>:<p className="muted" style={{fontSize:".9rem"}}>Tidak ada paket yang perlu diperpanjang.</p>}</div>
+        </div>
+      </>:<p className="muted">Bila Anda mau, catat murid, jadwal, dan pembayaran les di sini. Boleh juga tidak dipakai; iklan Anda tetap berjalan tanpa ini.</p>}
+    </section>
+  </div>;
+}
