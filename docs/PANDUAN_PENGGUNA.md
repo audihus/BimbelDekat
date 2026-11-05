@@ -360,13 +360,14 @@ Tombol "Hubungi melalui WhatsApp" hanya **membuka percakapan** dengan teks pembu
 
 Tidak perlu akun.
 
-1. Buka **Cari guru** (`/cari`).
+1. Di **halaman depan** isi kotak cari (pelajaran, provinsi, kabupaten/kota) lalu klik **Cari guru**, atau klik salah satu pelajaran populer. Bisa juga langsung membuka **Cari guru** (`/cari`).
 2. Isi filter yang diperlukan:
    - **Pelajaran atau nama guru**, contoh "Matematika".
-   - **Jenjang**: SD, SMP, atau SMA.
-   - **Cara belajar**: online atau tatap muka.
-   - **Provinsi**, **Kabupaten/kota**, dan **Kecamatan**, semuanya berupa pilihan bertingkat (kabupaten/kota muncul setelah provinsi dipilih, kecamatan setelah kabupaten/kota). Kecamatan hanya untuk tatap muka. Semua opsional.
+   - **Provinsi** dan **Kabupaten/kota**, berupa pilihan bertingkat (kabupaten/kota muncul setelah provinsi dipilih).
+   - Di **Filter lainnya** (terbuka otomatis di layar lebar, dilipat di ponsel): **Jenjang** (SD, SMP, SMA), **Cara belajar** (online atau tatap muka), dan **Kecamatan** (hanya untuk tatap muka). Semua opsional.
 3. Klik **Cari guru**.
+
+Setiap kartu guru menampilkan: tempat tinggal guru, apakah menerima murid baru, cara mengajar (Online / Tatap muka), **daerah tatap muka** (bila Anda memfilter wilayah, daerah yang cocok disorot, mis. "Mengajar di Beji, Kota Depok"), tag pelajaran dan jenjang, serta **tarif mulai dari** (penawaran termurah).
 
 Cara kerja pencarian:
 

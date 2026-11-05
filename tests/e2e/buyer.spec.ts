@@ -1,0 +1,87 @@
+import { test,expect,request,type APIRequestContext } from "@playwright/test";
+import { createClient } from "@supabase/supabase-js";
+import { randomInt,randomUUID } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import { resilientFetch } from "../../src/lib/supabase/resilient-fetch";
+
+process.loadEnvFile(".env.local");
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL!;
+if(url!=="http://127.0.0.1:55321")throw new Error("Pengujian hanya boleh memakai Supabase lokal.");
+const admin=createClient(url,process.env.SUPABASE_SECRET_KEY!,{global:{fetch:resilientFetch()},auth:{persistSession:false,autoRefreshToken:false}});
+const password="KataSandiUjiLokal!2026";
+const users:string[]=[];
+const fakeIp=()=>`10.${randomInt(1,255)}.${randomInt(1,255)}.${randomInt(1,255)}`;
+function sql(statement:string){const result=spawnSync("docker",["exec","-i","supabase_db_les-privat-local","psql","-X","-qAt","-v","ON_ERROR_STOP=1","-U","postgres","-d","postgres"],{input:statement,encoding:"utf8",windowsHide:true,timeout:20000});if(result.status!==0)throw new Error(result.stderr||"SQL tes gagal.");return result.stdout.trim();}
+async function signup(role:"teacher"|"admin"){
+  const email=`buy-${role}-${randomUUID()}@example.test`;
+  const {data,error}=await admin.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{display_name:role==="admin"?"Pengelola uji":"Guru uji"}});
+  if(error||!data.user)throw new Error("Fixture akun lokal tidak dapat dibuat.");
+  users.push(data.user.id);
+  if(role==="admin")sql(`update public.accounts set role = 'admin' where id = '${data.user.id}'::uuid;`);
+  return {id:data.user.id,email};
+}
+async function session(email:string){
+  const context=await request.newContext({baseURL:"http://127.0.0.1:3000",extraHTTPHeaders:{Origin:"http://127.0.0.1:3000","x-forwarded-for":fakeIp()}});
+  let response=await context.post("/api/auth",{data:{mode:"login",email,password}});
+  for(let i=0;i<3&&response.status()===503;i++){await new Promise(r=>setTimeout(r,3000));response=await context.post("/api/auth",{data:{mode:"login",email,password}});}
+  expect(response.status()).toBe(200);
+  return context;
+}
+const command=(context:APIRequestContext,action:string,payload:unknown)=>context.post("/api/commands",{data:{action,payload,requestId:randomUUID()}});
+// Teks yang terlihat: tanpa skrip data RSC, komentar pemisah React, tag, dan spasi tak terputus dari format rupiah.
+const visible=(html:string)=>html.replace(/<script[\s\S]*?<\/script>/g," ").replace(/<!--.*?-->/g,"").replace(/<[^>]+>/g," ").replace(/ /g," ").replace(/\s+/g," ");
+test.afterAll(async()=>{for(const id of users)await admin.auth.admin.deleteUser(id);});
+
+test("pencari melihat daerah mengajar yang cocok (bukan tempat tinggal), harga mulai, dan tag pelajaran",async()=>{
+  const teacher=await signup("teacher"),boss=await signup("admin");
+  const t=await session(teacher.email),a=await session(boss.email);
+  const name=`Guru-${randomUUID().slice(0,8)}`;
+  const submitted=await command(t,"profile.submit",{document:{name,about:"Mengajar dengan sabar.",phone:"6281234567890",province:"Jawa Barat",regency:"Kota Bekasi",
+    areas:[{province:"Jawa Barat",regency:"Kota Depok",district:"Beji"}],
+    offers:[{subject:"Matematika",level:"SD",mode:"offline",duration:60,price:"90000"},{subject:"Fisika",level:"SMA",mode:"online",duration:60,price:"60000"}]}});
+  expect(submitted.status(),await submitted.text()).toBe(200);
+  const profileId=sql(`select p.id from public.teacher_profiles p join public.workspaces w on w.id = p.workspace_id where w.owner_id = '${teacher.id}'::uuid;`);
+  expect((await a.post("/api/admin/moderate",{data:{id:profileId,decision:"approve",reason:"ok"}})).status()).toBe(200);
+
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const plain=visible(await (await visitor.get(`/cari?q=${name}`)).text());
+  expect(plain).toContain("Tinggal di Kota Bekasi");
+  expect(plain).toContain("Mengajar tatap muka di Beji, Kota Depok");
+  expect(plain).toContain("Mulai Rp 60.000 / pertemuan");        // termurah dari dua penawaran, bukan yang pertama
+  expect(plain).toContain("Matematika");expect(plain).toContain("Fisika");
+  expect(plain).toContain("Online");expect(plain).toContain("Tatap muka");
+
+  const depok=visible(await (await visitor.get(`/cari?q=${name}&mode=offline&regency=Kota%20Depok`)).text());
+  expect(depok).toContain("Mengajar di Beji, Kota Depok");       // sorotan daerah yang cocok dengan pencarian
+  expect(depok).toContain("Tinggal di Kota Bekasi");            // tempat tinggal tetap jujur ditampilkan terpisah
+  await visitor.dispose();await t.dispose();await a.dispose();
+});
+
+test("halaman cari: filter lengkap dilipat secara bawaan dan terbuka bila filter lanjutan dipakai",async()=>{
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const closed=await (await visitor.get("/cari")).text();
+  expect(closed).toContain("Filter lainnya");
+  expect(closed).not.toMatch(/<details[^>]*\sopen/);
+  expect(await (await visitor.get("/cari?mode=online")).text()).toMatch(/<details[^>]*\sopen/);
+  // Tautan dengan kabupaten/kota tanpa provinsi: provinsi disimpulkan, tidak muncul label "tidak dikenali".
+  const shared=await (await visitor.get("/cari?regency=Kota%20Depok")).text();
+  expect(shared).not.toContain("tidak dikenali");
+  expect(shared).toMatch(/<option value="Jawa Barat"[^>]*selected/);
+  // Jenjang, cara belajar, dan kecamatan tetap ada di formulir walau dilipat, sehingga ikut terkirim.
+  for(const field of ['name="level"','name="mode"','name="district"','name="q"','name="province"','name="regency"'])expect(closed,field).toContain(field);
+  await visitor.dispose();
+});
+
+test("halaman depan mengutamakan pencari: kotak cari, tautan populer, dan pintu untuk guru",async()=>{
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const html=await (await visitor.get("/")).text();
+  const text=visible(html);
+  expect(html).toContain('role="search"');
+  expect(html).toContain('action="/cari"');
+  expect(text).toContain("Temukan guru les privat di daerah Anda");
+  expect(html).toContain("/cari?q=Matematika");
+  expect(text).toContain("Pasang iklan les Anda");
+  expect(text.indexOf("Temukan guru les privat")).toBeLessThan(text.indexOf("Pasang iklan les Anda"));   // pencari lebih dulu
+  expect(text).toContain("Buat profil guru");
+  await visitor.dispose();
+});

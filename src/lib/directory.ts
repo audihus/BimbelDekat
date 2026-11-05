@@ -1,7 +1,7 @@
 import type { PublicTeacher } from "./domain/types";
 export interface TeacherFilters {q?:string;level?:string;mode?:string;province?:string;regency?:string;district?:string}
-const normalize=(value:string|undefined)=>(value??"").normalize("NFKC").trim().toLocaleLowerCase("id-ID");
-const contains=(value:string,query:string|undefined)=>normalize(value).includes(normalize(query));
+export const normalize=(value:string|undefined)=>(value??"").normalize("NFKC").trim().toLocaleLowerCase("id-ID");
+export const contains=(value:string,query:string|undefined)=>normalize(value).includes(normalize(query));
 export function matchesTeacher(teacher:PublicTeacher,filters:TeacherFilters):boolean{
   const profile=teacher.document;
   return profile.offers.some(offer=>{

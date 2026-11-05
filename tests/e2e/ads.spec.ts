@@ -91,12 +91,3 @@ test("guru yang punya murid melihat ringkasan catatan les, tetapi iklan tetap di
   expect(html).not.toContain("Boleh juga tidak dipakai");
   await t.dispose();
 });
-
-test("halaman depan mengutamakan iklan guru",async()=>{
-  const anonymous=await request.newContext({baseURL:"http://127.0.0.1:3000"});
-  const html=await (await anonymous.get("/")).text();
-  expect(html).toContain("Pasang iklan les Anda");
-  expect(html).toContain("Buat profil guru");
-  expect(html).toContain("Contoh tampilan");
-  await anonymous.dispose();
-});

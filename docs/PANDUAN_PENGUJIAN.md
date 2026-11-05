@@ -32,7 +32,7 @@ Jalankan berurutan. Server dev (langkah 5) harus hidup untuk tes e2e.
 | Perintah | Yang diuji | Hasil yang diharapkan |
 | --- | --- | --- |
 | `npm run typecheck` | Kesalahan tipe TypeScript | Tanpa keluaran error |
-| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan | `Tests 87 passed` |
+| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan | `Tests 96 passed` |
 | `npm run test:db` | Basis data nyata: hak akses, jatah, hapus akun, ekspor, moderasi, pembatas, statistik iklan | `18 database checks passed` |
 | `npx playwright test` | Aplikasi nyata lewat HTTP: login, isolasi data, pembatas, aksi akun, admin | `passed` untuk semua |
 | `npm run build` | Build produksi | Selesai tanpa error |
@@ -127,6 +127,14 @@ Di Chrome: tekan `F12`, klik ikon ponsel (Toggle device toolbar), pilih lebar se
 2. Klik panah bulan berikutnya/sebelumnya dan **Hari ini**. Tanggal yang diklik menampilkan pertemuannya di bawah kalender.
 3. Tambah pertemuan pukul **23.30** di akun WIB: harus tetap di tanggal yang sama (bukan hari berikutnya). Ganti zona waktu akun ke WITA di **Akun**: pertemuan yang sama kini muncul pukul 00.30 hari berikutnya.
 4. Ubah alamat menjadi `/jadwal?bulan=ngawur`: halaman tetap tampil (bulan ini).
+
+### J. Tampilan pencari guru (tanpa login, utama)
+1. Buka `http://127.0.0.1:3000/` di jendela pribadi. Harus terlihat: judul "Temukan guru les privat di daerah Anda" dengan kotak cari **di atas**, tautan pelajaran populer, daftar "Guru di direktori", lalu bagian untuk guru ("Pasang iklan les Anda") **di bawah**.
+2. Ketik "Matematika", pilih provinsi lalu kabupaten/kota, klik **Cari guru**. Harus terlihat: halaman hasil dengan filter yang sama terisi.
+3. Pada kartu guru: tempat tinggal, lencana Online/Tatap muka, tag pelajaran dan jenjang, "Mulai Rp … / pertemuan". Cari tatap muka di kota tempat guru **bersedia mengajar** (bukan tempat tinggalnya): kartu menyorot "Mengajar di …".
+4. Di ponsel (375 px): formulir hanya memuat pelajaran, provinsi, kabupaten/kota, lalu **Filter lainnya** dilipat; hasil pertama terlihat tanpa menggulir jauh. Klik **Filter lainnya**: jenjang, cara belajar, dan kecamatan muncul. Header: "Les Privat" satu baris, tombol **Buat profil** tidak terpotong.
+5. Buka `/cari?regency=Kota%20Depok` (tanpa provinsi): provinsi terisi otomatis, tanpa tulisan "tidak dikenali".
+6. Klik **Lihat profil**, lalu **Hubungi melalui WhatsApp**.
 
 ### I. Beranda berfokus iklan
 1. Akun guru baru tanpa profil: Beranda berstatus *Iklan Anda belum dibuat*, tombol **Buat iklan**; bagian Catatan les hanya satu keterangan singkat (tanpa angka nol).
