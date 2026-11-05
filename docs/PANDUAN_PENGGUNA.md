@@ -13,16 +13,17 @@ Panduan ini menjelaskan cara memakai aplikasi sesuai kondisi kode saat ini (vers
 
 ## 1. Gambaran singkat
 
-Platform Les Privat membantu guru les mandiri (SD sampai SMA, les individual, minimal mingguan) merapikan:
+Platform Les Privat adalah **tempat guru les mandiri (SD sampai SMA, les individual) memasang iklan** dan ditemukan calon murid. Fitur utamanya adalah iklan: profil, penawaran, daerah mengajar, tombol WhatsApp, tautan yang bisa dibagikan, dan angka kinerja iklan. Mencatat murid, jadwal, dan pembayaran adalah **fitur tambahan yang sepenuhnya opsional**; iklan tetap berjalan walau bagian itu tidak dipakai.
 
 | Kebutuhan | Fitur |
 | --- | --- |
-| Siapa saja murid saya? | Daftar murid, arsip, catatan, kontak wali |
+| Bagaimana calon murid menemukan saya? | **Iklan saya**: profil publik di direktori guru, dengan pilihan provinsi/kabupaten/kecamatan |
+| Berapa orang yang melihat iklan saya? | Kinerja iklan di Beranda (dilihat dan WhatsApp ditekan) |
+| Siapa saja murid saya? (opsional) | Daftar murid, arsip, catatan, kontak wali |
 | Berapa jatah pertemuan yang tersisa? | Paket pertemuan per murid |
-| Kapan saya mengajar? | Jadwal, anti-bentrok, penjadwalan ulang |
+| Kapan saya mengajar? | Jadwal berbentuk kalender, anti-bentrok, penjadwalan ulang |
 | Siapa yang sudah bayar? | Catatan pembayaran manual per paket |
 | Bagaimana wali tahu perkembangannya? | Tautan ringkasan untuk wali (tanpa akun) |
-| Bagaimana calon murid menemukan saya? | Profil publik di direktori guru |
 
 Ada tiga macam pengguna:
 
@@ -53,13 +54,21 @@ Aplikasi ini hanya **mencatat**. Uang tidak mengalir lewat aplikasi, WhatsApp ti
 
 ## 3. Mulai cepat untuk guru (sekitar 10 menit)
 
+**Memasang iklan (inti):**
+
 1. **Daftar** di halaman `Daftar`, lalu klik tautan verifikasi di email Anda.
-2. **Masuk** dengan email dan kata sandi.
-3. Buka **Murid**, isi formulir *Tambah murid*, lalu klik *Simpan murid*.
-4. Buka halaman murid itu, lalu *Tambah paket baru*: nama paket, jumlah pertemuan, harga.
-5. Buka **Jadwal**, lalu *Tambah pertemuan*: pilih murid dan paket, tentukan mulai dan selesai.
-6. Setelah les berlangsung, klik **Tandai les selesai** pada pertemuan itu. Jatah berkurang 1.
-7. Saat wali membayar, buka halaman murid dan isi *Pembayaran manual*.
+2. **Masuk** dengan email dan kata sandi. Anda tiba di **Beranda**.
+3. Buka **Iklan saya**. Isi nama, nomor WhatsApp, tempat tinggal (pilih dari daftar), perkenalan diri, dan minimal satu penawaran les. Lihat **pratinjau** di sebelah kanan.
+4. Klik **Ajukan pemeriksaan**. Pengelola memeriksa iklan sebelum tayang.
+5. Setelah disetujui, buka **Beranda**, salin tautan iklan atau **Bagikan lewat WhatsApp** ke grup orang tua.
+
+**Mencatat les (opsional):** menu **Murid** dan **Jadwal** ada di kelompok *Catatan les (opsional)*.
+
+1. Buka **Murid**, isi formulir *Tambah murid*, lalu klik *Simpan murid*.
+2. Buka halaman murid itu, lalu *Tambah paket baru*: nama paket, jumlah pertemuan, harga.
+3. Buka **Jadwal**, pilih tanggal di kalender, lalu *Tambah pertemuan*: pilih murid dan paket, tentukan mulai dan selesai.
+4. Setelah les berlangsung, klik **Tandai les selesai** pada pertemuan itu. Jatah berkurang 1.
+5. Saat wali membayar, buka halaman murid dan isi *Pembayaran manual*.
 
 ---
 
@@ -105,7 +114,7 @@ Semuanya ada di halaman **Akun** dan **meminta kata sandi Anda lagi**, walaupun 
 
 - **Ubah email.** Isi email baru dan kata sandi. Tautan konfirmasi dikirim ke **email lama dan email baru**. Email akun baru berganti setelah **keduanya** dikonfirmasi; sebelum itu email lama tetap berlaku.
 - **Ubah kata sandi.** Minimal 15 karakter dan harus berbeda dari yang lama. Setelah diganti, **semua login dicabut** (termasuk perangkat ini) dan Anda masuk lagi.
-- **Unduh data.** Menghasilkan berkas JSON berisi murid, paket, jadwal, pembayaran, profil, dan seluruh riwayat perubahan di ruang kerja Anda. Berkas memuat data pribadi; simpan di tempat aman.
+- **Unduh data.** Menghasilkan satu **dokumen** (`data-les-privat-TANGGAL.html`) berisi tabel murid, paket, jadwal, pembayaran, dan profil iklan Anda. Buka dengan browser (klik ganda), lalu tekan **Cetak atau simpan sebagai PDF**. Dokumen ini untuk dibaca dan dicetak; belum bisa diimpor kembali sebagai tabel. Dokumen memuat data pribadi; simpan di tempat aman.
 - **Hapus akun.** Setelah Anda mencentang persetujuan dan memasukkan kata sandi:
   - Profil publik **langsung disembunyikan** dan semua tautan wali **langsung dicabut**.
   - Anda punya **7 hari** untuk membatalkan. Selama itu hanya dua hal yang bisa dilakukan: **mengunduh data** atau **membatalkan penghapusan**. Menambah atau mengubah catatan les ditolak.
@@ -124,21 +133,21 @@ Menu ada di sisi kiri (komputer) atau bar bawah (ponsel):
 
 | Menu | Isi |
 | --- | --- |
-| **Ringkasan** | Angka penting dan hal yang perlu diperhatikan |
-| **Murid** | Daftar murid, pencarian, penambahan |
-| **Jadwal** | Semua pertemuan dan hasilnya |
-| **Profil publik** | Mengelola profil di direktori |
+| **Beranda** | Status iklan, kelengkapan, kinerja, tombol bagikan, ringkasan catatan les |
+| **Iklan saya** | Mengisi dan mengajukan profil di direktori |
 | **Akun** | Informasi akun, zona waktu, keamanan |
+| *Catatan les (opsional)*: **Murid** | Daftar murid, pencarian, penambahan |
+| *Catatan les (opsional)*: **Jadwal** | Kalender pertemuan dan hasilnya |
 
-### Halaman Ringkasan
+### Halaman Beranda
 
-- **Murid aktif**: jumlah murid yang tidak diarsipkan.
-- **Jadwal mendatang**: pertemuan berstatus terjadwal yang belum lewat.
-- **Paket hampir habis**: paket aktif dengan sisa 1 pertemuan atau kurang.
-- **Sisa pembayaran**: total kekurangan bayar dari semua paket.
-- **Pertemuan mendatang**: lima pertemuan terdekat.
-- **Perlu diperhatikan**: daftar paket yang hampir atau sudah habis. Klik untuk membuka murid terkait dan mencatat paket baru.
-- Tombol **Tambah murid** ada di kanan atas.
+Dari atas ke bawah:
+
+- **Status iklan**: belum dibuat, draf, sedang diperiksa, ditolak (dengan alasan), tayang, dijeda, atau disembunyikan pengelola, disertai satu tombol langkah berikutnya. Saat tayang ada tombol cepat *Tandai menerima / tidak menerima murid*.
+- **Kelengkapan iklan**: persentase dan daftar periksa (nama, perkenalan minimal 100 karakter, WhatsApp, tempat tinggal, minimal satu penawaran, dan daerah layanan bila ada les tatap muka). Butir yang belum selesai menjelaskan cara melengkapinya.
+- **Kinerja iklan** (hanya saat tayang): jumlah **profil dilihat** dan **WhatsApp ditekan** dalam 7 dan 30 hari. Ini angka **perkiraan**: kunjungan Anda sendiri dan mesin pencari bisa ikut terhitung, satu orang dihitung sekali per sesi browser, dan klik WhatsApp belum tentu menjadi murid. Tidak ada data pengunjung yang disimpan, hanya jumlahnya.
+- **Bagikan iklan Anda** (hanya saat tayang): tautan profil, tombol *Salin tautan* dan *Bagikan lewat WhatsApp*.
+- **Catatan les (opsional)**: bila Anda sudah punya murid tampil murid aktif, jadwal mendatang, paket hampir habis, sisa pembayaran, dan daftar pertemuan terdekat. Bila belum, hanya satu keterangan singkat; tidak ada kewajiban memakainya.
 
 ---
 
@@ -223,7 +232,9 @@ Jika jatah 0, aplikasi menolak menandai les selesai dengan pesan "Jatah paket ha
 
 ### 8.1 Menambah pertemuan
 
-Halaman **Jadwal**, buka **Tambah pertemuan**:
+Halaman **Jadwal** berbentuk **kalender bulanan** (minggu dimulai Senin). Setiap hari menampilkan pertemuannya: biru = terjadwal, hijau = les selesai, kuning = dibatalkan. Klik sebuah tanggal untuk melihat pertemuan hari itu di bawah kalender; gunakan panah untuk pindah bulan dan *Hari ini* untuk kembali. Di ponsel, hari yang punya pertemuan ditandai titik berwarna. Bila ada pertemuan yang sudah lewat tetapi belum diberi hasil, muncul pemberitahuan kuning dengan tautan ke yang paling lama.
+
+Untuk menambah pertemuan, pilih tanggalnya di kalender lalu buka **Tambah pertemuan** (jam awal 09.00 sampai 10.00, bisa diubah):
 
 1. Pilih **Murid dan paket** (daftar menampilkan sisa jatah). Hanya paket aktif milik murid aktif yang muncul. Jika kosong, buat paket dulu.
 2. Pilih **Cara mengajar**: Online atau Tatap muka.
@@ -234,7 +245,7 @@ Halaman **Jadwal**, buka **Tambah pertemuan**:
 
 ### 8.2 Menandai les selesai
 
-Di daftar **Belum diberi hasil**, klik **Tandai les selesai** setelah les berlangsung. Jatah paket berkurang **tepat 1**. Klik dua kali atau kirim ulang tidak akan memotong jatah dua kali.
+Pilih tanggal pertemuan di kalender, lalu klik **Tandai les selesai** setelah les berlangsung. Jatah paket berkurang **tepat 1**. Klik dua kali atau kirim ulang tidak akan memotong jatah dua kali.
 
 ### 8.3 Memindahkan jadwal
 
@@ -254,7 +265,7 @@ Pertemuan yang dibatalkan dengan potong jatah **tidak dihitung sebagai les seles
 
 ### 8.5 Mengoreksi hasil
 
-Salah menandai? Buka **Riwayat pertemuan**, pilih pertemuan, buka **Koreksi hasil pertemuan**, pilih hasil yang benar (les selesai, batal tanpa potong, batal dengan potong, atau kembali terjadwal), isi **alasan** (wajib), lalu simpan. Jatah disesuaikan dan alasan tercatat.
+Salah menandai? Pilih tanggal pertemuan itu di kalender (bulan lalu pun bisa), buka **Koreksi hasil pertemuan**, pilih hasil yang benar (les selesai, batal tanpa potong, batal dengan potong, atau kembali terjadwal), isi **alasan** (wajib), lalu simpan. Jatah disesuaikan dan alasan tercatat.
 
 ---
 
@@ -303,17 +314,19 @@ Jadwal dan hasil pertemuan, paket (jatah dan harga), pembayaran, serta nomor wal
 
 ---
 
-## 11. Profil publik
+## 11. Iklan saya (profil publik)
 
-Menu **Profil publik** mengatur halaman Anda di direktori guru.
+Menu **Iklan saya** mengatur halaman Anda di direktori guru. Di sebelah isian ada **pratinjau** kartu Anda persis seperti di hasil pencarian, yang berubah saat Anda mengetik.
 
-### 11.1 Mengisi profil
+### 11.1 Mengisi iklan
 
 | Bagian | Isian |
 | --- | --- |
-| **Informasi dasar** | Nama yang ditampilkan, nomor WhatsApp publik, provinsi dan kabupaten/kota tempat tinggal, dan "Tentang Anda dan cara mengajar" (maks. 3.000 karakter). |
-| **Penawaran les** | Klik *Tambah penawaran*. Isi pelajaran, jenjang, cara mengajar (online/tatap muka), durasi (menit), dan tarif per pertemuan. Boleh banyak penawaran, masing-masing dengan harga sendiri. |
-| **Daerah yang bersedia didatangi** | Klik *Tambah daerah* (provinsi, kabupaten/kota, kecamatan opsional). Dipakai untuk pencarian tatap muka dan boleh berbeda dari tempat tinggal. |
+| **1. Siapa Anda** | Nama yang ditampilkan, nomor WhatsApp publik, **provinsi dan kabupaten/kota tempat tinggal (dipilih dari daftar)**, dan "Tentang Anda dan cara mengajar" (maks. 3.000 karakter; sebaiknya minimal 100 karakter). |
+| **2. Penawaran les** | Klik *Tambah penawaran*. Isi pelajaran (ada saran, tetapi bebas diketik), jenjang, cara mengajar (online/tatap muka), durasi (menit), dan tarif per pertemuan (angka saja). Boleh banyak penawaran, masing-masing dengan harga sendiri. |
+| **3. Daerah yang bersedia didatangi** | Klik *Tambah daerah*, lalu pilih provinsi, kabupaten/kota, dan (opsional) kecamatan. Dipakai untuk pencarian tatap muka dan boleh berbeda dari tempat tinggal. |
+
+**Pilihan wilayah** berasal dari data kode wilayah Kepmendagri 2025 (38 provinsi, 514 kabupaten/kota, 7.265 kecamatan). Kabupaten/kota hanya menampilkan milik provinsi yang dipilih, dan kecamatan hanya milik kabupaten/kota itu. Profil lama yang wilayahnya diketik bebas dan tidak dikenali ditandai "(tidak dikenali, pilih ulang)" dan harus dipilih ulang sebelum disimpan.
 
 ### 11.2 Simpan draf dan ajukan
 
@@ -333,12 +346,13 @@ Di bagian atas halaman terlihat status: *Terlihat di direktori* atau *Belum terl
 Setelah profil terbit, tersedia tombol:
 
 - **Tandai tidak menerima murid / Tandai menerima murid**: profil **tetap muncul** di pencarian, hanya dengan keterangan "Sedang tidak menerima murid".
-- **Jeda profil / Aktifkan profil**: *menyembunyikan* profil sementara dari direktori.
-- **Lihat profil publik**: pratinjau halaman seperti yang dilihat pengunjung.
+- **Jeda iklan / Aktifkan iklan**: *menyembunyikan* profil sementara dari direktori.
+- **Lihat profil publik**: halaman seperti yang dilihat pengunjung.
+- Bila pengelola menyembunyikan iklan Anda, tombol-tombol ini tidak ditampilkan; alasannya tampil di status.
 
 ### 11.5 Tombol WhatsApp
 
-Tombol "Hubungi melalui WhatsApp" hanya **membuka percakapan** dengan teks pembuka. Pengunjung sendiri yang mengirim pesannya. Klik tombol bukan berarti ada murid baru.
+Tombol "Hubungi melalui WhatsApp" hanya **membuka percakapan** dengan teks pembuka. Pengunjung sendiri yang mengirim pesannya. Klik tombol bukan berarti ada murid baru. Setiap klik ikut dihitung di *Kinerja iklan* pada Beranda.
 
 ---
 
@@ -351,7 +365,7 @@ Tidak perlu akun.
    - **Pelajaran atau nama guru**, contoh "Matematika".
    - **Jenjang**: SD, SMP, atau SMA.
    - **Cara belajar**: online atau tatap muka.
-   - **Provinsi**, **Kabupaten/kota**, dan **Kecamatan** (kecamatan hanya untuk tatap muka). Semua opsional.
+   - **Provinsi**, **Kabupaten/kota**, dan **Kecamatan**, semuanya berupa pilihan bertingkat (kabupaten/kota muncul setelah provinsi dipilih, kecamatan setelah kabupaten/kota). Kecamatan hanya untuk tatap muka. Semua opsional.
 3. Klik **Cari guru**.
 
 Cara kerja pencarian:
@@ -407,7 +421,9 @@ Setiap keputusan tercatat di riwayat audit. Guru biasa yang membuka `/admin` dia
 | Penghapusan akun otomatis setelah 7 hari | Penghapusannya sudah ada (`scripts/process-deletions.mjs`), tetapi **belum terjadwal otomatis** di server karena hosting belum diputuskan. Sementara dijalankan manual. |
 | Foto profil guru | Belum ada. |
 | Lapor profil / saluran bantuan di aplikasi | Belum ada. |
-| Daftar wilayah Indonesia lengkap (pilihan dropdown) | Wilayah masih diketik manual. |
+| Pembaruan otomatis daftar wilayah | Daftar (Kepmendagri 2025) tersimpan di aplikasi. Pemekaran wilayah baru perlu dibangun ulang dengan `scripts/build-wilayah.mjs`. Pemeriksaan nama wilayah dilakukan aplikasi, bukan basis data. |
+| Statistik iklan yang presisi | Hanya hitungan perkiraan (tanpa pembeda pengunjung unik atau penyaring bot). |
+| Unduh data sebagai tabel (Excel/CSV) | Unduhan berupa dokumen yang dibaca/dicetak; belum bisa diolah ulang sebagai tabel. |
 | Menyesuaikan zona waktu tampilan untuk wali | Wali melihat waktu dalam zona waktu guru. |
 | Pencatatan tanpa internet | Tidak termasuk versi awal; internet diperlukan. |
 | Pembayaran lewat platform, komisi, obrolan, rating publik, kelas kelompok, akun murid/wali | Di luar cakupan versi awal. |

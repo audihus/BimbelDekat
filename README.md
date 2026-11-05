@@ -1,6 +1,6 @@
 # Platform Les Privat
 
-Aplikasi web untuk guru les mandiri. Implementasi lokal masih berlangsung; daftar kebutuhan dan keputusan produk ada di [PRD](./PRD_Platform_Les_Privat_v0_2.md).
+Tempat guru les mandiri memasang iklan dan ditemukan calon murid (profil, penawaran, pilihan wilayah, tombol WhatsApp, tautan yang bisa dibagikan). Pencatatan murid, jadwal (kalender), dan pembayaran tersedia sebagai fitur opsional. Implementasi lokal masih berlangsung; daftar kebutuhan dan keputusan produk ada di [PRD](./PRD_Platform_Les_Privat_v0_2.md).
 
 ## Menjalankan di komputer
 
@@ -21,11 +21,11 @@ Kotak email uji lokal tersedia di `http://127.0.0.1:55324`. Jangan memakai akun 
 
 Langkah lengkap beserta daftar uji manual di browser ada di [panduan pengujian](./docs/PANDUAN_PENGUJIAN.md). Cara memakai aplikasinya ada di [panduan pengguna](./docs/PANDUAN_PENGGUNA.md).
 
-- `npm test`: aturan domain, validasi, pencarian, enkripsi sesi, penyaringan log, dan pembatas percobaan.
+- `npm test`: aturan domain, validasi, pencarian, enkripsi sesi, penyaringan log, pembatas percobaan, wilayah, kalender, dokumen unduhan, dan kelengkapan iklan.
 - `npm run test:db`: transaksi, hak akses, hapus akun, ekspor, moderasi, dan pembatas pada PostgreSQL lokal melalui Docker.
 - `npm run typecheck`: pemeriksaan tipe TypeScript.
 - `npm run build`: build Next.js.
-- `npx playwright test`: pemeriksaan integrasi lewat HTTP (login, isolasi data, pembatas, aksi akun, halaman pengelola); memerlukan Supabase lokal dan konfigurasi `.env.local`.
+- `npx playwright test`: pemeriksaan integrasi lewat HTTP (login, isolasi data, pembatas, aksi akun, halaman pengelola, wilayah, kalender, Beranda iklan); memerlukan Supabase lokal dan konfigurasi `.env.local`.
 - `node scripts/process-deletions.mjs`: menghapus akun yang permintaan penghapusannya sudah lewat 7 hari (belum dijadwalkan otomatis).
 
 Di Windows, Docker Desktop kadang menahan atau me-reset permintaan ke Supabase lokal ("fetch failed" atau "aborted due to timeout"). Penyebab di mesin pengembang: `~/.wslconfig` membatasi WSL hanya `memory=1GB`, sehingga penerus port Docker ke Windows tersendat; setelah dinaikkan ke `4GB` (lalu `wsl --shutdown` dan buka ulang Docker Desktop), macet hilang pada pengukuran. Bila terulang, naikkan batas itu. Kode lokal juga mengulang permintaan sebagai lapisan kedua.
