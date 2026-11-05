@@ -31,6 +31,15 @@ test("lima kali salah memblokir email+IP itu, termasuk dengan kata sandi benar; 
   await here.dispose();await elsewhere.dispose();
 });
 
+// Browser sungguhan tidak mengirim x-forwarded-for di lokal, jadi IP jatuh ke "local". Jalur itu harus ikut terkunci.
+test("tanpa header IP (seperti browser lokal): percobaan ke-6 dengan kata sandi benar tetap diblokir",async()=>{
+  const email=await signup();
+  const bare=await request.newContext({baseURL:"http://127.0.0.1:3000",extraHTTPHeaders:{Origin:"http://127.0.0.1:3000"}});
+  for(let i=1;i<=5;i++)expect((await login(bare,email,"kata sandi salah sekali")).status(),`percobaan ${i}`).toBe(401);
+  expect((await login(bare,email,password)).status()).toBe(429);
+  await bare.dispose();
+});
+
 test("login berhasil berulang tidak dihitung sebagai percobaan gagal",async()=>{
   const email=await signup(),ip=fakeIp();const here=await from(ip);
   for(let i=1;i<=7;i++)expect((await login(here,email,password)).status(),`masuk ke-${i}`).toBe(200);
