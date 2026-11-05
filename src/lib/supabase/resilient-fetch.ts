@@ -6,8 +6,9 @@ export function isLoopbackUrl(value: string): boolean {
 }
 
 export function resilientFetch(base: typeof fetch = fetch, options: { attempts?: number; timeoutMs?: number } = {}): typeof fetch {
-  const attempts = options.attempts ?? 3;
-  const timeoutMs = options.timeoutMs ?? 6000;
+  // Diukur di mesin ini: ±30% permintaan pertama macet; 5 percobaan @4 dtk menekan kegagalan total dari ±3% (3x) ke ±0,2%.
+  const attempts = options.attempts ?? 5;
+  const timeoutMs = options.timeoutMs ?? 4000;
   return async (input, init) => {
     // Isi yang bukan teks (stream) tidak dapat dikirim ulang dengan aman.
     const repeatable = init?.body == null || typeof init.body === "string";

@@ -27,7 +27,8 @@ function sql(sql) {
   });
 }
 const pool = { query: (query, parameters=[]) => sql(bind(query,parameters)), end: async()=>{} };
-const actors = ["teacher", "teacher", "admin", "teacher"].map(role => ({ id: randomUUID(), session: randomUUID(), role }));
+// Empat pertama dipakai tes awal; lima berikutnya khusus siklus akun dan moderasi (carl, dewi, eko, fran, admin2).
+const actors = ["teacher", "teacher", "admin", "teacher", "teacher", "teacher", "teacher", "teacher", "admin"].map(role => ({ id: randomUUID(), session: randomUUID(), role }));
 let count = 0;
 async function check(name, test) {
   await test();
@@ -158,6 +159,105 @@ try {
     // Guru dan pengunjung tidak boleh memanggilnya langsung.
     await assert.rejects(queryAs(rina, "select public.rate_check('test.dbcheck', $1, 3, 60, true)", [hash()]));
     await assert.rejects(queryAs(null, "select public.rate_check('test.dbcheck', $1, 3, 60, true)", [hash()]));
+  });
+  const [carl, dewi, eko, fran, admin2] = actors.slice(4);
+  await pool.query("update public.accounts set role = 'admin' where id = $1", [admin2.id]);
+  const doc = name => ({ name, about: "Tentang", phone: "6281234567890", province: "Jawa Barat", regency: "Kota Bekasi", areas: [], offers: [{ subject: "Matematika", level: "SD", mode: "online", duration: 60, price: "75000" }] });
+  const rpc = (actor, call, parameters = []) => queryAs(actor, `select ${call} as result`, parameters).then(rows => rows[0].result);
+  const moderate = (actor, id, decision, reason) => rpc(actor, "(public.moderate_profile($1::uuid, $2, $3))::text", [id, decision, reason]);
+  const listed = async name => (await rpc(null, "public.public_teachers()")).some(item => item.document.name === name);
+  const profileOf = async actor => (await snapshot(actor)).profile;
+
+  await check("permintaan hapus akun menyembunyikan profil, mencabut tautan, menutup operasi; batal hanya memulihkan akses", async () => {
+    const pupil = await command(carl, "student.create", { name: "Murid Carl", level: "SD" });
+    const token = randomUUID() + randomUUID();
+    await command(carl, "guardian.create", { student_id: pupil.id, token_hash: createHash("sha256").update(token).digest("hex") });
+    await command(carl, "profile.submit", { document: doc("Carl Publik") });
+    await moderate(admin2, (await profileOf(carl)).id, "approve", "ok");
+    assert.equal(await listed("Carl Publik"), true);
+    assert.notEqual((await rpc(null, "public.guardian_summary($1)", [token])), null);
+
+    await assert.rejects(rpc(admin2, "public.request_account_deletion()"), "admin tidak memakai jalur ini");
+    await assert.rejects(rpc(null, "public.request_account_deletion()"));
+    await rpc(carl, "public.request_account_deletion()");
+    assert.equal(await listed("Carl Publik"), false, "profil langsung hilang dari direktori");
+    assert.equal(await rpc(null, "public.guardian_summary($1)", [token]), null, "tautan wali langsung mati");
+    await assert.rejects(command(carl, "student.create", { name: "Baru", level: "SD" }), "tidak boleh menambah catatan");
+    await assert.rejects(snapshot(carl));
+    assert.equal((await rpc(carl, "public.account_context()")).status, "deletion_pending", "tetap bisa membuka halaman akun");
+
+    await rpc(carl, "public.cancel_account_deletion()");
+    assert.equal((await rpc(carl, "public.account_context()")).status, "active");
+    assert.equal((await snapshot(carl)).students.length, 1, "data utuh setelah batal");
+    assert.equal((await profileOf(carl)).visible, false, "profil tidak otomatis terbit lagi");
+    assert.equal(await rpc(null, "public.guardian_summary($1)", [token]), null, "tautan lama tetap mati");
+    assert.equal(await listed("Carl Publik"), false);
+    await assert.rejects(rpc(carl, "public.cancel_account_deletion()"), "tidak ada permintaan untuk dibatalkan");
+  });
+
+  await check("penghapusan terjadwal hanya menyentuh yang lewat 7 hari dan menghapus seluruh data", async () => {
+    const pupil = await command(eko, "student.create", { name: "Murid Eko", level: "SD" });
+    const space = await pool.query("select id from public.workspaces where owner_id = $1", [eko.id]);
+    await rpc(eko, "public.request_account_deletion()");
+    await pool.query("update public.accounts set deletion_requested_at = now() - interval '6 days' where id = $1", [eko.id]);
+    await pool.query("select public.process_account_deletions()");
+    assert.equal(await pool.query("select count(*) from auth.users where id = $1", [eko.id]), "1", "6 hari belum boleh dihapus");
+    await pool.query("update public.accounts set deletion_requested_at = now() - interval '8 days' where id = $1", [eko.id]);
+    await assert.rejects(rpc(eko, "public.cancel_account_deletion()"), "masa batal sudah lewat");
+    assert.ok(Number(await pool.query("select public.process_account_deletions()")) >= 1);
+    assert.equal(await pool.query("select count(*) from auth.users where id = $1", [eko.id]), "0");
+    for (const table of ["accounts", "workspaces"]) assert.equal(await pool.query(`select count(*) from public.${table} where ${table === "accounts" ? "id" : "owner_id"} = $1`, [eko.id]), "0");
+    assert.equal(await pool.query("select count(*) from public.students where id = $1", [pupil.id]), "0", "catatan murid ikut terhapus");
+    assert.equal(await pool.query("select count(*) from public.workspaces where id = $1", [space]), "0");
+    assert.equal(await pool.query("select count(*) from auth.users where id = $1", [rina.id]), "1", "akun yang baru meminta hapus tidak tersentuh");
+    await assert.rejects(queryAs(dewi, "select public.process_account_deletions()"));
+    await assert.rejects(queryAs(null, "select public.process_account_deletions()"));
+  });
+
+  await check("ekspor hanya memuat data sendiri, lengkap dengan riwayat, tanpa hash tautan", async () => {
+    const mine = await command(dewi, "student.create", { name: "Murid Dewi", level: "SD", notes: "Catatan Dewi" });
+    const hash = createHash("sha256").update(randomUUID() + randomUUID()).digest("hex");
+    await command(dewi, "guardian.create", { student_id: mine.id, token_hash: hash });
+    const first = await rpc(dewi, "public.export_workspace()");
+    assert.equal(first.students.length, 1);
+    assert.equal(first.students[0].name, "Murid Dewi");
+    assert.equal(first.account.email, `${dewi.id}@example.test`);
+    const text = JSON.stringify(first);
+    assert.ok(!text.includes(hash), "hash tautan tidak boleh ikut");
+    assert.ok(!text.includes("Murid Carl") && !text.includes("Murid Eko") && !text.includes("Murid Andi"), "data guru lain tidak boleh ikut");
+    const second = await rpc(dewi, "public.export_workspace()");
+    assert.ok(second.audit_events.some(event => event.action === "account.exported"), "ekspor sebelumnya tercatat");
+    await assert.rejects(rpc(null, "public.export_workspace()"));
+    // Saat menunggu penghapusan, ekspor tetap boleh (PRD Q31).
+    assert.equal((await rpc(carl, "public.export_workspace()")).students.length, 1);
+    await rpc(carl, "public.request_account_deletion()");
+    assert.equal((await rpc(carl, "public.export_workspace()")).students.length, 1);
+  });
+
+  await check("peristiwa akun hanya dari daftar putih dan masuk ke riwayat", async () => {
+    await rpc(dewi, "(public.record_account_event($1))::text", ["account.password_changed"]);
+    await assert.rejects(rpc(dewi, "(public.record_account_event($1))::text", ["account.diretas"]));
+    assert.ok((await rpc(dewi, "public.export_workspace()")).audit_events.some(event => event.action === "account.password_changed"));
+  });
+
+  await check("moderasi: hanya admin, setujui hanya untuk pengajuan, alasan wajib, sembunyi dapat dibatalkan", async () => {
+    await command(fran, "profile.submit", { document: doc("Fran Publik") });
+    const id = (await profileOf(fran)).id;
+    await assert.rejects(moderate(rina, id, "approve", "ok"), "guru bukan admin");
+    await assert.rejects(moderate(null, id, "approve", "ok"));
+    await moderate(admin2, id, "approve", "ok");
+    assert.equal(await listed("Fran Publik"), true);
+    await assert.rejects(moderate(admin2, id, "approve", "ok"), "tidak ada pengajuan menunggu");
+    await assert.rejects(moderate(admin2, id, "hide", ""), "alasan wajib");
+    await moderate(admin2, id, "hide", "Melanggar aturan");
+    assert.equal(await listed("Fran Publik"), false);
+    await assert.rejects(command(fran, "profile.visibility", { visible: true }), "guru tidak bisa membuka sendiri");
+    await assert.rejects(moderate(admin2, id, "unhide", ""), "alasan wajib");
+    await moderate(admin2, id, "unhide", "Sudah diperbaiki");
+    assert.equal(await listed("Fran Publik"), true);
+    await assert.rejects(moderate(admin2, id, "unhide", "Lagi"), "tidak sedang disembunyikan");
+    await assert.rejects(moderate(admin2, id, "tak-dikenal", "x"));
+    assert.deepEqual(await queryAs(admin2, "select id from public.students"), [], "admin tetap tidak membaca catatan privat guru");
   });
   console.log(`\n${count} database checks passed.`);
 } catch (error) {
