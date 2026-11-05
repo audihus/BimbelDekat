@@ -1,0 +1,2 @@
+-- Data contoh ditambahkan melalui skrip seed lokal setelah layanan Auth siap.
+-- Tidak berisi data pribadi nyata atau kredensial produksi.
