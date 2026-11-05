@@ -19,12 +19,17 @@ Kotak email uji lokal tersedia di `http://127.0.0.1:55324`. Jangan memakai akun 
 
 ## Pemeriksaan
 
-- `npm test`: aturan domain, validasi, pencarian, dan enkripsi sesi.
-- `npm run test:db`: transaksi dan akses pada PostgreSQL lokal melalui Docker.
+Langkah lengkap beserta daftar uji manual di browser ada di [panduan pengujian](./docs/PANDUAN_PENGUJIAN.md). Cara memakai aplikasinya ada di [panduan pengguna](./docs/PANDUAN_PENGGUNA.md).
+
+- `npm test`: aturan domain, validasi, pencarian, enkripsi sesi, penyaringan log, dan pembatas percobaan.
+- `npm run test:db`: transaksi, hak akses, hapus akun, ekspor, moderasi, dan pembatas pada PostgreSQL lokal melalui Docker.
 - `npm run typecheck`: pemeriksaan tipe TypeScript.
 - `npm run build`: build Next.js.
-- `npx playwright test tests/e2e/api.spec.ts`: pemeriksaan integrasi API; memerlukan Supabase lokal dan konfigurasi `.env.local`.
+- `npx playwright test`: pemeriksaan integrasi lewat HTTP (login, isolasi data, pembatas, aksi akun, halaman pengelola); memerlukan Supabase lokal dan konfigurasi `.env.local`.
+- `node scripts/process-deletions.mjs`: menghapus akun yang permintaan penghapusannya sudah lewat 7 hari (belum dijadwalkan otomatis).
+
+Di Windows, Docker Desktop kadang menahan atau me-reset permintaan pertama ke Supabase lokal. Kode lokal sudah mengulang permintaan, tetapi tes sesekali masih gagal sekali lalu lolos saat diulang.
 
 ## Pekerjaan yang belum selesai
 
-Moderasi profil oleh pengelola, alur pemulihan dengan kode sekali pakai, perubahan email/kata sandi dengan pemeriksaan ulang, ekspor dan penghapusan akun, sumber pilihan wilayah lengkap, serta pekerjaan terjadwal dan pemulihan cadangan masih harus diselesaikan dan diuji. Integrasi akun dan pengujian browser menyeluruh masih memerlukan pemeriksaan sebelum dipakai dengan data nyata. Penyedia email produksi, biaya, konfigurasi Vercel/Supabase produksi, dan deployment belum ditetapkan.
+Alur pemulihan dengan kode sekali pakai, sumber pilihan wilayah lengkap, foto profil, saluran lapor profil/bantuan, penjadwalan otomatis penghapusan akun, serta pemulihan cadangan masih harus diselesaikan dan diuji. Pengujian browser menyeluruh baru berupa daftar uji manual; belum ada tes otomatis di browser. Belum ada tinjauan keamanan independen, sehingga aplikasi belum boleh dipakai dengan data nyata. Penyedia email produksi, biaya, konfigurasi Vercel/Supabase produksi, dan deployment belum ditetapkan.

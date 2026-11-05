@@ -97,7 +97,22 @@ Aplikasi ini hanya **mencatat**. Uang tidak mengalir lewat aplikasi, WhatsApp ti
 - **Keluar** (tombol di bagian bawah menu samping): keluar dari perangkat yang sedang dipakai.
 - **Keluar dari semua perangkat** (halaman **Akun**, bagian *Login dan keamanan*): dipakai jika HP atau laptop hilang. Masuk dari perangkat lain, buka Akun, lalu klik tombol itu.
 
-### 4.5 Zona waktu
+**Terlalu banyak percobaan masuk.** Setelah **5 kali salah** dari perangkat/jaringan yang sama untuk email yang sama, masuk dikunci selama sekitar 15 menit, **bahkan jika kata sandi yang dimasukkan benar**. Pesan "Coba lagi dalam N menit" muncul. Masuk yang berhasil tidak dihitung sebagai percobaan salah. Permintaan daftar dan lupa kata sandi juga dibatasi per jam.
+
+### 4.5 Ubah email, ubah kata sandi, unduh data, hapus akun
+
+Semuanya ada di halaman **Akun** dan **meminta kata sandi Anda lagi**, walaupun Anda sudah masuk. Kata sandi salah berulang akan dikunci sementara.
+
+- **Ubah email.** Isi email baru dan kata sandi. Tautan konfirmasi dikirim ke **email lama dan email baru**. Email akun baru berganti setelah **keduanya** dikonfirmasi; sebelum itu email lama tetap berlaku.
+- **Ubah kata sandi.** Minimal 15 karakter dan harus berbeda dari yang lama. Setelah diganti, **semua login dicabut** (termasuk perangkat ini) dan Anda masuk lagi.
+- **Unduh data.** Menghasilkan berkas JSON berisi murid, paket, jadwal, pembayaran, profil, dan seluruh riwayat perubahan di ruang kerja Anda. Berkas memuat data pribadi; simpan di tempat aman.
+- **Hapus akun.** Setelah Anda mencentang persetujuan dan memasukkan kata sandi:
+  - Profil publik **langsung disembunyikan** dan semua tautan wali **langsung dicabut**.
+  - Anda punya **7 hari** untuk membatalkan. Selama itu hanya dua hal yang bisa dilakukan: **mengunduh data** atau **membatalkan penghapusan**. Menambah atau mengubah catatan les ditolak.
+  - Setelah 7 hari, akun dan seluruh catatan dihapus permanen. Salinan cadangan dapat bertahan hingga 30 hari sejak dibuat.
+  - Jika dibatalkan, pemakaian normal kembali, tetapi profil tetap tersembunyi dan tautan wali lama tetap dicabut (aktifkan profil dan buat tautan baru bila perlu).
+
+### 4.6 Zona waktu
 
 Di halaman **Akun**, bagian *Zona waktu*, pilih **WIB**, **WITA**, atau **WIT**, lalu klik *Simpan zona waktu*. Semua jadwal akan ditampilkan sesuai pilihan itu. Mengubah zona waktu hanya mengubah tampilan, bukan waktu pelaksanaan les atau jatah.
 
@@ -363,10 +378,24 @@ Jika muncul "Ringkasan belum dapat dibuka", kemungkinan tautan sudah berakhir (l
 Akun pengelola dibuat terpisah dari pendaftaran guru. Pendaftaran biasa selalu menghasilkan akun guru.
 
 - Login pengelola berlaku **8 jam** sejak masuk, lalu harus masuk ulang.
-- Menu pengelola bernama **Moderasi**, dengan keputusan **setujui**, **tolak** (alasan wajib), atau **sembunyikan** (alasan wajib). Setiap keputusan tercatat di riwayat audit.
+- Menu pengelola hanya **Moderasi** dan **Akun**.
 - Pengelola **tidak punya akses** ke catatan privat guru (murid, paket, jadwal, pembayaran), baik lewat aplikasi maupun lewat basis data. Bantuan teknis memakai penjelasan masalah atau tangkapan layar yang datanya sudah ditutupi.
 
-> **Catatan:** logika moderasi di basis data sudah ada, tetapi **halaman Moderasi di antarmuka belum dibuat**. Menu "Moderasi" saat ini mengarah ke halaman yang belum ada. Lihat bagian 15.
+### 14.1 Halaman Moderasi
+
+1. **Menunggu pemeriksaan**: pengajuan pertama dan perubahan dari guru. Untuk profil yang sudah terbit, halaman menampilkan dua kolom, *Saat ini tampil di direktori* dan *Perubahan yang diajukan*, sehingga Anda dapat membandingkan nama, WhatsApp, domisili, penawaran, dan area.
+2. Tulis alasan (dilihat guru) pada kotak yang tersedia, lalu pilih keputusan:
+
+| Keputusan | Kapan | Alasan |
+| --- | --- | --- |
+| **Setujui dan terbitkan** | Ada pengajuan yang menunggu | Opsional |
+| **Tolak** | Pengajuan belum layak | **Wajib**. Guru melihat alasan ini di halaman Profil publik |
+| **Sembunyikan dari direktori** | Profil terbit yang bermasalah | **Wajib**. Guru tidak dapat membukanya sendiri |
+| **Tampilkan kembali** | Profil yang tadinya Anda sembunyikan | **Wajib** |
+
+3. **Sudah ditinjau**: profil yang terbit, ditolak, atau disembunyikan, lengkap dengan alasan terakhir. Draf yang belum diajukan tidak ditampilkan.
+
+Setiap keputusan tercatat di riwayat audit. Guru biasa yang membuka `/admin` dialihkan ke Ringkasan.
 
 ---
 
@@ -374,11 +403,8 @@ Akun pengelola dibuat terpisah dari pendaftaran guru. Pendaftaran biasa selalu m
 
 | Fitur | Keadaan |
 | --- | --- |
-| Halaman moderasi untuk pengelola | Belum ada antarmuka (hanya fungsi basis data). |
-| Kode pemulihan sekali pakai | Belum ada. |
-| Ganti email / ganti kata sandi dari pengaturan, dengan kata sandi diminta ulang | Belum ada di halaman Akun. Kata sandi hanya bisa diganti lewat *Lupa kata sandi*. |
-| Ekspor seluruh data | Belum ada. |
-| Permintaan penghapusan akun (masa batal 7 hari) | Belum ada tombolnya. Pembatasan akses saat status penghapusan sudah ada di server. |
+| Kode pemulihan sekali pakai | Belum ada (ditunda). Jika kata sandi lupa **dan** email tidak bisa dibuka, belum ada jalan pemulihan. |
+| Penghapusan akun otomatis setelah 7 hari | Penghapusannya sudah ada (`scripts/process-deletions.mjs`), tetapi **belum terjadwal otomatis** di server karena hosting belum diputuskan. Sementara dijalankan manual. |
 | Foto profil guru | Belum ada. |
 | Lapor profil / saluran bantuan di aplikasi | Belum ada. |
 | Daftar wilayah Indonesia lengkap (pilihan dropdown) | Wilayah masih diketik manual. |
@@ -386,7 +412,7 @@ Akun pengelola dibuat terpisah dari pendaftaran guru. Pendaftaran biasa selalu m
 | Pencatatan tanpa internet | Tidak termasuk versi awal; internet diperlukan. |
 | Pembayaran lewat platform, komisi, obrolan, rating publik, kelas kelompok, akun murid/wali | Di luar cakupan versi awal. |
 
-Selain itu, pengujian otomatis alur masuk akun (Playwright) pada catatan terakhir belum lolos. Karena itu, perlakukan aplikasi sebagai **versi percobaan**.
+Pengujian otomatis kini lolos, tetapi beberapa pengujian kadang gagal sekali di komputer pengembangan karena gangguan Docker Desktop di Windows. Perlakukan aplikasi sebagai **versi percobaan** sampai pemeriksaan keamanan dan uji pemulihan cadangan dilakukan.
 
 ---
 
@@ -407,6 +433,10 @@ Selain itu, pengujian otomatis alur masuk akun (Playwright) pada catatan terakhi
 | Lengkapi nama, kontak WhatsApp, dan penawaran les sebelum mengajukan | Profil belum lengkap | Lengkapi lalu ajukan. |
 | Profil harus disetujui pengelola terlebih dahulu | Tombol menerima murid / jeda dipakai sebelum profil terbit | Tunggu persetujuan. |
 | Permintaan tidak berasal dari aplikasi ini | Aplikasi dibuka dari alamat yang berbeda dari yang dikonfigurasi | Buka lewat `http://127.0.0.1:3000`. |
+| Terlalu banyak percobaan. Coba lagi dalam N menit | Batas percobaan login, pemulihan, atau cek kata sandi terlampaui | Tunggu sesuai menit yang disebut. |
+| Kata sandi belum sesuai | Kata sandi yang dimasukkan ulang untuk aksi sensitif salah | Ketik ulang kata sandi akun saat ini. |
+| Akun sedang menunggu penghapusan | Permintaan hapus akun sedang berjalan | Batalkan penghapusan di halaman Akun. |
+| ... (Kode: ab12cd34) | Kesalahan di server | Sebutkan kode itu saat melapor; kode yang sama ada di log server. |
 | Isian terlalu panjang | Data melebihi 64 KB | Persingkat catatan. |
 | Data belum tersimpan. Periksa isian atau coba kembali | Gangguan koneksi/server | Coba lagi. Mengirim ulang tidak menggandakan catatan. |
 
