@@ -1,7 +1,34 @@
+import Link from "next/link";
 import { requireWorkspace } from "@/lib/session";
-import { Field,SelectField,Empty } from "@/components/ui";
+import { Field,SelectField,Empty,Badge } from "@/components/ui";
 import { CommandForm } from "@/components/command-form";
 import { LessonList } from "@/components/lesson-list";
+import { ScheduleCalendar } from "@/components/schedule-calendar";
 import { zoneLabel } from "@/lib/format";
+import { dateKey,groupByDay,monthParam,parseDay,parseMonth } from "@/lib/calendar";
 
-export default async function Schedule(){const {account,data}=await requireWorkspace();const packages=data.packages.filter(p=>!p.closed_at&&data.students.some(s=>s.id===p.student_id&&!s.archived));const scheduled=data.lessons.filter(l=>l.status==="scheduled");const history=data.lessons.filter(l=>l.status!=="scheduled").reverse();return <div className="stack"><div className="page-heading"><p className="eyebrow">Pertemuan les</p><h1 style={{marginTop:8}}>Jadwal Anda</h1><p>Waktu ditampilkan dalam {zoneLabel(account.timezone)}. Jadwal yang bertabrakan akan ditolak.</p></div><section className="card"><details open={scheduled.length===0}><summary>Tambah pertemuan</summary>{packages.length?<CommandForm action="lesson.create" buttonLabel="Simpan jadwal" timezone={account.timezone} reset><div className="form-grid"><SelectField label="Murid dan paket" name="package_id" required><option value="">Pilih paket</option>{packages.map(p=><option value={p.id} key={p.id}>{data.students.find(s=>s.id===p.student_id)?.name} · {p.name} · sisa {p.remaining}</option>)}</SelectField><SelectField label="Cara mengajar" name="mode"><option value="online">Online</option><option value="offline">Tatap muka</option></SelectField><Field label={`Mulai (${zoneLabel(account.timezone)})`} name="starts_at" type="datetime-local" required/><Field label={`Selesai (${zoneLabel(account.timezone)})`} name="ends_at" type="datetime-local" required/></div></CommandForm>:<Empty title="Tambahkan paket terlebih dahulu">Buka halaman murid, catat paket aktifnya, lalu kembali untuk mengatur pertemuan.</Empty>}</details></section><section className="card"><div className="card-header"><h2>Belum diberi hasil</h2><span className="muted">{scheduled.length} pertemuan</span></div><LessonList lessons={scheduled} students={data.students} packages={data.packages} timezone={account.timezone}/></section><section className="card"><details><summary>Riwayat pertemuan ({history.length})</summary><LessonList lessons={history} students={data.students} packages={data.packages} timezone={account.timezone}/></details></section></div>;}
+export default async function Schedule({searchParams}:{searchParams:Promise<{bulan?:string;tgl?:string}>}){
+  const {account,data}=await requireWorkspace();const query=await searchParams;const zone=account.timezone;
+  const today=dateKey(new Date().toISOString(),zone);
+  const day=parseDay(query.tgl);
+  const todayMonth={year:Number(today.slice(0,4)),month:Number(today.slice(5,7))};
+  // Urutan: ?bulan= yang sah, lalu bulan dari ?tgl=, lalu bulan ini.
+  const month=parseMonth(query.bulan,day?{year:Number(day.slice(0,4)),month:Number(day.slice(5,7))}:todayMonth);
+  const selected=day&&day.startsWith(monthParam(month))?day:today.startsWith(monthParam(month))?today:`${monthParam(month)}-01`;
+  const byDay=groupByDay(data.lessons,zone);
+  const now=Date.parse(new Date().toISOString());
+  const overdue=data.lessons.filter(l=>l.status==="scheduled"&&Date.parse(l.ends_at)<now).sort((a,b)=>Date.parse(a.starts_at)-Date.parse(b.starts_at));
+  const packages=data.packages.filter(p=>!p.closed_at&&data.students.some(s=>s.id===p.student_id&&!s.archived));
+  const label=new Intl.DateTimeFormat("id-ID",{dateStyle:"full",timeZone:"UTC"}).format(new Date(`${selected}T00:00:00Z`));
+  const lessons=byDay[selected]??[];
+  return <div className="stack">
+    <div className="page-heading"><p className="eyebrow">Catatan les (opsional)</p><h1 style={{marginTop:8}}>Jadwal Anda</h1><p>Waktu ditampilkan dalam {zoneLabel(zone)}. Jadwal yang bertabrakan akan ditolak.</p></div>
+    {overdue.length>0&&<p role="status" className="notice warning">{overdue.length} pertemuan sudah lewat dan belum diberi hasil. <Link className="text-link" href={`/jadwal?tgl=${dateKey(overdue[0].starts_at,zone)}`}>Lihat yang paling lama</Link></p>}
+    <section className="card"><ScheduleCalendar month={month} selected={selected} today={today} byDay={byDay} students={data.students} zone={zone}/></section>
+    <section className="card stack">
+      <div className="card-header" style={{marginBottom:0}}><h2>{label}</h2><Badge tone={lessons.length?"blue":""}>{lessons.length} pertemuan</Badge></div>
+      {lessons.length?<LessonList lessons={lessons} students={data.students} packages={data.packages} timezone={zone}/>:<Empty title="Tidak ada pertemuan di hari ini">Pilih tanggal lain di kalender, atau tambahkan pertemuan di bawah.</Empty>}
+    </section>
+    <section className="card"><details key={selected} open={data.lessons.length===0}><summary>Tambah pertemuan pada {label}</summary>{packages.length?<CommandForm action="lesson.create" buttonLabel="Simpan jadwal" timezone={zone} reset><div className="form-grid"><SelectField label="Murid dan paket" name="package_id" required><option value="">Pilih paket</option>{packages.map(p=><option value={p.id} key={p.id}>{data.students.find(s=>s.id===p.student_id)?.name} · {p.name} · sisa {p.remaining}</option>)}</SelectField><SelectField label="Cara mengajar" name="mode"><option value="online">Online</option><option value="offline">Tatap muka</option></SelectField><Field label={`Mulai (${zoneLabel(zone)})`} name="starts_at" type="datetime-local" required defaultValue={`${selected}T09:00`}/><Field label={`Selesai (${zoneLabel(zone)})`} name="ends_at" type="datetime-local" required defaultValue={`${selected}T10:00`}/></div></CommandForm>:<Empty title="Tambahkan paket terlebih dahulu">Buka halaman murid, catat paket aktifnya, lalu kembali untuk mengatur pertemuan.</Empty>}</details></section>
+  </div>;
+}
