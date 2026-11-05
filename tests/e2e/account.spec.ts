@@ -85,11 +85,12 @@ test("ekspor berupa berkas unduhan yang hanya memuat data sendiri",async()=>{
   expect((await student(a,mine)).status()).toBe(200);expect((await student(b,theirs)).status()).toBe(200);
   const response=await exportData(a,password);
   expect(response.status()).toBe(200);
-  expect(response.headers()["content-disposition"]).toMatch(/^attachment; filename="les-privat-ekspor-\d{4}-\d{2}-\d{2}\.json"$/);
+  expect(response.headers()["content-disposition"]).toMatch(/^attachment; filename="data-les-privat-\d{4}-\d{2}-\d{2}\.html"$/);
+  expect(response.headers()["content-type"]).toContain("text/html");
   expect(response.headers()["cache-control"]).toContain("no-store");
-  const text=await response.text();const data=JSON.parse(text);
-  expect(data.account.email).toBe(alice.email);
-  expect(data.students.map((s:{name:string})=>s.name)).toEqual([mine]);
+  const text=await response.text();
+  expect(text).toContain(alice.email);
+  expect(text).toContain(mine);
   expect(text).not.toContain(theirs);
   expect(text).not.toContain("token_hash");
   await a.dispose();await b.dispose();
@@ -150,7 +151,7 @@ test("hapus akun: akses tertutup, hanya unduh dan batal yang boleh, batal memuli
   expect((await act(context,{action:"email.change",password,email:`x-${randomUUID()}@example.test`})).status()).toBe(403);
   expect((await act(context,{action:"password.change",password,newPassword:"kalimat panjang yang baru dan aman"})).status()).toBe(403);
   const exported=await exportData(context,password);expect(exported.status()).toBe(200);
-  expect((await exported.json()).students).toHaveLength(1);
+  expect(await exported.text()).toContain("Murid (1)");
   expect((await act(context,{action:"deletion.cancel"})).status()).toBe(200);
   expect((await context.get("/dashboard")).status()).toBe(200);
   expect((await student(context,"Sesudah batal")).status()).toBe(200);

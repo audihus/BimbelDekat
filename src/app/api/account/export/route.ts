@@ -5,6 +5,7 @@ import { serverSupabase } from "@/lib/supabase/server";
 import { requirePassword } from "@/lib/account-guard";
 import { enforce } from "@/lib/rate-limit";
 import { logEvent } from "@/lib/log";
+import { renderExportHtml,type ExportData } from "@/lib/export-document";
 import { HttpError,sameOrigin,requestBody,errorResponse,databaseError } from "@/lib/http";
 
 // Boleh dipakai saat akun menunggu penghapusan: mengunduh data adalah salah satu dari dua hal yang tetap diizinkan.
@@ -20,9 +21,10 @@ export async function POST(request:Request) {
     if(error) databaseError(error);
     logEvent("info","account.exported",{userId:account.id});
     const day=new Date().toISOString().slice(0,10);
-    return new NextResponse(JSON.stringify(data,null,2),{status:200,headers:{
-      "Content-Type":"application/json; charset=utf-8",
-      "Content-Disposition":`attachment; filename="les-privat-ekspor-${day}.json"`,
+    // Dokumen HTML yang bisa dibaca di browser dan dicetak ke PDF; guru biasa tidak perlu membaca JSON.
+    return new NextResponse(renderExportHtml(data as ExportData),{status:200,headers:{
+      "Content-Type":"text/html; charset=utf-8",
+      "Content-Disposition":`attachment; filename="data-les-privat-${day}.html"`,
       "Cache-Control":"private, no-store"
     }});
   } catch(error) { return errorResponse(error); }

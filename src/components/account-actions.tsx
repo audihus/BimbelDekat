@@ -22,7 +22,7 @@ export function AccountForm({ action, endpoint = "/api/account", buttonLabel, to
     try {
       const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...(action ? { action } : {}), ...values }) });
       if (download && response.ok) {
-        const name = /filename="([^"]+)"/.exec(response.headers.get("Content-Disposition") ?? "")?.[1] ?? "ekspor.json";
+        const name = /filename="([^"]+)"/.exec(response.headers.get("Content-Disposition") ?? "")?.[1] ?? "data-les-privat.html";
         const link = document.createElement("a");
         link.href = URL.createObjectURL(await response.blob());
         link.download = name;
