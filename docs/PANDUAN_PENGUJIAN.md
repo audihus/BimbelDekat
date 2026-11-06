@@ -32,7 +32,7 @@ Jalankan berurutan. Server dev (langkah 5) harus hidup untuk tes e2e.
 | Perintah | Yang diuji | Hasil yang diharapkan |
 | --- | --- | --- |
 | `npm run typecheck` | Kesalahan tipe TypeScript | Tanpa keluaran error |
-| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan, tautan WhatsApp | `Tests 109 passed` |
+| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan, tautan WhatsApp | `Tests 112 passed` |
 | `npm run test:db` | Basis data nyata: hak akses, jatah, hapus akun, ekspor, moderasi, pembatas, statistik iklan | `18 database checks passed` |
 | `npx playwright test` | Aplikasi nyata lewat HTTP: login, isolasi data, pembatas, aksi akun, admin | `passed` untuk semua |
 | `npm run build` | Build produksi | Selesai tanpa error |

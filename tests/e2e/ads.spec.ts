@@ -41,11 +41,11 @@ test("Beranda guru mengutamakan iklan: status berubah dari belum dibuat, diperik
   const first=await (await t.get("/dashboard")).text();
   expect(first).toContain("Iklan Anda belum dibuat");
   expect(first).toContain("Catatan bimbel");                       // kartu opsional tetap ada, tetapi sebagai undangan
-  expect(first).toContain("Boleh juga tidak dipakai");
-  expect(first).toContain("Belum ada angka");
+  expect(first).toContain("Fitur ini opsional");
+  expect(first).toContain("Belum ada data");
   expect(first).not.toContain("Bagikan iklan Anda");
   // Tiga contoh iklan tampil untuk guru yang belum punya iklan, berlabel jelas, dan tidak bocor ke pencarian publik.
-  expect(first).toContain("Contoh iklan guru yang menarik");
+  expect(first).toContain("Contoh iklan yang menarik");
   for(const name of ["Bu Maya","Pak Dimas","Kak Alya"])expect(first,name).toContain(name);
   expect(first).toContain("bukan guru sungguhan");
   const anon=await request.newContext({baseURL:"http://127.0.0.1:3000"});
@@ -96,6 +96,6 @@ test("guru yang punya murid melihat ringkasan catatan bimbel, tetapi iklan tetap
   const html=await (await t.get("/dashboard")).text();
   expect(html).toContain("Murid aktif");
   expect(html.indexOf("Iklan Anda belum dibuat")).toBeLessThan(html.indexOf("Murid aktif"));
-  expect(html).not.toContain("Boleh juga tidak dipakai");
+  expect(html).not.toContain("Fitur ini opsional");
   await t.dispose();
 });

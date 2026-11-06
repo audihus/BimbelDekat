@@ -13,31 +13,31 @@ export const dynamic="force-dynamic";
 
 // Halaman depan untuk ORANG TUA yang mencari bimbel. Halaman untuk guru ada di /untuk-guru.
 const trust=[
-  {icon:ShieldCheck,text:"Iklan guru dicek tim kami sebelum tayang"},
+  {icon:ShieldCheck,text:"Iklan ditinjau tim kami sebelum tayang"},
   {icon:MessageCircle,text:"Hubungi guru langsung lewat WhatsApp"},
-  {icon:House,text:"Bimbel online, atau guru datang ke rumah"}
+  {icon:House,text:"Bimbel online atau tatap muka di rumah"}
 ];
 const steps=[
-  {kind:"cari" as const,title:"Cari sesuai kebutuhan",body:"Ketik pelajaran dan pilih kota. Bimbel online bisa dicari dari mana saja."},
-  {kind:"peta" as const,title:"Lihat tarif dan wilayah",body:"Kartu guru menunjukkan tarif mulai berapa, wilayah yang didatangi, dan apakah guru masih menerima murid."},
-  {kind:"chat" as const,title:"Hubungi lewat WhatsApp",body:"Satu tombol untuk menanyakan jadwal dan kesepakatan. Anda berhubungan langsung dengan guru."}
+  {kind:"cari" as const,title:"Cari sesuai kebutuhan",body:"Masukkan pelajaran dan lokasi."},
+  {kind:"peta" as const,title:"Lihat tarif dan wilayah",body:"Bandingkan tarif, wilayah, dan ketersediaan guru."},
+  {kind:"chat" as const,title:"Hubungi lewat WhatsApp",body:"Sepakati jadwal langsung dengan guru."}
 ];
 const faq=[
-  {q:"Bagaimana cara membayar guru?",a:`Pembayaran diatur langsung antara Anda dan guru, di luar ${APP_NAME}. Sepakati tarif dan cara bayar sebelum mulai.`},
-  {q:"Apakah guru sudah diverifikasi?",a:`Isi iklan guru ditinjau tim kami sebelum tayang, tetapi kami belum memeriksa ijazah atau latar belakang guru. Tanyakan langsung ke guru, dan sebaiknya bertemu dulu sebelum mulai.`},
-  {q:"Apa bedanya bimbel online dan tatap muka?",a:"Bimbel online dilakukan lewat video, jadi bisa dengan guru dari kota mana saja. Bimbel tatap muka berarti guru datang ke rumah, hanya di wilayah yang tercantum di iklannya."},
-  {q:"Bagaimana kalau di kota saya belum ada guru?",a:"Coba cari bimbel online, atau kurangi pilihan wilayah. Guru baru terus bergabung dan iklannya muncul di hasil pencarian setelah dicek."}
+  {q:"Bagaimana cara membayar guru?",a:`Diatur langsung antara Anda dan guru, di luar ${APP_NAME}. Sepakati tarif sebelum mulai.`},
+  {q:"Apakah guru sudah diverifikasi?",a:`Isi iklan ditinjau sebelum tayang, tetapi ijazah dan latar belakang guru belum kami periksa. Tanyakan langsung kepada guru.`},
+  {q:"Apa bedanya bimbel online dan tatap muka?",a:"Online dilakukan lewat video, dari kota mana saja. Tatap muka berarti guru datang ke rumah, di wilayah yang tercantum pada iklan."},
+  {q:"Bagaimana kalau di kota saya belum ada guru?",a:"Coba bimbel online atau kurangi pilihan wilayah. Guru baru terus bergabung."}
 ];
 
 export default async function Home(){
   const {teachers}=await publicTeachers();
   const shown=teachers.slice(0,3);
-  return <><PublicHeader current="orangtua"/><main id="main" className="public-main">
+  return <><PublicHeader current="beranda"/><main id="main" className="public-main">
     <section className="hero" aria-labelledby="judul-cari">
       <div>
         <p className="eyebrow">Untuk orang tua dan murid</p>
         <h1 id="judul-cari">Cari bimbel privat di dekat rumah Anda.</h1>
-        <p className="lead">Pilih pelajaran dan lokasi, lihat tarif dan wilayah mengajar, lalu hubungi guru langsung lewat WhatsApp.</p>
+        <p className="lead">Pilih pelajaran dan lokasi, lalu hubungi guru langsung lewat WhatsApp.</p>
         <form action="/cari" className="card hero-search" role="search" aria-label="Cari bimbel">
           <div className="filter-main"><Field label="Pelajaran atau nama guru" name="q" placeholder="Contoh: Matematika"/><RegionAreaFilter/></div>
           <button type="submit" className="btn big"><Search size={19} aria-hidden="true"/>Cari bimbel</button>
@@ -60,6 +60,6 @@ export default async function Home(){
 
     <section style={{marginTop:64}} aria-labelledby="judul-faq"><div className="section-heading"><p className="eyebrow">Tanya jawab</p><h2 id="judul-faq">Pertanyaan yang sering muncul.</h2></div><Faq items={faq}/></section>
 
-    <section className="ribbon" style={{marginTop:64}} aria-labelledby="judul-guru-cta"><div><h2 id="judul-guru-cta">Anda guru bimbel privat?</h2><p className="muted" style={{marginTop:4}}>Pasang iklan Anda di sini dan dapatkan murid baru.</p></div><Link href="/untuk-guru" className="btn">Untuk guru <ArrowRight size={17} aria-hidden="true"/></Link></section>
+    <section className="ribbon" style={{marginTop:64}} aria-labelledby="judul-guru-cta"><div><h2 id="judul-guru-cta">Anda guru bimbel privat?</h2><p className="muted" style={{marginTop:4}}>Pasang iklan dan dapatkan murid baru.</p></div><Link href="/untuk-guru" className="btn">Untuk guru <ArrowRight size={17} aria-hidden="true"/></Link></section>
   </main><PublicFooter/></>;
 }

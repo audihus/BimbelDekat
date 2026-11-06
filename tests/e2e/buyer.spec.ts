@@ -78,6 +78,7 @@ test("dua tampilan terpisah: header memuat Cari bimbel dan Untuk guru, tanpa Mas
   const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
   for(const path of ["/","/untuk-guru","/cari"]){
     const header=headerOf(await (await visitor.get(path)).text());
+    expect(header,path).toContain(">Beranda<");                     // permintaan: opsi Beranda di navbar
     expect(header,path).toContain('href="/cari"');
     expect(header,path).toContain('href="/untuk-guru"');
     expect(header,path).not.toContain('href="/masuk"');             // arahan: bilah navigasi tanpa Masuk
@@ -103,7 +104,7 @@ test("halaman depan untuk ORANG TUA: cari bimbel, langkah di dalam kartu, tanya 
   expect(html).toMatch(/class="hero-art" aria-hidden="true"/);
   // Tanya jawab jujur: tidak menjanjikan verifikasi guru.
   expect(text).toContain("Apakah guru sudah diverifikasi?");
-  expect(text).toContain("belum memeriksa ijazah");
+  expect(text).toContain("belum kami periksa");
   // Ini halaman orang tua: tidak ada ajakan daftar untuk guru selain tautan ke halaman guru.
   expect(text).not.toContain("Daftarkan diri Anda");
   expect(html).toContain('href="/untuk-guru"');

@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { GraduationCap, FolderOpen } from "lucide-react";
+import { GraduationCap, FolderOpen, ArrowLeft } from "lucide-react";
 import { APP_NAME,APP_TAGLINE } from "@/lib/brand";
 
 export function Brand(){return <Link href="/" className="brand" aria-label={`${APP_NAME}, halaman awal`}><span className="brand-mark"><GraduationCap size={23} aria-hidden="true"/></span><span>Bimbel<span style={{color:"var(--primary)"}}>Dekat</span></span></Link>;}
 // Header publik sengaja hanya memuat logo dan dua tujuan: Cari bimbel (orang tua) dan Untuk guru. Tanpa tombol Masuk/Daftar di sini.
-export function PublicHeader({current}:{current?:"orangtua"|"guru"}){return <div className="public-header-wrap"><header className="public-header"><Brand/><nav aria-label="Navigasi utama" className="public-nav"><Link href="/cari" aria-current={current==="orangtua"?"page":undefined} className={current==="orangtua"?"active":""}>Cari bimbel</Link><Link href="/untuk-guru" aria-current={current==="guru"?"page":undefined} className={current==="guru"?"active":""}>Untuk guru</Link></nav></header></div>;}
+export function PublicHeader({current}:{current?:"beranda"|"orangtua"|"guru"}){const item=(key:NonNullable<typeof current>,href:string,label:string)=><Link href={href} aria-current={current===key?"page":undefined} className={current===key?"active":""}>{label}</Link>;return <div className="public-header-wrap"><header className="public-header"><Brand/><nav aria-label="Navigasi utama" className="public-nav">{item("beranda","/","Beranda")}{item("orangtua","/cari","Cari bimbel")}{item("guru","/untuk-guru","Untuk guru")}</nav></header></div>;}
+// Tombol kembali yang jelas terlihat sekilas (bukan tautan teks kecil).
+export function BackLink({href,children}:{href:string;children:React.ReactNode}){return <Link href={href} className="back-btn"><ArrowLeft size={18} aria-hidden="true"/>{children}</Link>;}
 export function PublicFooter(){return <footer className="public-footer"><div className="footer-grid"><div className="stack-sm"><Brand/><p className="muted" style={{fontSize:".9rem"}}>{APP_TAGLINE}.</p><p className="muted" style={{fontSize:".85rem"}}>{APP_NAME} mempertemukan orang tua dan guru. Pembayaran diatur langsung antara keduanya.</p></div><nav aria-label="Untuk orang tua" className="stack-sm"><h2>Untuk orang tua</h2><Link href="/cari">Cari bimbel</Link></nav><nav aria-label="Untuk guru" className="stack-sm"><h2>Untuk guru</h2><Link href="/untuk-guru">Pasang iklan bimbel</Link><Link href="/daftar">Daftar jadi guru</Link><Link href="/masuk">Sudah punya akun? Masuk</Link></nav></div><p className="footer-copy">© 2026 {APP_NAME}</p></footer>;}
 // Warna avatar tetap untuk satu nama, supaya kartu tidak seragam tetapi tidak berganti-ganti saat dimuat ulang.
 export const avatarTone=(name:string)=>String([...name].reduce((n,c)=>n+c.charCodeAt(0),0)%5);

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireWorkspace } from "@/lib/session";
-import { Badge,Field,SelectField,TextareaField } from "@/components/ui";
+import { Badge,BackLink,Field,SelectField,TextareaField } from "@/components/ui";
 import { CommandForm } from "@/components/command-form";
 import { LessonList } from "@/components/lesson-list";
 import { QuickLessonForm } from "@/components/quick-lesson-form";
@@ -33,7 +33,7 @@ export default async function StudentDetail({params}:{params:Promise<{id:string}
   const today=dateKey(new Date().toISOString(),account.timezone);
   const due=openPacks.reduce((n,p)=>n+BigInt(p.due),0n);
   return <div className="stack">
-    <Link href="/murid" className="text-link">← Semua murid</Link>
+    <div><BackLink href="/murid">Daftar murid</BackLink></div>
     <div className="page-heading row between"><div className="row"><span className="avatar large">{student.name.slice(0,1).toUpperCase()}</span><div><h1>{student.name}</h1><p>{student.level}{student.guardian_phone?` · WhatsApp orang tua ${student.guardian_phone}`:""}</p></div></div><Badge tone={student.archived?"amber":"green"}>{student.archived?"Sudah berhenti bimbel":"Masih bimbel"}</Badge></div>
     {student.archived&&<p className="notice warning">Murid ini sudah berhenti bimbel. Riwayatnya tetap tersimpan. Jadwal yang dibatalkan dan tautan yang dimatikan tidak aktif lagi saat murid diaktifkan kembali.</p>}
 
