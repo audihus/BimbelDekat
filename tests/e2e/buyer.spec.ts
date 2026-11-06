@@ -89,6 +89,12 @@ test("halaman depan: ajakan mendaftar untuk guru lebih dulu, pencari tepat di ba
   expect(html).toContain('role="search"');
   expect(html).toContain('action="/cari"');
   expect(html).toContain("/cari?q=Matematika");
+  // Tiga langkah: nomor berada DI DALAM kartu (bukan menggantung di tepinya) dan tiap kartu punya gambar.
+  const steps=[...html.matchAll(/<article class="card step">([\s\S]*?)<\/article>/g)].map(m=>m[1]);
+  expect(steps).toHaveLength(3);
+  steps.forEach((card,i)=>{expect(card).toContain(`class="step-num"`);expect(card).toContain('class="step-art"');expect(visible(card)).toContain(String(i+1));});
+  expect(html).toContain('class="hero-art"');                       // ilustrasi hero ada dan hanya hiasan
+  expect(html).toMatch(/class="hero-art" aria-hidden="true"/);
   expect(text.indexOf("Punya les privat?")).toBeLessThan(text.indexOf("Mencari guru les untuk anak Anda?"));   // guru dulu, lalu pencari
   await visitor.dispose();
 });

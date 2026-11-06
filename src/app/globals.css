@@ -192,15 +192,36 @@ td{padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .hero-preview .card{box-shadow:var(--shadow-lift)}
 .hero-note{font-size:.92rem;color:var(--muted);margin-top:18px}
 .hero-note a{color:var(--primary-dark);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.hero-art{position:relative;width:100%;max-width:460px;aspect-ratio:1/1;justify-self:center;container-type:inline-size}
+.hero-art-bg{position:absolute;inset:0;width:100%;height:100%}
+.phone{position:absolute;left:4%;top:5%;width:56%;height:90%;background:#fff;border:1.8cqw solid #292524;border-radius:8cqw;box-shadow:var(--shadow-lift);overflow:hidden;display:flex;flex-direction:column}
+.phone-bar{background:var(--wa);color:#fff;display:flex;align-items:center;gap:2cqw;padding:2.4cqw 3cqw;font-size:max(9px,2.5cqw);line-height:1.25}
+.phone-bar small{display:block;opacity:.85;font-size:max(8px,2.1cqw)}
+.phone-av{width:7cqw;height:7cqw;border-radius:50%;background:#fff;color:var(--wa);display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+.phone-chat{flex:1;background:#fff7ed;padding:3cqw;display:grid;gap:2cqw;align-content:start}
+.bub{max-width:88%;padding:2cqw 2.6cqw;border-radius:3cqw;font-size:max(8.5px,2.4cqw);line-height:1.35}
+.bub.in{justify-self:start;background:#fff;border:1px solid var(--border)}
+.bub.out{justify-self:end;background:var(--wa-soft)}
+.phone-input{display:flex;align-items:center;gap:2cqw;padding:2cqw;border-top:1px solid var(--border)}
+.phone-input span{flex:1;height:5cqw;border-radius:99px;background:#f5f0ea}
+.phone-input i{width:5cqw;height:5cqw;border-radius:50%;background:var(--wa)}
+.chip{position:absolute;display:flex;align-items:center;gap:1.4cqw;background:#fff;border-radius:3.4cqw;padding:2cqw 2.8cqw;box-shadow:var(--shadow-lift);font-size:max(8.5px,2.5cqw);font-weight:700;line-height:1.25;max-width:36cqw;flex-wrap:wrap}
+.showcase{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.showcase-art{background:linear-gradient(135deg,#ffedd5,#fff7ed 60%,#fef3c7);border:1px solid var(--border);border-radius:28px;padding:28px;display:grid;gap:14px;justify-items:center}
+.showcase-art>.card{width:100%;max-width:420px}
 .cta-short{display:none}
-.search-band{margin-top:-36px;position:relative;z-index:2;padding:0 24px}
+.search-band{margin-top:28px}
 .search-band .card{box-shadow:var(--shadow-lift)}
 .search-band h2{font-size:1.1rem}
 .section-heading{margin-bottom:28px}
 .section-heading h2{font-size:1.9rem;margin-top:10px;letter-spacing:-.018em}
-.steps{counter-reset:langkah}
-.step{position:relative;padding-top:34px}
-.step:before{counter-increment:langkah;content:counter(langkah);position:absolute;top:-18px;left:22px;width:40px;height:40px;border-radius:14px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.step{display:flex;flex-direction:column;gap:14px}
+.step-art{background:linear-gradient(135deg,#fff3e4,#ffedd5);border-radius:14px;display:grid;place-items:center;padding:10px 14px}
+.step-art svg{width:100%;max-width:210px;height:auto}
+.step-head{display:flex;align-items:center;gap:12px}
+.step-num{flex:0 0 36px;width:36px;height:36px;border-radius:12px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800}
+.step-head h3{font-size:1.1rem}
 .feature-icon{width:44px;height:44px;border-radius:14px;background:var(--primary-soft);display:grid;place-items:center;color:var(--primary);margin-bottom:16px}
 .cta-band{display:grid;justify-items:center;text-align:center;gap:14px;padding:56px 24px;border-radius:32px;background:var(--primary);color:#fff}
 .cta-band h2{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.018em;max-width:640px}
@@ -273,6 +294,9 @@ a:hover>.teacher-card,.teacher-card:hover{box-shadow:var(--shadow-lift)}
   .auth-page{gap:40px}
 }
 @media(max-width:800px){
+  .steps{grid-template-columns:1fr}
+  .showcase{grid-template-columns:1fr;gap:28px}
+  .showcase-art{padding:18px}
   .sidebar{display:none}
   .shell-content{margin-left:0}
   .topbar{height:72px;padding:0 20px}
@@ -287,7 +311,7 @@ a:hover>.teacher-card,.teacher-card:hover{box-shadow:var(--shadow-lift)}
   .card{padding:20px}
   .hero{grid-template-columns:1fr;padding:36px 22px;gap:28px;border-radius:26px}
   .hero-preview{max-width:480px;justify-self:center;width:100%;padding:0}
-  .search-band{margin-top:-20px;padding:0 8px}
+  .search-band{margin-top:20px}
   .auth-page{grid-template-columns:1fr;max-width:500px;padding-top:20px}
   .auth-intro{display:none}
   .public-header{height:72px;padding:0 18px}
