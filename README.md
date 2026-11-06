@@ -1,35 +1,64 @@
 # BimbelDekat
 
-Tempat guru bimbel mandiri memasang iklan dan ditemukan calon murid (profil, penawaran, pilihan wilayah, tombol WhatsApp, tautan yang bisa dibagikan). Pencatatan murid, jadwal (kalender), dan pembayaran tersedia sebagai fitur opsional. Implementasi lokal masih berlangsung; daftar kebutuhan dan keputusan produk ada di [PRD](./PRD_Platform_Les_Privat_v0_2.md).
+**Bimbel privat di sekitar Anda.** Tempat guru bimbel privat mandiri memasang iklan, dan tempat orang tua menemukan guru lalu menghubunginya lewat WhatsApp.
+
+## Masalah
+
+- **Guru privat mandiri sulit ditemukan.** Murid baru biasanya datang dari mulut ke mulut atau grup WhatsApp, sehingga jangkauannya terbatas.
+- **Orang tua sulit membandingkan guru.** Tarif, wilayah, dan ketersediaan guru tersebar di banyak chat, dan tidak ada tempat yang menyatukannya.
+- **Pencatatan murid sering berantakan.** Jadwal, sisa pertemuan, dan pembayaran dicatat di buku atau riwayat chat.
+
+## Solusi
+
+BimbelDekat mengutamakan **iklan guru**. Pencatatan murid hanya pelengkap dan sengaja dibuat sangat ringkas.
+
+| Untuk | Yang didapat |
+| --- | --- |
+| **Orang tua** (`/`) | Cari bimbel menurut pelajaran, kelas, dan lokasi; lihat tarif dan wilayah; hubungi guru lewat satu tombol WhatsApp. Tanpa akun. |
+| **Guru** (`/untuk-guru`) | Iklan bimbel yang ditinjau sebelum tayang, tautan pribadi untuk dibagikan, statistik kunjungan dan klik WhatsApp, serta tiga contoh iklan sebagai acuan. |
+| **Guru (opsional)** | Catatan murid, paket pertemuan, jadwal kalender, dan pembayaran. Orang tua dapat melihat ringkasannya lewat tautan berlaku 7 hari, tanpa akun. |
+
+Pembayaran diatur langsung antara orang tua dan guru, di luar aplikasi.
+
+## Teknologi
+
+Next.js 16, React 19, TypeScript, Tailwind 4, Zod 4, dan Supabase (PostgreSQL + Auth). Seluruh perubahan data lewat satu perintah RPC (`app_command`) dengan aturan bisnis dan hak akses (RLS) di basis data. Rincian arsitektur ada di [CLAUDE.md](./CLAUDE.md), kebutuhan produk di [PRD](./PRD_Platform_Les_Privat_v0_2.md), istilah di [GLOSSARY.md](./GLOSSARY.md), dan gaya tampilan di [docs/DESAIN.md](./docs/DESAIN.md).
 
 ## Menjalankan di komputer
 
-Persyaratan: Node.js 22 atau lebih baru, npm, dan Docker Desktop yang sedang berjalan. Perintah di bawah dijalankan dari folder proyek.
+Persyaratan: Node.js 22+, npm, dan Docker Desktop yang sedang berjalan.
 
-1. Instal dependensi: `npm install`.
-2. Buat jaringan Docker lokal sekali: `docker network create les-privat-dev`.
-3. Jalankan Supabase lokal: `npx supabase start --network-id les-privat-dev --exclude studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor`.
-4. Buat konfigurasi lokal: `node scripts/local-env.mjs`. Skrip tidak menampilkan kunci dan tidak menimpa `.env.local` yang bukan dibuat untuk proyek ini.
-5. Isi data contoh: `node scripts/seed-local.mjs`. Skrip hanya menerima alamat Supabase lokal proyek ini.
-6. Jalankan aplikasi: `npm run dev -- --port 3000`, lalu buka `http://127.0.0.1:3000`.
+```bash
+npm install
+docker network create les-privat-dev            # sekali saja
+npx supabase start --network-id les-privat-dev --exclude studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor
+node scripts/local-env.mjs                      # membuat .env.local (tanpa menampilkan kunci)
+node scripts/seed-local.mjs                     # data contoh, hanya untuk Supabase lokal
+npm run dev -- --port 3000
+```
 
-Akun contoh lokal: `rina@example.test`, `budi@example.test`, dan `admin@example.test`. Kata sandi contoh: `ContohLesPrivat!2026`. Akun ini hanya untuk data contoh lokal.
+Buka `http://127.0.0.1:3000`. Akun contoh lokal: `rina@example.test` (guru), `budi@example.test` (guru), `admin@example.test` (pengelola), kata sandi `ContohLesPrivat!2026`. Kotak email uji ada di `http://127.0.0.1:55324`. Akun dan kunci ini hanya untuk lokal.
 
-Kotak email uji lokal tersedia di `http://127.0.0.1:55324`. Jangan memakai akun contoh atau kunci lokal untuk produksi.
+## Pengujian
 
-## Pemeriksaan
+```bash
+npm run typecheck      # tipe TypeScript
+npm test               # tes unit (tanpa layanan)
+npm run test:db        # SQL, hak akses, dan konkurensi di PostgreSQL lokal
+npx playwright test    # integrasi HTTP dan alur browser (butuh Supabase lokal)
+npm run build
+```
 
-Langkah lengkap beserta daftar uji manual di browser ada di [panduan pengujian](./docs/PANDUAN_PENGUJIAN.md). Cara memakai aplikasinya ada di [panduan pengguna](./docs/PANDUAN_PENGGUNA.md).
+Daftar uji manual di browser ada di [docs/PANDUAN_PENGUJIAN.md](./docs/PANDUAN_PENGUJIAN.md), dan cara memakai aplikasi di [docs/PANDUAN_PENGGUNA.md](./docs/PANDUAN_PENGGUNA.md).
 
-- `npm test`: aturan domain, validasi, pencarian, enkripsi sesi, penyaringan log, pembatas percobaan, wilayah, kalender, dokumen unduhan, dan kelengkapan iklan.
-- `npm run test:db`: transaksi, hak akses, hapus akun, ekspor, moderasi, dan pembatas pada PostgreSQL lokal melalui Docker.
-- `npm run typecheck`: pemeriksaan tipe TypeScript.
-- `npm run build`: build Next.js.
-- `npx playwright test`: pemeriksaan integrasi lewat HTTP (login, isolasi data, pembatas, aksi akun, halaman pengelola, wilayah, kalender, Beranda iklan); memerlukan Supabase lokal dan konfigurasi `.env.local`.
-- `node scripts/process-deletions.mjs`: menghapus akun yang permintaan penghapusannya sudah lewat 7 hari (belum dijadwalkan otomatis).
+Di Windows, Docker Desktop kadang menahan permintaan pertama ke Supabase lokal ("fetch failed" atau timeout). Pada mesin pengembang, penyebabnya batas memori WSL (`~/.wslconfig`); naikkan ke `memory=4GB` lalu jalankan `wsl --shutdown`.
 
-Di Windows, Docker Desktop kadang menahan atau me-reset permintaan ke Supabase lokal ("fetch failed" atau "aborted due to timeout"). Penyebab di mesin pengembang: `~/.wslconfig` membatasi WSL hanya `memory=1GB`, sehingga penerus port Docker ke Windows tersendat; setelah dinaikkan ke `4GB` (lalu `wsl --shutdown` dan buka ulang Docker Desktop), macet hilang pada pengukuran. Bila terulang, naikkan batas itu. Kode lokal juga mengulang permintaan sebagai lapisan kedua.
+## Status
 
-## Pekerjaan yang belum selesai
+Aplikasi **belum siap untuk data nyata**. Belum ada tinjauan keamanan independen, dan belum diuji di perangkat nyata. Belum selesai:
 
-Alur pemulihan dengan kode sekali pakai, foto profil, saluran lapor profil/bantuan, penjadwalan otomatis penghapusan akun, serta pemulihan cadangan masih harus diselesaikan dan diuji. Pengujian browser menyeluruh baru berupa daftar uji manual; belum ada tes otomatis di browser. Belum ada tinjauan keamanan independen, sehingga aplikasi belum boleh dipakai dengan data nyata. Penyedia email produksi, biaya, konfigurasi Vercel/Supabase produksi, dan deployment belum ditetapkan.
+- kode pemulihan akun sekali pakai, foto profil, dan saluran lapor atau bantuan;
+- penjadwalan otomatis penghapusan akun (`node scripts/process-deletions.mjs` masih dijalankan manual) dan uji pemulihan cadangan;
+- halaman Kebijakan Privasi dan Kontak;
+- penyedia email produksi, biaya, serta konfigurasi Vercel dan Supabase produksi;
+- pemeriksaan ketersediaan nama BimbelDekat (domain, merek, toko aplikasi).
