@@ -14,8 +14,8 @@ export function NavLinks({role,restricted,mobile=false}:{role:string;restricted:
   const render=(items:NavItem[])=>items.map(link=>{const active=path===link.href||path.startsWith(link.href+"/");return <Link key={link.href} href={link.href} aria-current={active?"page":undefined} className={`nav-link ${active?"active":""}`}><link.icon size={19} aria-hidden="true"/>{link.label}</Link>;});
   if(restricted||role==="admin"){
     const items=restricted?[akun]:[{href:"/admin",label:"Moderasi",icon:ShieldCheck},akun];
-    return mobile?<>{render(items)}</>:<nav aria-label="Navigasi ruang kerja" className="nav-links">{render(items)}</nav>;
+    return mobile?<>{render(items)}</>:<nav aria-label="Menu guru" className="nav-links">{render(items)}</nav>;
   }
   if(mobile)return <>{render([...main,...records,akun])}</>;
-  return <nav aria-label="Navigasi ruang kerja" className="nav-links">{render([...main,akun])}<p className="nav-section nav-subsection" id="nav-catatan">Catatan les (opsional)</p><div className="nav-links" role="group" aria-labelledby="nav-catatan">{render(records)}</div></nav>;
+  return <nav aria-label="Menu guru" className="nav-links">{render([...main,akun])}<p className="nav-section nav-subsection" id="nav-catatan">Catatan les (opsional)</p><div className="nav-links" role="group" aria-labelledby="nav-catatan">{render(records)}</div></nav>;
 }

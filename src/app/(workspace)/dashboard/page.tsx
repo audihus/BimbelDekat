@@ -1,20 +1,31 @@
 import Link from "next/link";
-import { Users,CalendarDays,BookOpen,Wallet,ArrowRight,Plus,CheckCircle2,Circle,Eye,MessageCircle } from "lucide-react";
+import { Users,CalendarDays,BookOpen,Wallet,ArrowRight,Plus,CheckCircle2,Circle,Eye,MessageCircle,Lightbulb } from "lucide-react";
 import { requireWorkspace } from "@/lib/session";
 import { serverSupabase } from "@/lib/supabase/server";
 import { siteUrl } from "@/lib/config";
 import { rupiah } from "@/lib/format";
 import { adChecklist,adStatus } from "@/lib/ad-checklist";
+import { sampleProfiles } from "@/lib/sample-profiles";
 import { Badge,Empty } from "@/components/ui";
 import { CommandForm } from "@/components/command-form";
 import { LessonList } from "@/components/lesson-list";
 import { ShareAd } from "@/components/share-ad";
+import { TeacherCard } from "@/components/teacher-card";
 
 interface AdStats { last7:{views:number;wa_clicks:number}; last30:{views:number;wa_clicks:number} }
 // Statistik hanya pelengkap: bila gagal dimuat, Beranda tetap tampil tanpa angka.
 async function loadStats():Promise<AdStats|null>{
   try { const {data,error}=await (await serverSupabase()).rpc("ad_stats_summary"); return error?null:data as AdStats; }
   catch { return null; }
+}
+
+// Tiga contoh iklan yang bagus. Dibuka bila iklan belum tayang (guru butuh contoh), dilipat bila sudah tayang.
+function Samples({open,cta}:{open:boolean;cta:boolean}){
+  return <section className="card" aria-labelledby="contoh"><details open={open}><summary><h2 id="contoh">Contoh iklan guru yang menarik</h2></summary>
+    <p className="muted" style={{fontSize:".92rem",marginBottom:18}}>Tiga contoh iklan yang sudah lengkap. Ini hanya ilustrasi (guru rekaan, bukan guru sungguhan). Tirulah cara menulisnya, bukan isinya.</p>
+    <div className="grid-3">{sampleProfiles.map(s=><div key={s.document.name} className="stack-sm"><TeacherCard document={s.document} accepting/><div className="offer"><p className="row" style={{fontWeight:700,fontSize:".88rem",gap:6}}><Lightbulb size={15} aria-hidden="true"/>Kenapa menarik</p><ul style={{margin:"8px 0 0",paddingLeft:18,fontSize:".85rem"}} className="muted">{s.why.map(w=><li key={w}>{w}</li>)}</ul></div></div>)}</div>
+    {cta&&<div className="row" style={{marginTop:20}}><Link className="btn" href="/profil">Buat iklan saya <ArrowRight size={16} aria-hidden="true"/></Link></div>}
+  </details></section>;
 }
 
 export default async function Dashboard(){
@@ -29,17 +40,20 @@ export default async function Dashboard(){
   const due=data.packages.reduce((total,p)=>total+BigInt(p.due),0n);
   const low=data.packages.filter(p=>!p.closed_at&&p.remaining<=1&&active.some(s=>s.id===p.student_id));
   const name=profile?.published?.name||profile?.draft.name||account.display_name;
+  const needsAd=["none","draft","rejected"].includes(status.key);
   return <div className="stack">
-    <div className="page-heading"><p className="eyebrow">Beranda</p><h1 style={{marginTop:8}}>Halo, {account.display_name.split(" ")[0]}.</h1><p>Pantau iklan Anda dan bagikan ke calon murid.</p></div>
+    <div className="page-heading"><p className="eyebrow">Beranda</p><h1>Halo, {account.display_name.split(" ")[0]}.</h1><p>Ini ringkasan iklan Anda. Bagikan tautannya ke calon murid.</p></div>
 
     <section className={`card status-card ${status.tone} stack`} aria-labelledby="status-iklan">
       <div className="row between"><h2 id="status-iklan">{status.title}</h2><Badge tone={status.tone}>{live?"Tayang":"Iklan"}</Badge></div>
       <p className="muted">{status.detail}</p>
       <div className="row">
         {status.action&&<Link className="btn" href={status.action.href}>{status.action.label} <ArrowRight size={16} aria-hidden="true"/></Link>}
-        {live&&<CommandForm inline action="profile.accepting" fixed={{accepting:!profile.accepting}} buttonLabel={profile.accepting?"Tandai tidak menerima murid":"Tandai menerima murid"} tone="secondary"/>}
+        {live&&<CommandForm inline action="profile.accepting" fixed={{accepting:!profile.accepting}} buttonLabel={profile.accepting?"Tandai sedang penuh":"Tandai menerima murid baru"} tone="secondary"/>}
       </div>
     </section>
+
+    {needsAd&&<Samples open cta={false}/>}
 
     <div className="grid-2">
       <section className="card stack" aria-labelledby="kelengkapan">
@@ -50,10 +64,10 @@ export default async function Dashboard(){
       </section>
 
       <section className="card stack" aria-labelledby="kinerja">
-        <h2 id="kinerja">Kinerja iklan</h2>
+        <h2 id="kinerja">Dilihat orang</h2>
         {live?(stats?<>
           <div className="grid-2" style={{gap:12}}>
-            <div className="offer"><p className="stat-label row"><Eye size={15} aria-hidden="true"/>Profil dilihat (7 hari)</p><p className="stat-value">{stats.last7.views}</p></div>
+            <div className="offer"><p className="stat-label row"><Eye size={15} aria-hidden="true"/>Iklan dibuka (7 hari)</p><p className="stat-value">{stats.last7.views}</p></div>
             <div className="offer"><p className="stat-label row"><MessageCircle size={15} aria-hidden="true"/>WhatsApp ditekan (7 hari)</p><p className="stat-value">{stats.last7.wa_clicks}</p></div>
           </div>
           <p className="muted" style={{fontSize:".85rem"}}>30 hari terakhir: {stats.last30.views} dilihat, {stats.last30.wa_clicks} klik WhatsApp.</p>
@@ -63,17 +77,19 @@ export default async function Dashboard(){
       </section>
     </div>
 
-    {live&&<section className="card stack" aria-labelledby="bagikan"><h2 id="bagikan">Bagikan iklan Anda</h2><p className="muted" style={{fontSize:".9rem"}}>Kirim tautan ini ke grup orang tua, status WhatsApp, atau media sosial. Orang yang membukanya langsung melihat profil dan tombol hubungi Anda.</p><ShareAd url={`${siteUrl()}/guru/${profile.id}`} name={name}/></section>}
+    {live&&<section className="card stack" aria-labelledby="bagikan"><h2 id="bagikan">Bagikan iklan Anda</h2><p className="muted" style={{fontSize:".92rem"}}>Kirim tautan ini ke grup orang tua, status WhatsApp, atau media sosial. Yang membukanya langsung melihat iklan dan tombol WhatsApp Anda.</p><ShareAd url={`${siteUrl()}/guru/${profile.id}`} name={name}/></section>}
+
+    {!needsAd&&<Samples open={false} cta={false}/>}
 
     <section className="card stack" aria-labelledby="catatan">
-      <div className="row between"><div><p className="eyebrow">Opsional</p><h2 id="catatan" style={{marginTop:4}}>Catatan les</h2></div><Link href="/murid#tambah" className="btn secondary"><Plus size={16} aria-hidden="true"/>Tambah murid</Link></div>
+      <div className="row between"><div><p className="eyebrow">Boleh dipakai, boleh tidak</p><h2 id="catatan" style={{marginTop:8}}>Catatan les</h2></div><Link href="/murid#tambah" className="btn secondary"><Plus size={16} aria-hidden="true"/>Tambah murid</Link></div>
       {active.length?<>
-        <div className="grid-4">{[{label:"Murid aktif",value:String(active.length),icon:Users},{label:"Jadwal mendatang",value:String(scheduled.length),icon:CalendarDays},{label:"Paket hampir habis",value:String(low.length),icon:BookOpen},{label:"Sisa pembayaran",value:rupiah(due.toString()),icon:Wallet}].map(item=><div className="offer" key={item.label}><div className="row between"><p className="stat-label">{item.label}</p><span className="stat-icon"><item.icon size={18} aria-hidden="true"/></span></div><p className="stat-value" style={{marginTop:8,fontSize:item.label==="Sisa pembayaran"?"1.3rem":undefined}}>{item.value}</p></div>)}</div>
+        <div className="grid-4">{[{label:"Murid aktif",value:String(active.length),icon:Users},{label:"Jadwal mendatang",value:String(scheduled.length),icon:CalendarDays},{label:"Paket hampir habis",value:String(low.length),icon:BookOpen},{label:"Belum dibayar",value:rupiah(due.toString()),icon:Wallet}].map(item=><div className="offer" key={item.label}><div className="row between"><p className="stat-label">{item.label}</p><span className="stat-icon"><item.icon size={18} aria-hidden="true"/></span></div><p className="stat-value" style={{marginTop:8,fontSize:item.label==="Belum dibayar"?"1.3rem":undefined}}>{item.value}</p></div>)}</div>
         <div className="grid-2">
-          <div><div className="card-header"><h3>Pertemuan mendatang</h3><Link href="/jadwal" className="text-link">Kalender jadwal</Link></div><LessonList lessons={scheduled.slice(0,3)} students={data.students} packages={data.packages} timezone={account.timezone} compact/></div>
-          <div><div className="card-header"><h3>Perlu diperhatikan</h3><Badge tone="amber">{low.length} paket</Badge></div>{low.length?<div className="record-list">{low.map(pack=><Link key={pack.id} href={`/murid/${pack.student_id}`} className="record"><span className="avatar"><BookOpen size={19} aria-hidden="true"/></span><div className="grow"><p className="record-name">{data.students.find(s=>s.id===pack.student_id)?.name}</p><p className="record-meta">{pack.name} · {pack.remaining===0?"Jatah habis":"Tersisa 1 pertemuan"}</p></div><ArrowRight size={17} aria-hidden="true"/></Link>)}</div>:<p className="muted" style={{fontSize:".9rem"}}>Tidak ada paket yang perlu diperpanjang.</p>}</div>
+          <div><div className="card-header"><h3>Pertemuan mendatang</h3><Link href="/jadwal" className="text-link">Buka jadwal</Link></div><LessonList lessons={scheduled.slice(0,3)} students={data.students} packages={data.packages} timezone={account.timezone} compact/></div>
+          <div><div className="card-header"><h3>Perlu diperpanjang</h3><Badge tone="amber">{low.length} paket</Badge></div>{low.length?<div className="record-list">{low.map(pack=><Link key={pack.id} href={`/murid/${pack.student_id}`} className="record"><span className="avatar"><BookOpen size={19} aria-hidden="true"/></span><div className="grow"><p className="record-name">{data.students.find(s=>s.id===pack.student_id)?.name}</p><p className="record-meta">{pack.name} · {pack.remaining===0?"Pertemuan habis":"Tinggal 1 pertemuan"}</p></div><ArrowRight size={17} aria-hidden="true"/></Link>)}</div>:<p className="muted" style={{fontSize:".9rem"}}>Belum ada paket yang perlu diperpanjang.</p>}</div>
         </div>
-      </>:<p className="muted">Bila Anda mau, catat murid, jadwal, dan pembayaran les di sini. Boleh juga tidak dipakai; iklan Anda tetap berjalan tanpa ini.</p>}
+      </>:<p className="muted">Mau mencatat murid, jadwal, dan pembayaran les? Bisa di sini. Boleh juga tidak dipakai; iklan Anda tetap berjalan tanpa ini.</p>}
     </section>
   </div>;
 }

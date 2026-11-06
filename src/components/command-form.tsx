@@ -4,8 +4,9 @@ import { useRef,useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle,Check } from "lucide-react";
 import { localToInstant,type IndonesiaZone } from "@/lib/domain/rules";
+import { addMinutes } from "@/lib/calendar";
 
-export function CommandForm({action,fixed={},buttonLabel="Simpan",tone="",inline=false,reset=false,timezone="Asia/Jakarta",children}:{action:string;fixed?:Record<string,unknown>;buttonLabel?:string;tone?:string;inline?:boolean;reset?:boolean;timezone?:IndonesiaZone;children?:React.ReactNode}){
+export function CommandForm({action,fixed={},buttonLabel="Simpan",tone="",inline=false,reset=false,timezone="Asia/Jakarta",quickLesson=false,children}:{action:string;fixed?:Record<string,unknown>;buttonLabel?:string;tone?:string;inline?:boolean;reset?:boolean;timezone?:IndonesiaZone;quickLesson?:boolean;children?:React.ReactNode}){
   const router=useRouter();
   const [pending,setPending]=useState(false);
   const [message,setMessage]=useState("");
@@ -17,6 +18,8 @@ export function CommandForm({action,fixed={},buttonLabel="Simpan",tone="",inline
     const form=event.currentTarget;
     const payload:Record<string,unknown>={...Object.fromEntries(new FormData(form)),...fixed};
     try{
+      // Formulir pertemuan singkat: tanggal + jam + lama menjadi waktu mulai dan selesai.
+      if(quickLesson){const start=`${payload.date}T${payload.time}`;payload.starts_at=start;payload.ends_at=addMinutes(start,Number(payload.minutes));delete payload.date;delete payload.time;delete payload.minutes;}
       for(const field of ["quota","opening_used","delta"]) if(field in payload) payload[field]=Number(payload[field]);
       for(const field of ["archived","charged","accepting","visible"]) if(field in payload && typeof payload[field]==="string") payload[field]=payload[field]==="true" || payload[field]==="on";
       for(const field of ["starts_at","ends_at","paid_at"]) if(typeof payload[field]==="string") {if(payload[field]) payload[field]=localToInstant(payload[field] as string,timezone);else delete payload[field];}

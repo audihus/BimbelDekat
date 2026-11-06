@@ -28,17 +28,17 @@ export function renderExportHtml(data:ExportData):string{
 <p class="meta">Diunduh ${when(data.exported_at)} · Email ${e(data.account.email)} · Waktu ditampilkan dalam ${e(zoneLabel(zone))}</p>
 <p><button type="button" onclick="window.print()">Cetak atau simpan sebagai PDF</button></p>
 <h2>Murid (${data.students.length})</h2>
-${table(["Nama","Jenjang","Telepon wali","Alamat","Catatan","Status"],data.students.map(s=>[e(s.name),e(s.level),e(s.guardian_phone),e(s.address),e(s.notes),s.archived?"Diarsipkan":"Aktif"]),"Belum ada murid.")}
-<h2>Paket pertemuan (${data.packages.length})</h2>
-${table(["Murid","Paket","Jatah","Sisa","Harga disepakati","Sudah dibayar","Sisa pembayaran","Status"],data.packages.map(p=>[student(p.student_id),e(p.name),String(p.quota),String(p.remaining),e(rupiah(p.agreed_price)),e(rupiah(p.received)),e(rupiah(p.due)),p.closed_at?`Ditutup${p.closure_reason?`: ${e(p.closure_reason)}`:""}`:"Berjalan"]),"Belum ada paket.")}
+${table(["Nama","Kelas","WhatsApp orang tua","Alamat","Catatan","Status"],data.students.map(s=>[e(s.name),e(s.level),e(s.guardian_phone),e(s.address),e(s.notes),s.archived?"Sudah berhenti":"Masih les"]),"Belum ada murid.")}
+<h2>Paket les (${data.packages.length})</h2>
+${table(["Murid","Paket","Jumlah pertemuan","Sisa pertemuan","Harga paket","Sudah dibayar","Belum dibayar","Status"],data.packages.map(p=>[student(p.student_id),e(p.name),String(p.quota),String(p.remaining),e(rupiah(p.agreed_price)),e(rupiah(p.received)),e(rupiah(p.due)),p.closed_at?`Diakhiri${p.closure_reason?`: ${e(p.closure_reason)}`:""}`:"Berjalan"]),"Belum ada paket.")}
 <h2>Jadwal pertemuan (${data.lessons.length})</h2>
 ${table(["Waktu mulai","Murid","Paket","Cara","Status","Catatan"],data.lessons.map(l=>[when(l.starts_at),student(l.student_id),e(pack(l.package_id)?.name??"-"),l.mode==="online"?"Online":"Tatap muka",e(lessonLabel(l.status)),e(l.reason)]),"Belum ada pertemuan.")}
 <h2>Pembayaran (${data.payments.length})</h2>
 ${table(["Tanggal","Paket","Jenis","Jumlah","Keterangan"],data.payments.map(p=>[when(p.paid_at),e(pack(p.package_id)?`${data.students.find(s=>s.id===pack(p.package_id)?.student_id)?.name??"-"} · ${pack(p.package_id)?.name}`:"-"),e(kindLabel[p.kind]),e(rupiah(p.amount)),e(p.reason)]),"Belum ada pembayaran.")}
-${profile?`<h2>Profil iklan</h2>
+${profile?`<h2>Iklan Anda</h2>
 <p><strong>${e(profile.name)}</strong> · ${e(profile.regency)}, ${e(profile.province)} · WhatsApp ${e(profile.phone)}</p>
 <p>${e(profile.about)}</p>
-${table(["Pelajaran","Jenjang","Cara","Durasi","Tarif"],profile.offers.map(o=>[e(o.subject),e(o.level),o.mode==="online"?"Online":"Tatap muka",`${o.duration} menit`,e(rupiah(o.price))]),"Belum ada penawaran.")}`:""}
+${table(["Pelajaran","Kelas","Cara","Lama","Tarif"],profile.offers.map(o=>[e(o.subject),e(o.level),o.mode==="online"?"Online":"Tatap muka",`${o.duration} menit`,e(rupiah(o.price))]),"Belum ada les yang diajarkan.")}`:""}
 </body></html>
 `;
 }

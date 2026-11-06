@@ -29,7 +29,7 @@ export async function POST(request:Request) {
       const {error}=await supabase.rpc("cancel_account_deletion");
       if(error) databaseError(error);
       logEvent("info","account.deletion_cancelled",{userId:account.id});
-      return json({message:"Penghapusan dibatalkan. Profil publik masih tersembunyi dan tautan wali lama tetap dicabut; aktifkan profil dan buat tautan baru bila diperlukan."});
+      return json({message:"Penghapusan dibatalkan. Iklan Anda masih tersembunyi dan tautan orang tua yang lama tetap mati; aktifkan iklan dan buat tautan baru bila perlu."});
     }
 
     await requirePassword(account,body.password,body.action);
@@ -38,7 +38,7 @@ export async function POST(request:Request) {
       const {error}=await supabase.rpc("request_account_deletion");
       if(error) databaseError(error);
       logEvent("info","account.deletion_requested",{userId:account.id});
-      return json({message:"Permintaan penghapusan dicatat. Profil disembunyikan dan tautan wali dicabut. Anda punya 7 hari untuk membatalkan.",refresh:true});
+      return json({message:"Permintaan penghapusan dicatat. Iklan Anda disembunyikan dan tautan orang tua dimatikan. Anda punya 7 hari untuk membatalkan.",refresh:true});
     }
 
     if(body.action==="email.change") {

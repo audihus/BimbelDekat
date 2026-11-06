@@ -36,6 +36,6 @@ export function ScheduleCalendar({month,selected,today,byDay,students,zone}:{mon
         </Link>;
       })}
     </div>
-    <p className="cal-legend"><span><i className="cal-dot blue"/>Terjadwal</span><span><i className="cal-dot green"/>Les selesai</span><span><i className="cal-dot amber"/>Dibatalkan</span></p>
+    <p className="cal-legend"><span><i className="cal-dot blue"/>Akan datang</span><span><i className="cal-dot green"/>Sudah selesai</span><span><i className="cal-dot amber"/>Batal</span></p>
   </div>;
 }

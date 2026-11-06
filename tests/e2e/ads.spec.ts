@@ -44,16 +44,24 @@ test("Beranda guru mengutamakan iklan: status berubah dari belum dibuat, diperik
   expect(first).toContain("Boleh juga tidak dipakai");
   expect(first).toContain("Belum ada angka");
   expect(first).not.toContain("Bagikan iklan Anda");
+  // Tiga contoh iklan tampil untuk guru yang belum punya iklan, berlabel jelas, dan tidak bocor ke pencarian publik.
+  expect(first).toContain("Contoh iklan guru yang menarik");
+  for(const name of ["Bu Maya","Pak Dimas","Kak Alya"])expect(first,name).toContain(name);
+  expect(first).toContain("bukan guru sungguhan");
+  const anon=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const publicList=await (await anon.get("/cari")).text();
+  for(const name of ["Bu Maya","Pak Dimas","Kak Alya"])expect(publicList,name).not.toContain(name);
+  await anon.dispose();
   expect(first).toContain("Catatan les (opsional)");            // menu kedua di sidebar
 
   const editor=await (await t.get("/profil")).text();
-  for(const text of ["Iklan saya","Pratinjau di pencarian","Pilih provinsi","Tambah penawaran"])expect(editor,text).toContain(text);
+  for(const text of ["Iklan saya","Pratinjau di pencarian","Pilih provinsi","Tambah les"])expect(editor,text).toContain(text);
 
   const name=`Guru-${randomUUID().slice(0,8)}`;
   const submitted=await command(t,"profile.submit",{document:{name,about:"Mengajar matematika dengan sabar.",phone:"6281234567890",province:"Jawa Barat",regency:"Kota Bekasi",areas:[],offers:[{subject:"Matematika",level:"SD",mode:"online",duration:60,price:"75000"}]}});
   expect(submitted.status(),await submitted.text()).toBe(200);
   const pending=await (await t.get("/dashboard")).text();
-  expect(pending).toContain("Iklan sedang diperiksa");
+  expect(pending).toContain("Iklan sedang dicek tim kami");
   expect(pending).toContain("80%");                             // deskripsi masih di bawah 100 karakter
 
   const profileId=sql(`select p.id from public.teacher_profiles p join public.workspaces w on w.id = p.workspace_id where w.owner_id = '${teacher.id}'::uuid;`);

@@ -20,7 +20,7 @@ const schemas: Record<string, z.ZodType> = {
   "student.create": z.strictObject({ ...student, source: z.enum(["existing", "profile", "search", "other", "unknown"]).default("unknown") }),
   "student.update": z.strictObject({ id, ...student }),
   "student.archive": z.strictObject({ id, archived: z.boolean() }),
-  "package.create": z.strictObject({ student_id: id, name: text, quota: z.number().int().positive(), opening_used: z.number().int().nonnegative().default(0), agreed_price: money }).refine(p => p.opening_used <= p.quota, "Pemakaian awal melebihi jatah."),
+  "package.create": z.strictObject({ student_id: id, name: text, quota: z.number().int().positive(), opening_used: z.number().int().nonnegative().default(0), agreed_price: money }).refine(p => p.opening_used <= p.quota, "Pertemuan yang sudah dipakai tidak boleh lebih banyak dari jumlah pertemuan."),
   "package.close": z.strictObject({ id, reason }),
   "package.adjust_quota": z.strictObject({ id, delta: z.number().int().refine(n => n !== 0), reason }),
   "package.adjust_price": z.strictObject({ id, agreed_price: money, reason }),

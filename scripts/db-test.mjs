@@ -267,9 +267,10 @@ try {
     for (let i = 0; i < 3; i++) await record(franId, "view");
     await record(franId, "wa_click");
     await record(carlId, "view");                  // profil tidak tayang: diabaikan, tidak error
-    await record(randomUUID(), "view");            // ID ngawur: diabaikan, tidak error
+    const ghostId = randomUUID();
+    await record(ghostId, "view");                 // ID ngawur: diabaikan, tidak error
     await assert.rejects(record(franId, "bukan-jenis"), "jenis peristiwa harus dikenal");
-    assert.equal(await pool.query("select count(*) from public.ad_stats where profile_id <> $1::uuid", [franId]), "0", "tidak ada baris untuk profil tak tayang atau ID ngawur");
+    assert.equal(await pool.query("select count(*) from public.ad_stats where profile_id = any($1::uuid[])", [[carlId, ghostId]]), "0", "tidak ada baris untuk profil tak tayang atau ID ngawur");
     const mine = await rpc(fran, "public.ad_stats_summary()");
     assert.deepEqual([mine.last7.views, mine.last7.wa_clicks, mine.last30.views], [3, 1, 3]);
     assert.equal(mine.days.length, 7);

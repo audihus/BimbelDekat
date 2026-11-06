@@ -1,5 +1,5 @@
 import { describe,expect,it } from "vitest";
-import { dateKey,groupByDay,monthGrid,monthParam,parseDay,parseMonth,shiftMonth } from "@/lib/calendar";
+import { addMinutes,dateKey,groupByDay,monthGrid,monthParam,parseDay,parseMonth,shiftMonth } from "@/lib/calendar";
 
 const lesson=(id:string,starts_at:string)=>({id,starts_at});
 
@@ -53,5 +53,21 @@ describe("parameter alamat",()=>{
     expect(shiftMonth({year:2026,month:12},1)).toEqual({year:2027,month:1});
     expect(shiftMonth({year:2026,month:1},-1)).toEqual({year:2025,month:12});
     expect(monthParam({year:2026,month:3})).toBe("2026-03");
+  });
+});
+
+describe("addMinutes (jam selesai dari jam mulai + lama)",()=>{
+  it("menambah menit pada waktu setempat tanpa menggeser zona",()=>{
+    expect(addMinutes("2027-03-15T09:00",60)).toBe("2027-03-15T10:00");
+    expect(addMinutes("2027-03-15T09:30",90)).toBe("2027-03-15T11:00");
+  });
+  it("melewati tengah malam, akhir bulan, dan akhir tahun",()=>{
+    expect(addMinutes("2027-03-15T23:30",60)).toBe("2027-03-16T00:30");
+    expect(addMinutes("2027-02-28T23:30",60)).toBe("2027-03-01T00:30");
+    expect(addMinutes("2026-12-31T23:00",120)).toBe("2027-01-01T01:00");
+  });
+  it("menolak masukan yang bukan waktu setempat yang sah",()=>{
+    expect(()=>addMinutes("ngawur",60)).toThrow();
+    expect(()=>addMinutes("2027-03-15T09:00",0)).toThrow();
   });
 });

@@ -16,7 +16,7 @@ describe("renderExportHtml",()=>{
     const html=renderExportHtml(base);
     expect(html.startsWith("<!doctype html>")).toBe(true);
     expect(html).toContain('<html lang="id">');
-    for(const text of ["Rina Guru","rina@example.test","Arka","Matematika","Les selesai"])expect(html).toContain(text);
+    for(const text of ["Rina Guru","rina@example.test","Arka","Matematika","Sudah selesai"])expect(html).toContain(text);
   });
   it("memformat rupiah dan memakai zona waktu guru (WITA, bukan UTC)",()=>{
     const html=renderExportHtml(base);

@@ -48,8 +48,8 @@ small{font-size:.82rem}
 .lead{font-size:1.08rem;line-height:1.75;color:var(--muted)}
 
 /* 3. Tata letak umum ------------------------------------------------------ */
-.stack{display:grid;gap:20px}
-.stack-sm{display:grid;gap:12px}
+.stack{display:grid;gap:20px;align-content:start}
+.stack-sm{display:grid;gap:12px;align-content:start}
 .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .between{justify-content:space-between}
 .grow{flex:1}
@@ -90,6 +90,8 @@ small{font-size:.82rem}
 .btn.full{width:100%}
 .btn.big{min-height:56px;padding:14px 28px;font-size:1.05rem;border-radius:16px}
 .text-link{color:var(--primary-dark);font-size:.9rem;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+/* Tombol contoh/pratinjau (bukan tautan sungguhan) dibuat redup agar tidak disangka bisa ditekan. */
+[aria-disabled="true"]{opacity:.55;cursor:default;pointer-events:none}
 .empty{padding:36px 20px;text-align:center;display:grid;justify-items:center;gap:10px}
 .empty svg{color:#b8a898}
 .empty p{max-width:440px;color:var(--muted)}

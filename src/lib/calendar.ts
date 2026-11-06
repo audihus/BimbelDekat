@@ -57,3 +57,13 @@ export function shiftMonth({ year, month }: Month, delta: number): Month {
 }
 
 export const monthParam = ({ year, month }: Month) => `${year}-${pad(month)}`;
+
+// Menambah menit pada waktu setempat "YYYY-MM-DDTHH:mm". Dihitung sebagai jam dinding (Indonesia tidak memakai jam musim panas),
+// sehingga hasilnya tetap waktu setempat dan baru diubah ke instan oleh localToInstant.
+export function addMinutes(local: string, minutes: number): string {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local)) throw new Error("Waktu setempat tidak sah.");
+  if (!Number.isInteger(minutes) || minutes <= 0) throw new Error("Lama pertemuan harus lebih dari nol.");
+  const base = Date.parse(`${local}:00Z`);
+  if (Number.isNaN(base)) throw new Error("Waktu setempat tidak sah.");
+  return new Date(base + minutes * 60_000).toISOString().slice(0, 16);
+}

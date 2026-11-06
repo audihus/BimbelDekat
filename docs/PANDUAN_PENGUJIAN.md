@@ -32,7 +32,7 @@ Jalankan berurutan. Server dev (langkah 5) harus hidup untuk tes e2e.
 | Perintah | Yang diuji | Hasil yang diharapkan |
 | --- | --- | --- |
 | `npm run typecheck` | Kesalahan tipe TypeScript | Tanpa keluaran error |
-| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan, tautan WhatsApp | `Tests 102 passed` |
+| `npm test` | Aturan murni: penyaringan log, pembatas, domain, enkripsi sesi, wilayah, kalender, dokumen unduhan, kelengkapan iklan, tautan WhatsApp | `Tests 109 passed` |
 | `npm run test:db` | Basis data nyata: hak akses, jatah, hapus akun, ekspor, moderasi, pembatas, statistik iklan | `18 database checks passed` |
 | `npx playwright test` | Aplikasi nyata lewat HTTP: login, isolasi data, pembatas, aksi akun, admin | `passed` untuk semua |
 | `npm run build` | Build produksi | Selesai tanpa error |
@@ -143,6 +143,16 @@ Di Chrome: tekan `F12`, klik ikon ponsel (Toggle device toolbar), pilih lebar se
 3. Klik **Salin tautan**, tempel di jendela pribadi (tanpa login): halaman profil publik terbuka. Klik **Hubungi lewat WhatsApp** (WhatsApp terbuka di tab baru).
 4. Muat ulang Beranda guru: *Profil dilihat* bertambah **satu** (memuat ulang profil di tab yang sama tidak menambah lagi), *WhatsApp ditekan* bertambah satu.
 5. Tambahkan satu murid di **Murid**: bagian Catatan les di Beranda menampilkan ringkasannya, tetapi status iklan tetap di atas.
+
+### K. Dashboard guru, contoh iklan, dan catatan murid yang singkat
+1. Daftar sebagai guru baru. Beranda: status *Iklan Anda belum dibuat*, lalu bagian **Contoh iklan guru yang menarik** terbuka dengan tiga kartu (Bu Maya, Pak Dimas, Kak Alya) berlabel "bukan guru sungguhan", masing-masing dengan kotak "Kenapa menarik". Tombol di kartu contoh tampak redup dan tidak bisa ditekan. Buka `/cari`: ketiga nama itu **tidak** ada.
+2. **Iklan saya**: istilahnya sehari-hari (Les yang Anda ajarkan, Wilayah yang bisa Anda datangi, Kirim untuk dicek). Isi iklan lalu kirim; admin menyetujui. Beranda: contoh iklan kini dilipat, muncul **Bagikan iklan Anda**.
+3. **Murid**: tambah murid hanya dengan nama (+ kelas dan WhatsApp orang tua bila mau). Buka murid itu: karena belum ada paket, muncul **Mulai dengan paket les** (pelajaran, jumlah pertemuan, harga).
+4. Setelah paket ada: ringkasan besar *Sisa pertemuan* dan *Belum dibayar*. **Tambah pertemuan** hanya menanyakan tanggal, jam, lama, dan cara belajar (jam selesai dihitung otomatis). Coba pukul 23.30 lama 60 menit: selesai 00.30 hari berikutnya. Dua pertemuan di jam yang sama ditolak.
+5. **Catat pembayaran**: isi hanya jumlah uang. *Belum dibayar* berkurang; bila lunas muncul "Lunas". Uang dikembalikan atau koreksi ada di lipatan sendiri dan meminta alasan.
+6. Pertemuan akan datang: **Tandai selesai** mengurangi sisa pertemuan satu. Buka **Pengaturan lain**: ubah jumlah pertemuan/harga, akhiri paket, data murid, dan **Murid berhenti les**.
+7. Halaman **Jadwal**: kalender tetap; form tambah pertemuan sama singkatnya (murid, tanggal, jam, lama).
+8. Di ponsel (375 px): semua halaman di atas terbaca tanpa gulir ke samping; menu bawah tidak menutup tombol.
 
 ## 4. Yang belum bisa diuji (belum dibuat)
 

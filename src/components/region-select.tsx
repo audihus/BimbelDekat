@@ -50,7 +50,7 @@ export function RegionSelect({ value, onChange, names, withDistrict = true, dist
 }
 
 // Versi untuk formulir pencarian (GET): menyimpan pilihannya sendiri dan mengirimnya lewat atribut name.
-// Tata letak ringkas: `lead` (kolom pelajaran) + provinsi + kabupaten/kota terlihat; `extra` (jenjang, cara belajar) dan
+// Tata letak ringkas: `lead` (kolom pelajaran) + provinsi + kabupaten/kota terlihat; `extra` (kelas, cara belajar) dan
 // kecamatan dilipat di "Filter lainnya" agar di ponsel hasil pencarian cepat terlihat. Di layar lebar lipatan dibuka otomatis.
 export function RegionFilter({ initial, districtDisabled, lead, extra, extraActive }: { initial: Region; districtDisabled: boolean; lead: React.ReactNode; extra: React.ReactNode; extraActive: boolean }) {
   // Tautan lama/dibagikan bisa memuat kabupaten/kota tanpa provinsi; nama kabupaten/kota unik, jadi provinsinya dapat disimpulkan.
@@ -61,7 +61,7 @@ export function RegionFilter({ initial, districtDisabled, lead, extra, extraActi
   return <>
     <div className="filter-main">{lead}<RegionSelect filter part="area" value={value} onChange={setValue} names={names} /></div>
     <details ref={more} open={extraActive} className="filter-more">
-      <summary>Filter lainnya (jenjang, cara belajar, kecamatan)</summary>
+      <summary>Filter lainnya (kelas, cara belajar, kecamatan)</summary>
       <div className="form-grid">{extra}<RegionSelect filter part="district" value={value} onChange={setValue} names={names} districtDisabled={districtDisabled} districtLabel="Kecamatan untuk tatap muka (opsional)" /></div>
     </details>
   </>;
