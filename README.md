@@ -49,7 +49,7 @@ npx playwright test    # integrasi HTTP dan alur browser (butuh Supabase lokal)
 npm run build
 ```
 
-Daftar uji manual di browser ada di [docs/PANDUAN_PENGUJIAN.md](./docs/PANDUAN_PENGUJIAN.md), dan cara memakai aplikasi di [docs/PANDUAN_PENGGUNA.md](./docs/PANDUAN_PENGGUNA.md).
+Cara menaikkan ke internet ada di [docs/DEPLOY.md](./docs/DEPLOY.md). Daftar uji manual di browser ada di [docs/PANDUAN_PENGUJIAN.md](./docs/PANDUAN_PENGUJIAN.md), dan cara memakai aplikasi di [docs/PANDUAN_PENGGUNA.md](./docs/PANDUAN_PENGGUNA.md).
 
 Di Windows, Docker Desktop kadang menahan permintaan pertama ke Supabase lokal ("fetch failed" atau timeout). Pada mesin pengembang, penyebabnya batas memori WSL (`~/.wslconfig`); naikkan ke `memory=4GB` lalu jalankan `wsl --shutdown`.
 
@@ -57,8 +57,7 @@ Di Windows, Docker Desktop kadang menahan permintaan pertama ke Supabase lokal (
 
 Aplikasi **belum siap untuk data nyata**. Belum ada tinjauan keamanan independen, dan belum diuji di perangkat nyata. Belum selesai:
 
-- kode pemulihan akun sekali pakai, foto profil, dan saluran lapor atau bantuan;
-- penjadwalan otomatis penghapusan akun (`node scripts/process-deletions.mjs` masih dijalankan manual) dan uji pemulihan cadangan;
-- halaman Kebijakan Privasi dan Kontak;
-- penyedia email produksi, biaya, serta konfigurasi Vercel dan Supabase produksi;
+- kode pemulihan akun sekali pakai dan foto profil;
+- membuat proyek Supabase dan Vercel produksi, email produksi, dan uji pemulihan cadangan (langkah di [docs/DEPLOY.md](./docs/DEPLOY.md); kodenya sudah disiapkan: penghapusan akun terjadwal lewat Vercel Cron, halaman Privasi dan Kontak, robots dan sitemap);
+- peninjauan naskah Kebijakan Privasi oleh orang yang paham hukum;
 - pemeriksaan ketersediaan nama BimbelDekat (domain, merek, toko aplikasi).

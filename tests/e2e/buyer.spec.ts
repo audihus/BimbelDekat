@@ -132,3 +132,25 @@ test("halaman untuk GURU: judul baru, tombol daftar, tanpa kotak cari, dan jalan
   expect(steps).toHaveLength(3);
   await visitor.dispose();
 });
+
+test("halaman kesiapan produksi: privasi, kontak, robots, sitemap, dan cron yang tertutup",async()=>{
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const privacy=visible(await (await visitor.get("/privasi")).text());
+  for(const text of ["Kebijakan Privasi","Data yang kami simpan","Layanan pihak lain","Hak guru atas data"])expect(privacy,text).toContain(text);
+  const contact=visible(await (await visitor.get("/kontak")).text());
+  expect(contact).toContain("Butuh bantuan?");
+  expect(contact).toContain("Melaporkan iklan");
+  // Footer di halaman publik menautkan keduanya.
+  const home=await (await visitor.get("/")).text();
+  expect(home).toContain('href="/privasi"');expect(home).toContain('href="/kontak"');
+  // robots menutup area guru dan API, membuka halaman publik; sitemap memuat halaman tetap.
+  const robots=await (await visitor.get("/robots.txt")).text();
+  expect(robots).toContain("Disallow: /dashboard");expect(robots).toContain("Disallow: /api/");expect(robots).toContain("Sitemap:");
+  const sitemap=await (await visitor.get("/sitemap.xml")).text();
+  for(const path of ["/cari","/untuk-guru","/privasi","/kontak"])expect(sitemap,path).toContain(`${path}</loc>`);
+  expect(sitemap).not.toContain("/dashboard");
+  // Rute cron tertutup tanpa rahasia yang benar (tidak menyentuh basis data).
+  expect((await visitor.get("/api/cron/process-deletions")).status()).toBe(401);
+  expect((await visitor.get("/api/cron/process-deletions",{headers:{authorization:"Bearer salah"}})).status()).toBe(401);
+  await visitor.dispose();
+});

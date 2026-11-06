@@ -195,7 +195,16 @@ td{padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .footer-grid h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--foreground)}
 .footer-grid nav a{color:var(--primary-dark);font-weight:650}
 .footer-grid nav a:hover{text-decoration:underline;text-underline-offset:3px}
-.footer-copy{max-width:1180px;margin:28px auto 0;padding-top:18px;border-top:1px solid var(--border);font-size:.82rem}
+.footer-copy{max-width:1180px;margin:28px auto 0;padding-top:18px;border-top:1px solid var(--border);font-size:.82rem;display:flex;flex-wrap:wrap;gap:6px 20px}
+.footer-copy a{color:var(--muted)}
+.footer-copy a:hover{color:var(--primary-dark);text-decoration:underline}
+.legal{max-width:760px}
+.legal h2{font-size:1.15rem;margin:30px 0 10px}
+.legal p,.legal li{color:var(--muted);line-height:1.7}
+.legal ul{padding-left:22px;display:grid;gap:8px;list-style:disc}
+.legal ul+p{margin-top:16px}
+.legal strong{color:var(--foreground)}
+.legal a,.plain-link{color:var(--primary-dark);font-weight:650;text-decoration:underline;text-underline-offset:3px}
 .hero{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center;padding:56px 56px;border-radius:32px;background:linear-gradient(135deg,#ffedd5 0%,#fff7ed 55%,#fef3c7 100%);border:1px solid var(--border)}
 .hero h1{font-size:clamp(2.2rem,4.8vw,3.5rem);letter-spacing:-.02em;line-height:1.12;margin:18px 0 20px}
 .hero .lead{max-width:540px}
