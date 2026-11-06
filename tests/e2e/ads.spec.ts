@@ -40,7 +40,7 @@ test("Beranda guru mengutamakan iklan: status berubah dari belum dibuat, diperik
 
   const first=await (await t.get("/dashboard")).text();
   expect(first).toContain("Iklan Anda belum dibuat");
-  expect(first).toContain("Catatan les");                       // kartu opsional tetap ada, tetapi sebagai undangan
+  expect(first).toContain("Catatan bimbel");                       // kartu opsional tetap ada, tetapi sebagai undangan
   expect(first).toContain("Boleh juga tidak dipakai");
   expect(first).toContain("Belum ada angka");
   expect(first).not.toContain("Bagikan iklan Anda");
@@ -52,10 +52,10 @@ test("Beranda guru mengutamakan iklan: status berubah dari belum dibuat, diperik
   const publicList=await (await anon.get("/cari")).text();
   for(const name of ["Bu Maya","Pak Dimas","Kak Alya"])expect(publicList,name).not.toContain(name);
   await anon.dispose();
-  expect(first).toContain("Catatan les (opsional)");            // menu kedua di sidebar
+  expect(first).toContain("Catatan bimbel (opsional)");            // menu kedua di sidebar
 
   const editor=await (await t.get("/profil")).text();
-  for(const text of ["Iklan saya","Pratinjau di pencarian","Pilih provinsi","Tambah les"])expect(editor,text).toContain(text);
+  for(const text of ["Iklan saya","Pratinjau di pencarian","Pilih provinsi","Tambah bimbel"])expect(editor,text).toContain(text);
 
   const name=`Guru-${randomUUID().slice(0,8)}`;
   const submitted=await command(t,"profile.submit",{document:{name,about:"Mengajar matematika dengan sabar.",phone:"6281234567890",province:"Jawa Barat",regency:"Kota Bekasi",areas:[],offers:[{subject:"Matematika",level:"SD",mode:"online",duration:60,price:"75000"}]}});
@@ -90,7 +90,7 @@ test("Beranda guru mengutamakan iklan: status berubah dari belum dibuat, diperik
   await visitor.dispose();await t.dispose();await a.dispose();
 });
 
-test("guru yang punya murid melihat ringkasan catatan les, tetapi iklan tetap di atas",async()=>{
+test("guru yang punya murid melihat ringkasan catatan bimbel, tetapi iklan tetap di atas",async()=>{
   const teacher=await signup("teacher");const t=await session(teacher.email);
   expect((await command(t,"student.create",{name:"Murid Ringkas",level:"SD",source:"existing"})).status()).toBe(200);
   const html=await (await t.get("/dashboard")).text();

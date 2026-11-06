@@ -24,7 +24,7 @@ export async function POST(request:Request) {
     // Dokumen HTML yang bisa dibaca di browser dan dicetak ke PDF; guru biasa tidak perlu membaca JSON.
     return new NextResponse(renderExportHtml(data as ExportData),{status:200,headers:{
       "Content-Type":"text/html; charset=utf-8",
-      "Content-Disposition":`attachment; filename="data-les-privat-${day}.html"`,
+      "Content-Disposition":`attachment; filename="data-bimbeldekat-${day}.html"`,
       "Cache-Control":"private, no-store"
     }});
   } catch(error) { return errorResponse(error); }

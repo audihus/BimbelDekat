@@ -1,13 +1,15 @@
-# Panduan Pengguna Platform Les Privat
+# Panduan Pengguna BimbelDekat
 
 Panduan ini menjelaskan cara memakai aplikasi sesuai kondisi kode saat ini (versi lokal, November 2026). Isinya dibagi menurut siapa yang memakai:
 
-- **Guru les** (pengguna utama): bagian 3 sampai 11.
+- **Guru bimbel** (pengguna utama): bagian 3 sampai 11.
 - **Orang tua / calon murid**: bagian 12 dan 13.
 - **Pengelola (admin)**: bagian 14.
 - **Orang yang menjalankan aplikasi di komputer**: Lampiran A.
 
-> **Catatan perubahan tampilan (5 November 2026).** Tampilan dan istilah aplikasi diganti ke bahasa sehari-hari (lihat `GLOSSARY.md`): misalnya *wali* menjadi *orang tua*, *jatah* menjadi *sisa pertemuan*, *diarsipkan* menjadi *berhenti les*, dan *ajukan pemeriksaan* menjadi *kirim untuk dicek*. Panduan ini sudah disesuaikan secara istilah, tetapi rincian langkah pada bagian murid dan jadwal belum dibaca ulang satu per satu terhadap tampilan baru: bila ada yang tidak cocok dengan layar, percayalah pada layar dan beri tahu kami.
+> **Catatan perubahan tampilan (5 November 2026).** Tampilan dan istilah aplikasi diganti ke bahasa sehari-hari (lihat `GLOSSARY.md`): misalnya *wali* menjadi *orang tua*, *jatah* menjadi *sisa pertemuan*, *diarsipkan* menjadi *berhenti bimbel*, dan *ajukan pemeriksaan* menjadi *kirim untuk dicek*. Panduan ini sudah disesuaikan secara istilah, tetapi rincian langkah pada bagian murid dan jadwal belum dibaca ulang satu per satu terhadap tampilan baru: bila ada yang tidak cocok dengan layar, percayalah pada layar dan beri tahu kami.
+
+> **Dua halaman depan dan nama baru.** Aplikasi bernama **BimbelDekat**. Alamat `/` adalah halaman untuk **orang tua** (cari bimbel), dan `/untuk-guru` adalah halaman untuk **guru** (pasang iklan dan daftar). Navbar hanya berisi "Cari bimbel" dan "Untuk guru"; guru yang sudah punya akun masuk lewat "Sudah punya akun? Masuk" di halaman guru atau di footer.
 
 > **Status penting.** Aplikasi masih dalam pengembangan lokal dan belum dipasang online. Jangan memasukkan data murid sungguhan sampai pemeriksaan keamanan dan uji pemulihan data selesai. Bagian yang belum tersedia dicantumkan jujur di bagian 15.
 
@@ -15,14 +17,14 @@ Panduan ini menjelaskan cara memakai aplikasi sesuai kondisi kode saat ini (vers
 
 ## 1. Gambaran singkat
 
-Platform Les Privat adalah **tempat guru les mandiri (SD sampai SMA, les individual) memasang iklan** dan ditemukan calon murid. Fitur utamanya adalah iklan: profil, les yang diajarkan, daerah mengajar, tombol WhatsApp, tautan yang bisa dibagikan, dan angka kinerja iklan. Mencatat murid, jadwal, dan pembayaran adalah **fitur tambahan yang sepenuhnya opsional**; iklan tetap berjalan walau bagian itu tidak dipakai.
+BimbelDekat adalah **tempat guru bimbel mandiri (SD sampai SMA, bimbel individual) memasang iklan** dan ditemukan calon murid. Fitur utamanya adalah iklan: profil, bimbel yang diajarkan, daerah mengajar, tombol WhatsApp, tautan yang bisa dibagikan, dan angka kinerja iklan. Mencatat murid, jadwal, dan pembayaran adalah **fitur tambahan yang sepenuhnya opsional**; iklan tetap berjalan walau bagian itu tidak dipakai.
 
 | Kebutuhan | Fitur |
 | --- | --- |
 | Bagaimana calon murid menemukan saya? | **Iklan saya**: iklan di direktori guru, dengan pilihan provinsi/kabupaten/kecamatan |
 | Berapa orang yang melihat iklan saya? | Kinerja iklan di Beranda (dilihat dan WhatsApp ditekan) |
 | Siapa saja murid saya? (opsional) | Daftar murid, arsip, catatan, kontak orang tua |
-| Berapa sisa pertemuan yang tersisa? | Paket les per murid |
+| Berapa sisa pertemuan yang tersisa? | Paket bimbel per murid |
 | Kapan saya mengajar? | Jadwal berbentuk kalender, anti-bentrok, penjadwalan ulang |
 | Siapa yang sudah bayar? | Catatan pembayaran manual per paket |
 | Bagaimana orang tua tahu perkembangannya? | Tautan ringkasan untuk orang tua (tanpa akun) |
@@ -41,14 +43,14 @@ Aplikasi ini hanya **mencatat**. Uang tidak mengalir lewat aplikasi, WhatsApp ti
 | --- | --- |
 | **Akun** | Tempat privat milik satu guru berisi murid, paket, jadwal, dan pembayaran. |
 | **Iklan** | Halaman promosi guru yang bisa dicari orang. Berbeda dari akun. |
-| **Paket les** | Kesepakatan les untuk satu murid: nama/pelajaran, jumlah pertemuan (sisa pertemuan), dan harga. Satu murid boleh punya beberapa paket (misalnya Matematika dan Bahasa Inggris), masing-masing dihitung sendiri. |
+| **Paket bimbel** | Kesepakatan bimbel untuk satu murid: nama/pelajaran, jumlah pertemuan (sisa pertemuan), dan harga. Satu murid boleh punya beberapa paket (misalnya Matematika dan Bahasa Inggris), masing-masing dihitung sendiri. |
 | **Sisa pertemuan** | Jumlah pertemuan yang menjadi hak murid dalam satu paket (bukan uang). |
-| **Les selesai** | Pertemuan yang benar-benar berlangsung. Mengurangi sisa pertemuan 1. |
+| **Bimbel selesai** | Pertemuan yang benar-benar berlangsung. Mengurangi sisa pertemuan 1. |
 | **Batal (pertemuan tidak berkurang)** | Pertemuan dibatalkan, sisa pertemuan tetap. |
-| **Batal (pertemuan tetap dihitung)** | Pertemuan dibatalkan tetapi sisa pertemuan tetap berkurang 1 karena kesepakatan dengan orang tua. Ini **bukan** les selesai. |
+| **Batal (pertemuan tetap dihitung)** | Pertemuan dibatalkan tetapi sisa pertemuan tetap berkurang 1 karena kesepakatan dengan orang tua. Ini **bukan** bimbel selesai. |
 | **Paket habis** | Semua sisa pertemuan terpakai. |
 | **Paket ditutup** | Paket diakhiri lebih awal. Sisa pertemuan tetap tercatat sebagai "belum dipakai", dan paket tidak bisa dipakai untuk pertemuan baru. |
-| **Murid berhenti les** | Murid dikeluarkan dari daftar aktif tanpa menghapus riwayat. |
+| **Murid berhenti bimbel** | Murid dikeluarkan dari daftar aktif tanpa menghapus riwayat. |
 | **Tautan untuk orang tua** | Tautan baca-saja ke ringkasan satu murid. Berlaku 7 hari. |
 | **Status menerima murid** | Apakah guru menerima murid baru. Terpisah dari apakah profil terlihat di direktori. |
 
@@ -60,16 +62,16 @@ Aplikasi ini hanya **mencatat**. Uang tidak mengalir lewat aplikasi, WhatsApp ti
 
 1. **Daftar** di halaman `Daftar`, lalu klik tautan verifikasi di email Anda.
 2. **Masuk** dengan email dan kata sandi. Anda tiba di **Beranda**.
-3. Buka **Iklan saya**. Isi nama, nomor WhatsApp, tempat tinggal (pilih dari daftar), perkenalan diri, dan minimal satu les yang diajarkan. Lihat **pratinjau** di sebelah kanan.
+3. Buka **Iklan saya**. Isi nama, nomor WhatsApp, tempat tinggal (pilih dari daftar), perkenalan diri, dan minimal satu bimbel yang diajarkan. Lihat **pratinjau** di sebelah kanan.
 4. Klik **Kirim untuk dicek**. Pengelola memeriksa iklan sebelum tayang.
 5. Setelah disetujui, buka **Beranda**, salin tautan iklan atau **Bagikan lewat WhatsApp** ke grup orang tua.
 
-**Mencatat les (opsional):** menu **Murid** dan **Jadwal** ada di kelompok *Catatan les (opsional)*.
+**Mencatat bimbel (opsional):** menu **Murid** dan **Jadwal** ada di kelompok *Catatan bimbel (opsional)*.
 
 1. Buka **Murid**, isi formulir *Tambah murid*, lalu klik *Simpan murid*.
 2. Buka halaman murid itu, lalu *Tambah paket baru*: nama paket, jumlah pertemuan, harga.
 3. Buka **Jadwal**, pilih tanggal di kalender, lalu *Tambah pertemuan*: pilih murid dan paket, tentukan mulai dan selesai.
-4. Setelah les berlangsung, klik **Tandai selesai** pada pertemuan itu. Sisa pertemuan berkurang 1.
+4. Setelah bimbel berlangsung, klik **Tandai selesai** pada pertemuan itu. Sisa pertemuan berkurang 1.
 5. Saat orang tua membayar, buka halaman murid dan isi *Pembayaran manual*.
 
 ---
@@ -101,7 +103,7 @@ Aplikasi ini hanya **mencatat**. Uang tidak mengalir lewat aplikasi, WhatsApp ti
 3. Buka email, klik tautan pemulihan, lalu isi **kata sandi baru** (minimal 15 karakter).
 4. Klik **Simpan kata sandi**. Anda dibawa ke halaman Masuk.
 
-**Perhatikan:** setelah kata sandi diganti lewat pemulihan, **semua login lama di semua perangkat dicabut**. Anda harus masuk lagi di semua perangkat. Data les tidak hilang. Tautan pemulihan hanya berlaku sementara; jika kedaluwarsa, minta lagi.
+**Perhatikan:** setelah kata sandi diganti lewat pemulihan, **semua login lama di semua perangkat dicabut**. Anda harus masuk lagi di semua perangkat. Data bimbel tidak hilang. Tautan pemulihan hanya berlaku sementara; jika kedaluwarsa, minta lagi.
 
 ### 4.4 Keluar
 
@@ -116,16 +118,16 @@ Semuanya ada di halaman **Akun** dan **meminta kata sandi Anda lagi**, walaupun 
 
 - **Ubah email.** Isi email baru dan kata sandi. Tautan konfirmasi dikirim ke **email lama dan email baru**. Email akun baru berganti setelah **keduanya** dikonfirmasi; sebelum itu email lama tetap berlaku.
 - **Ubah kata sandi.** Minimal 15 karakter dan harus berbeda dari yang lama. Setelah diganti, **semua login dicabut** (termasuk perangkat ini) dan Anda masuk lagi.
-- **Unduh data.** Menghasilkan satu **dokumen** (`data-les-privat-TANGGAL.html`) berisi tabel murid, paket, jadwal, pembayaran, dan profil iklan Anda. Buka dengan browser (klik ganda), lalu tekan **Cetak atau simpan sebagai PDF**. Dokumen ini untuk dibaca dan dicetak; belum bisa diimpor kembali sebagai tabel. Dokumen memuat data pribadi; simpan di tempat aman.
+- **Unduh data.** Menghasilkan satu **dokumen** (`data-bimbeldekat-TANGGAL.html`) berisi tabel murid, paket, jadwal, pembayaran, dan profil iklan Anda. Buka dengan browser (klik ganda), lalu tekan **Cetak atau simpan sebagai PDF**. Dokumen ini untuk dibaca dan dicetak; belum bisa diimpor kembali sebagai tabel. Dokumen memuat data pribadi; simpan di tempat aman.
 - **Hapus akun.** Setelah Anda mencentang persetujuan dan memasukkan kata sandi:
   - Iklan **langsung disembunyikan** dan semua tautan untuk orang tua **langsung dicabut**.
-  - Anda punya **7 hari** untuk membatalkan. Selama itu hanya dua hal yang bisa dilakukan: **mengunduh data** atau **membatalkan penghapusan**. Menambah atau mengubah catatan les ditolak.
+  - Anda punya **7 hari** untuk membatalkan. Selama itu hanya dua hal yang bisa dilakukan: **mengunduh data** atau **membatalkan penghapusan**. Menambah atau mengubah catatan bimbel ditolak.
   - Setelah 7 hari, akun dan seluruh catatan dihapus permanen. Salinan cadangan dapat bertahan hingga 30 hari sejak dibuat.
   - Jika dibatalkan, pemakaian normal kembali, tetapi profil tetap tersembunyi dan tautan untuk orang tua lama tetap dicabut (aktifkan profil dan buat tautan baru bila perlu).
 
 ### 4.6 Zona waktu
 
-Di halaman **Akun**, bagian *Zona waktu*, pilih **WIB**, **WITA**, atau **WIT**, lalu klik *Simpan zona waktu*. Semua jadwal akan ditampilkan sesuai pilihan itu. Mengubah zona waktu hanya mengubah tampilan, bukan waktu pelaksanaan les atau sisa pertemuan.
+Di halaman **Akun**, bagian *Zona waktu*, pilih **WIB**, **WITA**, atau **WIT**, lalu klik *Simpan zona waktu*. Semua jadwal akan ditampilkan sesuai pilihan itu. Mengubah zona waktu hanya mengubah tampilan, bukan waktu pelaksanaan bimbel atau sisa pertemuan.
 
 ---
 
@@ -135,21 +137,21 @@ Menu ada di sisi kiri (komputer) atau bar bawah (ponsel):
 
 | Menu | Isi |
 | --- | --- |
-| **Beranda** | Status iklan, kelengkapan, kinerja, tombol bagikan, ringkasan catatan les |
+| **Beranda** | Status iklan, kelengkapan, kinerja, tombol bagikan, ringkasan catatan bimbel |
 | **Iklan saya** | Mengisi dan mengajukan profil di direktori |
 | **Akun** | Informasi akun, zona waktu, keamanan |
-| *Catatan les (opsional)*: **Murid** | Daftar murid, pencarian, penambahan |
-| *Catatan les (opsional)*: **Jadwal** | Kalender pertemuan dan hasilnya |
+| *Catatan bimbel (opsional)*: **Murid** | Daftar murid, pencarian, penambahan |
+| *Catatan bimbel (opsional)*: **Jadwal** | Kalender pertemuan dan hasilnya |
 
 ### Halaman Beranda
 
 Dari atas ke bawah:
 
 - **Status iklan**: belum dibuat, draf, sedang diperiksa, ditolak (dengan alasan), tayang, dijeda, atau disembunyikan pengelola, disertai satu tombol langkah berikutnya. Saat tayang ada tombol cepat *Tandai menerima / tidak menerima murid*.
-- **Kelengkapan iklan**: persentase dan daftar periksa (nama, perkenalan minimal 100 karakter, WhatsApp, tempat tinggal, minimal satu les yang diajarkan, dan daerah layanan bila ada les tatap muka). Butir yang belum selesai menjelaskan cara melengkapinya.
+- **Kelengkapan iklan**: persentase dan daftar periksa (nama, perkenalan minimal 100 karakter, WhatsApp, tempat tinggal, minimal satu bimbel yang diajarkan, dan daerah layanan bila ada bimbel tatap muka). Butir yang belum selesai menjelaskan cara melengkapinya.
 - **Kinerja iklan** (hanya saat tayang): jumlah **profil dilihat** dan **WhatsApp ditekan** dalam 7 dan 30 hari. Ini angka **perkiraan**: kunjungan Anda sendiri dan mesin pencari bisa ikut terhitung, satu orang dihitung sekali per sesi browser, dan klik WhatsApp belum tentu menjadi murid. Tidak ada data pengunjung yang disimpan, hanya jumlahnya.
 - **Bagikan iklan Anda** (hanya saat tayang): tautan profil, tombol *Salin tautan* dan *Bagikan lewat WhatsApp*.
-- **Catatan les (opsional)**: bila Anda sudah punya murid tampil murid aktif, jadwal mendatang, paket hampir habis, sisa pembayaran, dan daftar pertemuan terdekat. Bila belum, hanya satu keterangan singkat; tidak ada kewajiban memakainya.
+- **Catatan bimbel (opsional)**: bila Anda sudah punya murid tampil murid aktif, jadwal mendatang, paket hampir habis, sisa pembayaran, dan daftar pertemuan terdekat. Bila belum, hanya satu keterangan singkat; tidak ada kewajiban memakainya.
 
 ---
 
@@ -174,7 +176,7 @@ Klik **Simpan murid**. Pesan "Perubahan tersimpan" menandakan berhasil.
 ### 6.2 Mencari dan menyaring
 
 - Ketik nama di kotak **Cari nama murid**, lalu klik *Cari*.
-- Pilih **Aktif** atau **Berhenti les** untuk berpindah daftar.
+- Pilih **Aktif** atau **Berhenti bimbel** untuk berpindah daftar.
 
 ### 6.3 Membuka dan mengubah murid
 
@@ -182,20 +184,20 @@ Klik nama murid untuk membuka halamannya. Di sana ada paket, pembayaran, tautan 
 
 ### 6.4 Mengarsipkan murid
 
-Gunakan jika murid berhenti les. Di **Informasi murid**, klik **Murid berhenti les**. Akibatnya:
+Gunakan jika murid berhenti bimbel. Di **Informasi murid**, klik **Murid berhenti bimbel**. Akibatnya:
 
 - Murid pindah dari daftar aktif.
 - Semua **jadwal mendatang dibatalkan tanpa mengurangi sisa pertemuan**.
 - Semua **tautan untuk orang tua dicabut**.
-- Riwayat les, sisa pertemuan, dan pembayaran **tetap tersimpan**.
+- Riwayat bimbel, sisa pertemuan, dan pembayaran **tetap tersimpan**.
 
 ### 6.5 Mengaktifkan kembali murid
 
-Buka tab **Berhenti les**, buka murid, lalu klik **Aktifkan kembali murid**. Jadwal yang sudah dibatalkan dan tautan yang sudah dicabut **tidak** pulih otomatis. Buat jadwal dan tautan baru bila perlu.
+Buka tab **Berhenti bimbel**, buka murid, lalu klik **Aktifkan kembali murid**. Jadwal yang sudah dibatalkan dan tautan yang sudah dicabut **tidak** pulih otomatis. Buat jadwal dan tautan baru bila perlu.
 
 ---
 
-## 7. Paket les
+## 7. Paket bimbel
 
 ### 7.1 Membuat paket
 
@@ -205,12 +207,12 @@ Di halaman murid, buka **Tambah paket baru**:
 | --- | --- |
 | **Nama paket / pelajaran** | Misalnya "Matematika". |
 | **Jumlah pertemuan** | Sisa pertemuan total paket, misalnya 8. |
-| **Sudah terpakai sebelum aplikasi** | Isi jika murid sudah les beberapa kali sebelum Anda mencatat di aplikasi. Tidak boleh melebihi jumlah pertemuan. |
+| **Sudah terpakai sebelum aplikasi** | Isi jika murid sudah bimbel beberapa kali sebelum Anda mencatat di aplikasi. Tidak boleh melebihi jumlah pertemuan. |
 | **Harga kesepakatan (Rp)** | Angka bulat tanpa titik atau koma, misalnya `400000`. |
 
 Pembayaran boleh menyusul. Sisa pertemuan **tidak hangus** karena tanggal atau pergantian bulan.
 
-**Contoh:** paket 8 pertemuan, sudah terpakai 3 sebelum aplikasi, lalu 2 les selesai di aplikasi. Sisa = 8 − 3 − 2 = **3**. Sisa itu tetap 3 meskipun bulan berganti.
+**Contoh:** paket 8 pertemuan, sudah terpakai 3 sebelum aplikasi, lalu 2 bimbel selesai di aplikasi. Sisa = 8 − 3 − 2 = **3**. Sisa itu tetap 3 meskipun bulan berganti.
 
 ### 7.2 Membaca kartu paket
 
@@ -226,7 +228,7 @@ Buka **Penyesuaian paket** pada kartu paket:
 
 ### 7.4 Ketika paket habis
 
-Jika sisa pertemuan 0, aplikasi menolak menandai les selesai dengan pesan "Sisa pertemuan paket habis. Catat paket baru untuk les lanjutan." Buat paket baru (boleh belum dibayar). Paket lama tetap menjadi riwayat dengan sisa 0.
+Jika sisa pertemuan 0, aplikasi menolak menandai bimbel selesai dengan pesan "Sisa pertemuan paket habis. Catat paket baru untuk bimbel lanjutan." Buat paket baru (boleh belum dibayar). Paket lama tetap menjadi riwayat dengan sisa 0.
 
 ---
 
@@ -234,7 +236,7 @@ Jika sisa pertemuan 0, aplikasi menolak menandai les selesai dengan pesan "Sisa 
 
 ### 8.1 Menambah pertemuan
 
-Halaman **Jadwal** berbentuk **kalender bulanan** (minggu dimulai Senin). Setiap hari menampilkan pertemuannya: biru = terjadwal, hijau = les selesai, kuning = dibatalkan. Klik sebuah tanggal untuk melihat pertemuan hari itu di bawah kalender; gunakan panah untuk pindah bulan dan *Hari ini* untuk kembali. Di ponsel, hari yang punya pertemuan ditandai titik berwarna. Bila ada pertemuan yang sudah lewat tetapi belum diberi hasil, muncul pemberitahuan kuning dengan tautan ke yang paling lama.
+Halaman **Jadwal** berbentuk **kalender bulanan** (minggu dimulai Senin). Setiap hari menampilkan pertemuannya: biru = terjadwal, hijau = bimbel selesai, kuning = dibatalkan. Klik sebuah tanggal untuk melihat pertemuan hari itu di bawah kalender; gunakan panah untuk pindah bulan dan *Hari ini* untuk kembali. Di ponsel, hari yang punya pertemuan ditandai titik berwarna. Bila ada pertemuan yang sudah lewat tetapi belum diberi hasil, muncul pemberitahuan kuning dengan tautan ke yang paling lama.
 
 Untuk menambah pertemuan, pilih tanggalnya di kalender lalu buka **Tambah pertemuan** (jam awal 09.00 sampai 10.00, bisa diubah):
 
@@ -243,11 +245,11 @@ Untuk menambah pertemuan, pilih tanggalnya di kalender lalu buka **Tambah pertem
 3. Isi **Mulai** dan **Selesai** (waktu mengikuti zona waktu Anda).
 4. Klik **Simpan jadwal**.
 
-**Anti-bentrok:** aplikasi menolak pertemuan yang waktunya tumpang tindih dengan pertemuan aktif Anda yang lain (pesan: "Jadwal bertabrakan dengan les lain"). Pertemuan yang saling bersebelahan, misalnya selesai 14.00 dan mulai 14.00, boleh. Waktu selesai harus setelah waktu mulai.
+**Anti-bentrok:** aplikasi menolak pertemuan yang waktunya tumpang tindih dengan pertemuan aktif Anda yang lain (pesan: "Jadwal bertabrakan dengan bimbel lain"). Pertemuan yang saling bersebelahan, misalnya selesai 14.00 dan mulai 14.00, boleh. Waktu selesai harus setelah waktu mulai.
 
-### 8.2 Menandai les selesai
+### 8.2 Menandai bimbel selesai
 
-Pilih tanggal pertemuan di kalender, lalu klik **Tandai selesai** setelah les berlangsung. Sisa pertemuan paket berkurang **tepat 1**. Klik dua kali atau kirim ulang tidak akan memotong sisa pertemuan dua kali.
+Pilih tanggal pertemuan di kalender, lalu klik **Tandai selesai** setelah bimbel berlangsung. Sisa pertemuan paket berkurang **tepat 1**. Klik dua kali atau kirim ulang tidak akan memotong sisa pertemuan dua kali.
 
 ### 8.3 Memindahkan jadwal
 
@@ -263,11 +265,11 @@ Buka **Ubah atau batalkan**, bagian *Batalkan pertemuan*:
 | Dibatalkan **murid / orang tua**, tanpa mengurangi sisa pertemuan | Sisa pertemuan tetap. |
 | Dibatalkan **murid / orang tua**, **mengurangi sisa pertemuan** | Sisa pertemuan berkurang 1, **alasan wajib** diisi. Pilih ini hanya jika sudah disepakati dengan orang tua. |
 
-Pertemuan yang dibatalkan dengan mengurangi sisa pertemuan **tidak dihitung sebagai les selesai**.
+Pertemuan yang dibatalkan dengan mengurangi sisa pertemuan **tidak dihitung sebagai bimbel selesai**.
 
 ### 8.5 Mengoreksi hasil
 
-Salah menandai? Pilih tanggal pertemuan itu di kalender (bulan lalu pun bisa), buka **Koreksi hasil pertemuan**, pilih hasil yang benar (les selesai, batal tanpa potong, batal dengan potong, atau kembali terjadwal), isi **alasan** (wajib), lalu simpan. Sisa pertemuan disesuaikan dan alasan tercatat.
+Salah menandai? Pilih tanggal pertemuan itu di kalender (bulan lalu pun bisa), buka **Koreksi hasil pertemuan**, pilih hasil yang benar (bimbel selesai, batal tanpa potong, batal dengan potong, atau kembali terjadwal), isi **alasan** (wajib), lalu simpan. Sisa pertemuan disesuaikan dan alasan tercatat.
 
 ---
 
@@ -311,7 +313,7 @@ Jadwal dan hasil pertemuan, paket (sisa pertemuan dan harga), pembayaran, serta 
 - Tautan berlaku **7 hari**.
 - **Siapa pun yang memegang tautan** dapat membaca ringkasannya, termasuk orang yang menerima tautan terusan dari orang tua.
 - Anda bisa **mencabut** kapan saja: di daftar tautan aktif, klik **Matikan tautan**.
-- Tautan otomatis dicabut jika murid berhenti les.
+- Tautan otomatis dicabut jika murid berhenti bimbel.
 - Halaman ringkasan tidak diindeks mesin pencari.
 
 ---
@@ -325,7 +327,7 @@ Menu **Iklan saya** mengatur halaman Anda di direktori guru. Di sebelah isian ad
 | Bagian | Isian |
 | --- | --- |
 | **1. Siapa Anda** | Nama yang ditampilkan, nomor WhatsApp publik, **provinsi dan kabupaten/kota tempat tinggal (dipilih dari daftar)**, dan "Tentang Anda dan cara mengajar" (maks. 3.000 karakter; sebaiknya minimal 100 karakter). |
-| **2. Les yang diajarkan** | Klik *Tambah les*. Isi pelajaran (ada saran, tetapi bebas diketik), jenjang, cara mengajar (online/tatap muka), durasi (menit), dan tarif per pertemuan (angka saja). Boleh banyak les yang diajarkan, masing-masing dengan harga sendiri. |
+| **2. Bimbel yang diajarkan** | Klik *Tambah bimbel*. Isi pelajaran (ada saran, tetapi bebas diketik), jenjang, cara mengajar (online/tatap muka), durasi (menit), dan tarif per pertemuan (angka saja). Boleh banyak bimbel yang diajarkan, masing-masing dengan harga sendiri. |
 | **3. Daerah yang bersedia didatangi** | Klik *Tambah wilayah*, lalu pilih provinsi, kabupaten/kota, dan (opsional) kecamatan. Dipakai untuk pencarian tatap muka dan boleh berbeda dari tempat tinggal. |
 
 **Pilihan wilayah** berasal dari data kode wilayah Kepmendagri 2025 (38 provinsi, 514 kabupaten/kota, 7.265 kecamatan). Kabupaten/kota hanya menampilkan milik provinsi yang dipilih, dan kecamatan hanya milik kabupaten/kota itu. Profil lama yang wilayahnya diketik bebas dan tidak dikenali ditandai "(tidak dikenali, pilih ulang)" dan harus dipilih ulang sebelum disimpan.
@@ -333,7 +335,7 @@ Menu **Iklan saya** mengatur halaman Anda di direktori guru. Di sebelah isian ad
 ### 11.2 Simpan draf dan ajukan
 
 - **Simpan draf**: menyimpan tanpa mengirim. Draf tidak tampil di direktori.
-- **Kirim untuk dicek**: mengirim ke pengelola. Syaratnya nama minimal 2 huruf, nomor WhatsApp valid (8 sampai 20 karakter angka/`+`), dan minimal satu les yang diajarkan. Jika kurang, muncul pesan "Lengkapi nama, kontak WhatsApp, dan les yang diajarkan sebelum mengajukan."
+- **Kirim untuk dicek**: mengirim ke pengelola. Syaratnya nama minimal 2 huruf, nomor WhatsApp valid (8 sampai 20 karakter angka/`+`), dan minimal satu bimbel yang diajarkan. Jika kurang, muncul pesan "Lengkapi nama, kontak WhatsApp, dan bimbel yang diajarkan sebelum mengajukan."
 
 ### 11.3 Status profil
 
@@ -369,7 +371,7 @@ Tidak perlu akun.
    - Di **Filter lainnya** (terbuka otomatis di layar lebar, dilipat di ponsel): **Jenjang** (SD, SMP, SMA), **Cara belajar** (online atau tatap muka), dan **Kecamatan** (hanya untuk tatap muka). Semua opsional.
 3. Klik **Cari guru**.
 
-Setiap kartu guru menampilkan: tempat tinggal guru, apakah menerima murid baru, cara mengajar (Online / Tatap muka), **daerah tatap muka** (bila Anda memfilter wilayah, daerah yang cocok disorot, mis. "Mengajar di Beji, Kota Depok"), tag pelajaran dan jenjang, serta **tarif mulai dari** (les yang diajarkan termurah).
+Setiap kartu guru menampilkan: tempat tinggal guru, apakah menerima murid baru, cara mengajar (Online / Tatap muka), **daerah tatap muka** (bila Anda memfilter wilayah, daerah yang cocok disorot, mis. "Mengajar di Beji, Kota Depok"), tag pelajaran dan jenjang, serta **tarif mulai dari** (bimbel yang diajarkan termurah).
 
 Cara kerja pencarian:
 
@@ -378,15 +380,15 @@ Cara kerja pencarian:
 - Guru yang **sedang tidak menerima murid** tetap tampil dengan label kuning. Anda masih bisa menanyakan ketersediaan di lain waktu.
 - Jika tidak ada hasil, kurangi filter wilayah atau pilih online.
 
-Klik **Lihat profil** untuk membaca deskripsi, les yang diajarkan (pelajaran, jenjang, durasi, tarif per pertemuan), dan wilayah yang bisa didatangi. Klik **Hubungi lewat WhatsApp** untuk menanyakan jadwal dan kesepakatan. Pesan Anda kirim sendiri.
+Klik **Lihat profil** untuk membaca deskripsi, bimbel yang diajarkan (pelajaran, jenjang, durasi, tarif per pertemuan), dan wilayah yang bisa didatangi. Klik **Hubungi lewat WhatsApp** untuk menanyakan jadwal dan kesepakatan. Pesan Anda kirim sendiri.
 
-## 13. Panduan untuk orang tua: membuka ringkasan les
+## 13. Panduan untuk orang tua: membuka ringkasan bimbel
 
 1. Guru mengirim tautan yang berakhiran `/orang tua#...`. Buka tautan itu di browser.
 2. Halaman menampilkan nama murid, tanggal tautan berakhir, paket (sisa pertemuan, harga, diterima, sisa bayar, kelebihan), jadwal dan hasil pertemuan, catatan uang, dan informasi yang dicatat guru.
 3. Halaman **hanya untuk dibaca**. Jika ada kesalahan data, hubungi guru yang membagikan.
 
-Jika muncul "Ringkasan belum dapat dibuka", kemungkinan tautan sudah berakhir (lewat 7 hari), dicabut guru, terpotong saat disalin (tautan harus lengkap, termasuk bagian setelah `#`), atau muridnya sudah berhenti les. Minta tautan baru kepada guru.
+Jika muncul "Ringkasan belum dapat dibuka", kemungkinan tautan sudah berakhir (lewat 7 hari), dicabut guru, terpotong saat disalin (tautan harus lengkap, termasuk bagian setelah `#`), atau muridnya sudah berhenti bimbel. Minta tautan baru kepada guru.
 
 ---
 
@@ -400,7 +402,7 @@ Akun pengelola dibuat terpisah dari pendaftaran guru. Pendaftaran biasa selalu m
 
 ### 14.1 Halaman Moderasi
 
-1. **Menunggu pemeriksaan**: pengajuan pertama dan perubahan dari guru. Untuk profil yang sudah terbit, halaman menampilkan dua kolom, *Saat ini tampil di direktori* dan *Perubahan yang diajukan*, sehingga Anda dapat membandingkan nama, WhatsApp, domisili, les yang diajarkan, dan area.
+1. **Menunggu pemeriksaan**: pengajuan pertama dan perubahan dari guru. Untuk profil yang sudah terbit, halaman menampilkan dua kolom, *Saat ini tampil di direktori* dan *Perubahan yang diajukan*, sehingga Anda dapat membandingkan nama, WhatsApp, domisili, bimbel yang diajarkan, dan area.
 2. Tulis alasan (dilihat guru) pada kotak yang tersedia, lalu pilih keputusan:
 
 | Keputusan | Kapan | Alasan |
@@ -442,14 +444,14 @@ Pengujian otomatis kini lolos, tetapi beberapa pengujian kadang gagal sekali di 
 | Email atau kata sandi belum sesuai, atau email belum diverifikasi | Salah isian, atau tautan verifikasi belum diklik | Periksa isian dan email verifikasi (cek spam). |
 | Lengkapi nama dan gunakan kata sandi minimal 15 karakter | Kata sandi pendek | Pakai kalimat 15 karakter atau lebih. |
 | Silakan masuk kembali / Akses berakhir | Login lewat 7 hari, dicabut, atau kata sandi baru diganti | Masuk lagi. |
-| Jadwal bertabrakan dengan les lain | Waktu tumpang tindih | Pilih waktu lain. |
-| Sisa pertemuan paket habis. Catat paket baru untuk les lanjutan | Sisa pertemuan 0 | Buat paket baru. |
+| Jadwal bertabrakan dengan bimbel lain | Waktu tumpang tindih | Pilih waktu lain. |
+| Sisa pertemuan paket habis. Catat paket baru untuk bimbel lanjutan | Sisa pertemuan 0 | Buat paket baru. |
 | Paket sudah ditutup | Paket yang ditutup tidak bisa dipakai | Pilih paket aktif. |
-| Murid sudah berhenti les | Mencoba menambah jadwal/paket untuk murid arsip | Aktifkan kembali murid dulu. |
+| Murid sudah berhenti bimbel | Mencoba menambah jadwal/paket untuk murid arsip | Aktifkan kembali murid dulu. |
 | Harga harus berupa rupiah bulat / Nominal harus berupa rupiah bulat | Ada titik, koma, atau "Rp" | Tulis angka saja, misalnya `400000`. |
 | Tuliskan alasannya | Kolom alasan kosong | Isi alasan. |
 | Potong sisa pertemuan memerlukan alasan dan tidak berlaku jika guru membatalkan | Potong sisa pertemuan dipilih tanpa alasan, atau yang membatalkan guru | Isi alasan, atau pilih "tanpa mengurangi sisa pertemuan". |
-| Lengkapi nama, kontak WhatsApp, dan les yang diajarkan sebelum mengajukan | Profil belum lengkap | Lengkapi lalu ajukan. |
+| Lengkapi nama, kontak WhatsApp, dan bimbel yang diajarkan sebelum mengajukan | Profil belum lengkap | Lengkapi lalu ajukan. |
 | Profil harus disetujui pengelola terlebih dahulu | Tombol menerima murid / jeda dipakai sebelum profil terbit | Tunggu persetujuan. |
 | Permintaan tidak berasal dari aplikasi ini | Aplikasi dibuka dari alamat yang berbeda dari yang dikonfigurasi | Buka lewat `http://127.0.0.1:3000`. |
 | Terlalu banyak percobaan. Coba lagi dalam N menit | Batas percobaan login, pemulihan, atau cek kata sandi terlampaui | Tunggu sesuai menit yang disebut. |
@@ -476,11 +478,11 @@ Pengujian otomatis kini lolos, tetapi beberapa pengujian kadang gagal sekali di 
 
 **Apakah murid atau orang tua butuh akun?** Tidak. Orang tua cukup membuka tautan, murid bahkan tidak perlu apa-apa.
 
-**Bisakah satu murid les dua pelajaran?** Bisa. Buat dua paket (misalnya Matematika dan Bahasa Inggris). Sisa pertemuan dan pembayaran dihitung terpisah.
+**Bisakah satu murid bimbel dua pelajaran?** Bisa. Buat dua paket (misalnya Matematika dan Bahasa Inggris). Sisa pertemuan dan pembayaran dihitung terpisah.
 
-**Sisa pertemuan saya hangus di akhir bulan?** Tidak. Sisa pertemuan hanya berkurang karena les selesai atau pembatalan yang disepakati memotong sisa pertemuan.
+**Sisa pertemuan saya hangus di akhir bulan?** Tidak. Sisa pertemuan hanya berkurang karena bimbel selesai atau pembatalan yang disepakati memotong sisa pertemuan.
 
-**Murid sudah les sebelum saya memakai aplikasi ini.** Isi "Sudah terpakai sebelum aplikasi" saat membuat paket supaya sisa pertemuannya benar.
+**Murid sudah bimbel sebelum saya memakai aplikasi ini.** Isi "Sudah terpakai sebelum aplikasi" saat membuat paket supaya sisa pertemuannya benar.
 
 **Orang tua membayar lebih.** Catat apa adanya. Aplikasi menampilkan "Kelebihan". Jika dikembalikan, catat sebagai "Uang dikembalikan".
 
@@ -488,7 +490,7 @@ Pengujian otomatis kini lolos, tetapi beberapa pengujian kadang gagal sekali di 
 
 **Guru batalkan karena sakit, apakah sisa pertemuan terpotong?** Tidak. Pembatalan oleh guru selalu tanpa mengurangi sisa pertemuan.
 
-**Salah mencatat les selesai.** Gunakan *Koreksi hasil pertemuan* dengan alasan. Jangan membuat catatan baru untuk menutupi.
+**Salah mencatat bimbel selesai.** Gunakan *Koreksi hasil pertemuan* dengan alasan. Jangan membuat catatan baru untuk menutupi.
 
 **Profil saya tidak muncul di pencarian.** Periksa: sudah diajukan dan disetujui? Tidak sedang dijeda? Wilayah tatap muka sudah diisi pada *Daerah yang bersedia didatangi*?
 
@@ -521,12 +523,12 @@ Buka `http://127.0.0.1:3000`. Gunakan **alamat itu**, bukan `localhost`, karena 
 
 **Kotak email uji:** email verifikasi dan pemulihan dari Supabase lokal tidak dikirim ke internet. Bukalah di `http://127.0.0.1:55324`.
 
-## Lampiran B. Alur ringkas satu paket les
+## Lampiran B. Alur ringkas satu paket bimbel
 
 ```
 Daftar -> verifikasi email -> masuk
    -> tambah murid -> buat paket (mis. 8 pertemuan, Rp400.000)
-   -> jadwalkan pertemuan -> les berlangsung -> tandai selesai (sisa pertemuan -1)
+   -> jadwalkan pertemuan -> bimbel berlangsung -> tandai selesai (sisa pertemuan -1)
    -> orang tua membayar -> catat pembayaran
    -> bagikan tautan untuk orang tua (7 hari)
    -> sisa pertemuan habis -> buat paket baru -> lanjut

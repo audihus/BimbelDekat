@@ -42,7 +42,7 @@ for(const sample of samples.filter(sample=>sample.role==="teacher")){
   }
   const state=await client.rpc("workspace_snapshot");
   if(!state.data.profile){
-    await cmd("profile.submit",{document:{name:sample.name,about:"Profil contoh lokal untuk mencoba pencarian guru. Bukan penawaran les sungguhan.",phone:"6280000000000",province:"Jawa Barat",regency:"Kota Bekasi",areas:[{province:"Jawa Barat",regency:"Kota Depok",district:"Beji"}],offers:[{subject:"Matematika",level:"SD",mode:"online",duration:60,price:"75000"},{subject:"Matematika",level:"SD",mode:"offline",duration:60,price:"90000"}]}});
+    await cmd("profile.submit",{document:{name:sample.name,about:"Profil contoh lokal untuk mencoba pencarian guru. Bukan penawaran bimbel sungguhan.",phone:"6280000000000",province:"Jawa Barat",regency:"Kota Bekasi",areas:[{province:"Jawa Barat",regency:"Kota Depok",district:"Beji"}],offers:[{subject:"Matematika",level:"SD",mode:"online",duration:60,price:"75000"},{subject:"Matematika",level:"SD",mode:"offline",duration:60,price:"90000"}]}});
     const next=await client.rpc("workspace_snapshot");
     const reviewed=await reviewer.rpc("moderate_profile",{p_id:next.data.profile.id,p_decision:"approve",p_reason:"Persetujuan profil contoh lokal"});if(reviewed.error)throw reviewed.error;
     if(sample.email.startsWith("budi"))await cmd("profile.accepting",{accepting:false});

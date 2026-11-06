@@ -7,7 +7,7 @@ export interface TeacherSummary {
   subjects: string[];           // pelajaran unik, urut kemunculan
   levels: string[];
   modes: ("online" | "offline")[];
-  areas: string[];              // daerah yang didatangi (kosong bila tidak ada les tatap muka)
+  areas: string[];              // daerah yang didatangi (kosong bila tidak ada bimbel tatap muka)
   matchedArea: string | null;   // daerah yang cocok dengan filter pencarian wilayah, bila ada
 }
 

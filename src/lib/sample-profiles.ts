@@ -8,7 +8,7 @@ export const sampleProfiles: SampleProfile[] = [
   {
     document: {
       name: "Bu Maya", phone: "", province: "Jawa Barat", regency: "Kota Bekasi",
-      about: "Sabar menemani anak SD belajar membaca, menulis, dan berhitung dari nol. Tersedia juga les mengaji Iqro. Belajar lewat permainan singkat supaya anak tidak bosan, dan kabar perkembangan dikirim ke orang tua setiap minggu.",
+      about: "Sabar menemani anak SD belajar membaca, menulis, dan berhitung dari nol. Tersedia juga bimbel mengaji Iqro. Belajar lewat permainan singkat supaya anak tidak bosan, dan kabar perkembangan dikirim ke orang tua setiap minggu.",
       areas: [{ province: "Jawa Barat", regency: "Kota Bekasi", district: "Bekasi Selatan" }, { province: "Jawa Barat", regency: "Kota Bekasi", district: "Bekasi Timur" }],
       offers: [
         { subject: "Calistung", level: "SD", mode: "offline", duration: 60, price: "60000" },
@@ -33,13 +33,13 @@ export const sampleProfiles: SampleProfile[] = [
   {
     document: {
       name: "Kak Alya", phone: "", province: "Jawa Tengah", regency: "Kota Semarang",
-      about: "Les Bahasa Inggris online untuk pelajar SMP dan SMA: percakapan, tata bahasa, dan latihan soal ujian sekolah. Materi disesuaikan dengan buku yang dipakai murid, dan jadwal fleksibel di sore atau malam hari.",
+      about: "Bimbel Bahasa Inggris online untuk pelajar SMP dan SMA: percakapan, tata bahasa, dan latihan soal ujian sekolah. Materi disesuaikan dengan buku yang dipakai murid, dan jadwal fleksibel di sore atau malam hari.",
       areas: [],
       offers: [
         { subject: "Bahasa Inggris", level: "SMP", mode: "online", duration: 60, price: "70000" },
         { subject: "Bahasa Inggris", level: "SMA", mode: "online", duration: 60, price: "85000" }
       ]
     },
-    why: ["Fokus pada satu pelajaran, sehingga mudah diingat orang tua", "Jadwal sore dan malam disebut, cocok untuk murid yang sekolah seharian", "Les online bisa dicari dari kota mana saja"]
+    why: ["Fokus pada satu pelajaran, sehingga mudah diingat orang tua", "Jadwal sore dan malam disebut, cocok untuk murid yang sekolah seharian", "Bimbel online bisa dicari dari kota mana saja"]
   }
 ];

@@ -33,24 +33,24 @@ export function ProfileEditor({profile}:{profile:TeacherProfile|null}){
       </section>
 
       <section className="stack-sm" aria-labelledby="ed-penawaran">
-        <div className="row between"><h2 id="ed-penawaran">2. Les yang Anda ajarkan</h2><button type="button" className="btn secondary" onClick={()=>setDoc({...doc,offers:[...doc.offers,{subject:"",level:"SD",mode:"online",duration:60,price:""}]})}>Tambah les</button></div>
+        <div className="row between"><h2 id="ed-penawaran">2. Bimbel yang Anda ajarkan</h2><button type="button" className="btn secondary" onClick={()=>setDoc({...doc,offers:[...doc.offers,{subject:"",level:"SD",mode:"online",duration:60,price:""}]})}>Tambah bimbel</button></div>
         <datalist id="saran-pelajaran">{subjects.map(s=><option key={s} value={s}/>)}</datalist>
-        {doc.offers.length===0&&<p className="muted">Tambahkan minimal satu les agar iklan Anda muncul di hasil pencarian.</p>}
+        {doc.offers.length===0&&<p className="muted">Tambahkan minimal satu bimbel agar iklan Anda muncul di hasil pencarian.</p>}
         {doc.offers.map((offer,index)=><div className="offer stack-sm" key={index}><div className="form-grid">
           <label className="field"><span className="field-label">Pelajaran</span><input list="saran-pelajaran" value={offer.subject} onChange={e=>setOffer(index,{subject:e.target.value})}/></label>
           <label className="field"><span className="field-label">Kelas</span><select value={offer.level} onChange={e=>setOffer(index,{level:e.target.value})}><option>SD</option><option>SMP</option><option>SMA</option></select></label>
           <label className="field"><span className="field-label">Cara belajar</span><select value={offer.mode} onChange={e=>setOffer(index,{mode:e.target.value as "online"|"offline"})}><option value="online">Online</option><option value="offline">Tatap muka (datang ke rumah)</option></select></label>
           <label className="field"><span className="field-label">Lama (menit)</span><input type="number" min="1" value={offer.duration} onChange={e=>setOffer(index,{duration:Number(e.target.value)})}/></label>
           <label className="field span-2"><span className="field-label">Tarif per pertemuan (Rp, angka saja)</span><input inputMode="numeric" value={offer.price} placeholder="Contoh: 75000" onChange={e=>setOffer(index,{price:e.target.value.replace(/\D/g,"")})}/></label>
-        </div><button type="button" className="btn ghost" onClick={()=>setDoc({...doc,offers:doc.offers.filter((_,i)=>i!==index)})}>Hapus les ini</button></div>)}
+        </div><button type="button" className="btn ghost" onClick={()=>setDoc({...doc,offers:doc.offers.filter((_,i)=>i!==index)})}>Hapus bimbel ini</button></div>)}
       </section>
 
       <section className="stack-sm" aria-labelledby="ed-daerah">
-        <div className="row between"><div><h2 id="ed-daerah">3. Wilayah yang bisa Anda datangi</h2><p className="muted">Untuk les tatap muka. Boleh berbeda dari tempat tinggal Anda.</p></div><button type="button" className="btn secondary" onClick={()=>setDoc({...doc,areas:[...doc.areas,{province:"",regency:"",district:""}]})}>Tambah wilayah</button></div>
+        <div className="row between"><div><h2 id="ed-daerah">3. Wilayah yang bisa Anda datangi</h2><p className="muted">Untuk bimbel tatap muka. Boleh berbeda dari tempat tinggal Anda.</p></div><button type="button" className="btn secondary" onClick={()=>setDoc({...doc,areas:[...doc.areas,{province:"",regency:"",district:""}]})}>Tambah wilayah</button></div>
         {doc.areas.map((area,index)=><div className="offer stack-sm" key={index}><div className="form-grid"><RegionSelect value={area} onChange={r=>setDoc({...doc,areas:doc.areas.map((a,i)=>i===index?r:a)})}/></div><button type="button" className="btn ghost" onClick={()=>setDoc({...doc,areas:doc.areas.filter((_,i)=>i!==index)})}>Hapus wilayah</button></div>)}
       </section>
 
-      <p className="muted">Nama, WhatsApp, wilayah, dan les Anda akan terlihat oleh semua orang setelah disetujui. Iklan yang lama tetap tayang selama perubahan dicek.</p>
+      <p className="muted">Nama, WhatsApp, wilayah, dan bimbel Anda akan terlihat oleh semua orang setelah disetujui. Iklan yang lama tetap tayang selama perubahan dicek.</p>
       <div className="row"><button type="button" className="btn secondary" disabled={pending} onClick={()=>save("profile.save")}>Simpan draf</button><button type="button" className="btn" disabled={pending} onClick={()=>save("profile.submit")}>Kirim untuk dicek</button></div>
       {message&&<p role={failed?"alert":"status"} className={`notice ${failed?"error":"success"}`}>{message}</p>}
     </div>

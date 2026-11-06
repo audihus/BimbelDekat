@@ -85,7 +85,7 @@ test("ekspor berupa berkas unduhan yang hanya memuat data sendiri",async()=>{
   expect((await student(a,mine)).status()).toBe(200);expect((await student(b,theirs)).status()).toBe(200);
   const response=await exportData(a,password);
   expect(response.status()).toBe(200);
-  expect(response.headers()["content-disposition"]).toMatch(/^attachment; filename="data-les-privat-\d{4}-\d{2}-\d{2}\.html"$/);
+  expect(response.headers()["content-disposition"]).toMatch(/^attachment; filename="data-bimbeldekat-\d{4}-\d{2}-\d{2}\.html"$/);
   expect(response.headers()["content-type"]).toContain("text/html");
   expect(response.headers()["cache-control"]).toContain("no-store");
   const text=await response.text();

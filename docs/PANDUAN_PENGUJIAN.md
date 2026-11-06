@@ -1,4 +1,4 @@
-# Panduan Pengujian Platform Les Privat
+# Panduan Pengujian BimbelDekat
 
 Panduan ini membantu Anda menguji aplikasi langkah demi langkah. Ada dua bagian:
 
@@ -9,7 +9,7 @@ Panduan ini membantu Anda menguji aplikasi langkah demi langkah. Ada dua bagian:
 
 ## 1. Persiapan
 
-Perintah dijalankan di folder proyek (`F:\Porto\Les`).
+Perintah dijalankan di folder proyek (`F:\Porto\Bimbel`).
 
 | Langkah | Perintah | Hasil yang diharapkan |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ Centang tiap butir. Jika hasilnya berbeda dari "Harus terlihat", catat langkah d
 
 ### D. Halaman Akun (login sebagai guru)
 1. **Unduh data:** buka **Akun**, masukkan kata sandi di *Unduh data Anda*, klik **Unduh data**.
-   - Harus terlihat: berkas `data-les-privat-TANGGAL.html` terunduh. Klik ganda untuk membukanya di browser: tabel Murid, Paket, Jadwal, Pembayaran, hanya berisi murid Anda. Waktu memakai zona waktu Anda. Klik **Cetak atau simpan sebagai PDF**; hasil cetak tidak memuat tombolnya.
+   - Harus terlihat: berkas `data-bimbeldekat-TANGGAL.html` terunduh. Klik ganda untuk membukanya di browser: tabel Murid, Paket, Jadwal, Pembayaran, hanya berisi murid Anda. Waktu memakai zona waktu Anda. Klik **Cetak atau simpan sebagai PDF**; hasil cetak tidak memuat tombolnya.
    - Kata sandi salah harus menampilkan "Kata sandi belum sesuai."
 2. **Ubah kata sandi:** isi kata sandi lama dan baru (15+).
    - Harus terlihat: dialihkan ke Masuk dengan pesan semua login dicabut. Login lama di jendela lain juga mati.
@@ -128,9 +128,9 @@ Di Chrome: tekan `F12`, klik ikon ponsel (Toggle device toolbar), pilih lebar se
 3. Tambah pertemuan pukul **23.30** di akun WIB: harus tetap di tanggal yang sama (bukan hari berikutnya). Ganti zona waktu akun ke WITA di **Akun**: pertemuan yang sama kini muncul pukul 00.30 hari berikutnya.
 4. Ubah alamat menjadi `/jadwal?bulan=ngawur`: halaman tetap tampil (bulan ini).
 
-### J. Halaman depan, pencari guru, dan profil guru (tanpa login)
-1. Buka `http://127.0.0.1:3000/` di jendela pribadi. Header hanya berisi logo dan **Cari guru** (tidak ada tombol Masuk atau Buat profil). Di sebelah kanan ada ilustrasi ponsel berisi percakapan WhatsApp rekaan; di ponsel ilustrasinya turun di bawah teks dan tidak terpotong. Tiga langkah: nomor 1, 2, 3 berada **di dalam** kartu, masing-masing dengan gambar; tidak ada bagian yang menimpa bagian lain. Urutan halaman: ajakan untuk guru ("Punya les privat? Biar orang tua yang menemukan Anda." + tombol **Daftarkan diri Anda**), kotak cari tepat di bawahnya, tiga langkah, daftar guru, lalu ajakan daftar kedua. **Sudah punya akun? Masuk** ada di bawah tombol daftar dan di footer.
-2. Klik **Daftarkan diri Anda**: halaman daftar terbuka. Ketik "Matematika" di kotak cari, pilih provinsi lalu kabupaten/kota, klik **Cari guru**: hasil dengan filter yang sama terisi.
+### J. Dua halaman depan (orang tua dan guru), pencarian, dan profil guru (tanpa login)
+1. Buka `http://127.0.0.1:3000/` di jendela pribadi: ini **halaman orang tua**. Header hanya berisi logo **BimbelDekat**, **Cari bimbel**, dan **Untuk guru** (tidak ada Masuk atau Buat profil). Urutan: judul "Cari bimbel privat di dekat rumah Anda." dengan kotak cari, strip tiga butir, tiga langkah (nomor 1, 2, 3 **di dalam** kartu, masing-masing dengan gambar), pintasan pelajaran dan kota, guru di BimbelDekat, tanya jawab (buka tiap pertanyaan; jawaban soal verifikasi harus jujur: ijazah belum diperiksa), pita "Anda guru bimbel privat?", lalu footer. Tidak ada tombol "Daftarkan diri Anda" di halaman ini.
+2. Klik pintasan kota (mis. Depok): halaman cari terbuka dengan provinsi dan kabupaten/kota terisi. Klik **Untuk guru**: terbuka **halaman guru** di `/untuk-guru` dengan judul "Dapatkan murid baru untuk bimbel privat Anda.", ilustrasi ponsel WhatsApp, tombol **Daftarkan diri Anda** (menuju daftar), "Sudah punya akun? Masuk", tiga langkah, contoh kartu, tanya jawab (tidak ada kata gratis atau biaya), dan tautan "Anda orang tua? Cari bimbel di sini". Tidak ada kotak cari di halaman ini. Periksa juga di ponsel (375 px): tidak ada yang saling menimpa dan ilustrasi tidak terpotong. Footer sama di kedua halaman (kolom Untuk orang tua dan Untuk guru).
 3. Kartu guru: tempat tinggal, lencana Online/Tatap muka, tag pelajaran dan jenjang, "Mulai Rp … / pertemuan", tombol **Lihat profil** dan **WhatsApp**. Cari tatap muka di kota tempat guru **bersedia mengajar** (bukan tempat tinggalnya): kartu menyorot "Mengajar di …".
 4. Di ponsel (375 px): formulir hanya memuat pelajaran, provinsi, kabupaten/kota, lalu **Filter lainnya** dilipat. Klik **Filter lainnya**: jenjang, cara belajar, dan kecamatan muncul.
 5. Buka `/cari?regency=Kota%20Depok` (tanpa provinsi): provinsi terisi otomatis, tanpa tulisan "tidak dikenali".
@@ -138,19 +138,19 @@ Di Chrome: tekan `F12`, klik ikon ponsel (Toggle device toolbar), pilih lebar se
 7. Pratinjau tautan: tempel alamat profil guru ke obrolan WhatsApp (ke diri sendiri atau grup uji). Harus muncul kartu dengan judul dan deskripsi. Catatan: di komputer lokal WhatsApp tidak dapat mengambil gambar dari `127.0.0.1`; gambar baru bisa dipastikan setelah aplikasi tayang di alamat umum dan `NEXT_PUBLIC_SITE_URL` diisi alamat itu.
 
 ### I. Beranda berfokus iklan
-1. Akun guru baru tanpa profil: Beranda berstatus *Iklan Anda belum dibuat*, tombol **Buat iklan**; bagian Catatan les hanya satu keterangan singkat (tanpa angka nol).
+1. Akun guru baru tanpa profil: Beranda berstatus *Iklan Anda belum dibuat*, tombol **Buat iklan**; bagian Catatan bimbel hanya satu keterangan singkat (tanpa angka nol).
 2. Setelah mengajukan: *Iklan sedang diperiksa*. Setelah pengelola menyetujui: *Iklan Anda tayang*, muncul **Bagikan iklan Anda** (tautan, *Salin tautan*, *Bagikan lewat WhatsApp*).
 3. Klik **Salin tautan**, tempel di jendela pribadi (tanpa login): halaman profil publik terbuka. Klik **Hubungi lewat WhatsApp** (WhatsApp terbuka di tab baru).
 4. Muat ulang Beranda guru: *Profil dilihat* bertambah **satu** (memuat ulang profil di tab yang sama tidak menambah lagi), *WhatsApp ditekan* bertambah satu.
-5. Tambahkan satu murid di **Murid**: bagian Catatan les di Beranda menampilkan ringkasannya, tetapi status iklan tetap di atas.
+5. Tambahkan satu murid di **Murid**: bagian Catatan bimbel di Beranda menampilkan ringkasannya, tetapi status iklan tetap di atas.
 
 ### K. Dashboard guru, contoh iklan, dan catatan murid yang singkat
 1. Daftar sebagai guru baru. Beranda: status *Iklan Anda belum dibuat*, lalu bagian **Contoh iklan guru yang menarik** terbuka dengan tiga kartu (Bu Maya, Pak Dimas, Kak Alya) berlabel "bukan guru sungguhan", masing-masing dengan kotak "Kenapa menarik". Tombol di kartu contoh tampak redup dan tidak bisa ditekan. Buka `/cari`: ketiga nama itu **tidak** ada.
-2. **Iklan saya**: istilahnya sehari-hari (Les yang Anda ajarkan, Wilayah yang bisa Anda datangi, Kirim untuk dicek). Isi iklan lalu kirim; admin menyetujui. Beranda: contoh iklan kini dilipat, muncul **Bagikan iklan Anda**.
-3. **Murid**: tambah murid hanya dengan nama (+ kelas dan WhatsApp orang tua bila mau). Buka murid itu: karena belum ada paket, muncul **Mulai dengan paket les** (pelajaran, jumlah pertemuan, harga).
+2. **Iklan saya**: istilahnya sehari-hari (Bimbel yang Anda ajarkan, Wilayah yang bisa Anda datangi, Kirim untuk dicek). Isi iklan lalu kirim; admin menyetujui. Beranda: contoh iklan kini dilipat, muncul **Bagikan iklan Anda**.
+3. **Murid**: tambah murid hanya dengan nama (+ kelas dan WhatsApp orang tua bila mau). Buka murid itu: karena belum ada paket, muncul **Mulai dengan paket bimbel** (pelajaran, jumlah pertemuan, harga).
 4. Setelah paket ada: ringkasan besar *Sisa pertemuan* dan *Belum dibayar*. **Tambah pertemuan** hanya menanyakan tanggal, jam, lama, dan cara belajar (jam selesai dihitung otomatis). Coba pukul 23.30 lama 60 menit: selesai 00.30 hari berikutnya. Dua pertemuan di jam yang sama ditolak.
 5. **Catat pembayaran**: isi hanya jumlah uang. *Belum dibayar* berkurang; bila lunas muncul "Lunas". Uang dikembalikan atau koreksi ada di lipatan sendiri dan meminta alasan.
-6. Pertemuan akan datang: **Tandai selesai** mengurangi sisa pertemuan satu. Buka **Pengaturan lain**: ubah jumlah pertemuan/harga, akhiri paket, data murid, dan **Murid berhenti les**.
+6. Pertemuan akan datang: **Tandai selesai** mengurangi sisa pertemuan satu. Buka **Pengaturan lain**: ubah jumlah pertemuan/harga, akhiri paket, data murid, dan **Murid berhenti bimbel**.
 7. Halaman **Jadwal**: kalender tetap; form tambah pertemuan sama singkatnya (murid, tanggal, jam, lama).
 8. Di ponsel (375 px): semua halaman di atas terbaca tanpa gulir ke samping; menu bawah tidak menutup tombol.
 

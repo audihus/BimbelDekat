@@ -9,6 +9,7 @@ import { teacherSummary } from "@/lib/teacher-summary";
 import { whatsappLink,contactMessage } from "@/lib/whatsapp";
 import { rupiah } from "@/lib/format";
 import { AdBeacon,WhatsappLink } from "@/components/ad-beacon";
+import { APP_NAME } from "@/lib/brand";
 export const dynamic="force-dynamic";
 
 const load=cache(async()=>publicTeachers());
@@ -19,9 +20,9 @@ export async function generateMetadata({params}:{params:Promise<{id:string}>}):P
   if(!teacher)return {title:"Profil guru"};
   const s=teacherSummary(teacher.document,{});
   const subjects=s.subjects.slice(0,3).join(", ");
-  const title=`${teacher.document.name} — guru les${subjects?` ${subjects}`:""}`;
+  const title=`${teacher.document.name} — guru bimbel${subjects?` ${subjects}`:""}`;
   const description=[s.fromPrice!==null?`Mulai ${rupiah(s.fromPrice)} / pertemuan.`:"",teacher.document.about.slice(0,140)].filter(Boolean).join(" ");
-  return {title,description,openGraph:{title,description,type:"profile",locale:"id_ID",siteName:"Les Privat"}};
+  return {title,description,openGraph:{title,description,type:"profile",locale:"id_ID",siteName:APP_NAME}};
 }
 
 export default async function PublicProfile({params}:{params:Promise<{id:string}>}){
@@ -40,10 +41,10 @@ export default async function PublicProfile({params}:{params:Promise<{id:string}
     </section>
     <div className="grid-2"><section className="stack">
       <div className="card"><h2 style={{marginBottom:14}}>Tentang guru</h2><p style={{whiteSpace:"pre-wrap"}}>{profile.about}</p></div>
-      <div className="card"><h2 style={{marginBottom:18}}>Les yang diajarkan</h2><div className="stack-sm">{profile.offers.map((offer,index)=><article className="offer row between" key={index}><div><h3>{offer.subject} · {offer.level}</h3><p className="record-meta">{offer.mode==="online"?"Online":"Tatap muka"} · {offer.duration} menit</p></div><p className="from-price"><strong>{rupiah(offer.price)}</strong><span className="muted" style={{fontSize:".8rem"}}> / pertemuan</span></p></article>)}</div></div>
+      <div className="card"><h2 style={{marginBottom:18}}>Bimbel yang diajarkan</h2><div className="stack-sm">{profile.offers.map((offer,index)=><article className="offer row between" key={index}><div><h3>{offer.subject} · {offer.level}</h3><p className="record-meta">{offer.mode==="online"?"Online":"Tatap muka"} · {offer.duration} menit</p></div><p className="from-price"><strong>{rupiah(offer.price)}</strong><span className="muted" style={{fontSize:".8rem"}}> / pertemuan</span></p></article>)}</div></div>
     </section><aside className="stack" style={{alignSelf:"start"}}>
       <div className="card"><h2 style={{marginBottom:14}}>Wilayah yang bisa didatangi</h2>{profile.areas.length?<ul style={{paddingLeft:20,margin:0}}>{profile.areas.map((area,index)=><li key={index}>{[area.district,area.regency,area.province].filter(Boolean).join(", ")}</li>)}</ul>:<p className="muted">Guru ini mengajar online, bisa dari mana saja.</p>}</div>
-      <div className="card stack-sm"><h2 className="row"><ShieldCheck size={20} aria-hidden="true"/>Sebelum mulai les</h2><p className="muted" style={{fontSize:".92rem"}}>Iklan ini sudah ditinjau tim Les Privat sebelum tayang. Tanyakan jadwal dan kesepakatan langsung ke guru. Pembayaran diatur antara Anda dan guru, di luar Les Privat.</p>{!teacher.accepting&&<p className="notice warning">Guru sedang penuh. Anda tetap bisa menanyakan ketersediaan di waktu lain.</p>}</div>
+      <div className="card stack-sm"><h2 className="row"><ShieldCheck size={20} aria-hidden="true"/>Sebelum mulai bimbel</h2><p className="muted" style={{fontSize:".92rem"}}>Iklan ini sudah ditinjau tim {APP_NAME} sebelum tayang. Tanyakan jadwal dan kesepakatan langsung ke guru. Pembayaran diatur antara Anda dan guru, di luar {APP_NAME}.</p>{!teacher.accepting&&<p className="notice warning">Guru sedang penuh. Anda tetap bisa menanyakan ketersediaan di waktu lain.</p>}</div>
     </aside></div>
     {contact&&<div className="wa-bar"><WhatsappLink profile={teacher.id} href={contact} className="btn wa"><MessageCircle size={20} aria-hidden="true"/>Hubungi lewat WhatsApp</WhatsappLink></div>}
   </main><PublicFooter/></>;

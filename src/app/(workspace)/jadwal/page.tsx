@@ -22,7 +22,7 @@ export default async function Schedule({searchParams}:{searchParams:Promise<{bul
   const label=new Intl.DateTimeFormat("id-ID",{dateStyle:"full",timeZone:"UTC"}).format(new Date(`${selected}T00:00:00Z`));
   const lessons=byDay[selected]??[];
   return <div className="stack">
-    <div className="page-heading"><p className="eyebrow">Catatan les (opsional)</p><h1 style={{marginTop:8}}>Jadwal Anda</h1><p>Semua jam memakai {zoneLabel(zone)}. Dua pertemuan di jam yang sama tidak bisa disimpan.</p></div>
+    <div className="page-heading"><p className="eyebrow">Catatan bimbel (opsional)</p><h1 style={{marginTop:8}}>Jadwal Anda</h1><p>Semua jam memakai {zoneLabel(zone)}. Dua pertemuan di jam yang sama tidak bisa disimpan.</p></div>
     {overdue.length>0&&<p role="status" className="notice warning">{overdue.length} pertemuan sudah lewat tetapi belum ditandai selesai atau batal. <Link className="text-link" href={`/jadwal?tgl=${dateKey(overdue[0].starts_at,zone)}`}>Lihat yang paling lama</Link></p>}
     <section className="card"><ScheduleCalendar month={month} selected={selected} today={today} byDay={byDay} students={data.students} zone={zone}/></section>
     <section className="card stack">

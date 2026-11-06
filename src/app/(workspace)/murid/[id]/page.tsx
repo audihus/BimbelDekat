@@ -34,10 +34,10 @@ export default async function StudentDetail({params}:{params:Promise<{id:string}
   const due=openPacks.reduce((n,p)=>n+BigInt(p.due),0n);
   return <div className="stack">
     <Link href="/murid" className="text-link">← Semua murid</Link>
-    <div className="page-heading row between"><div className="row"><span className="avatar large">{student.name.slice(0,1).toUpperCase()}</span><div><h1>{student.name}</h1><p>{student.level}{student.guardian_phone?` · WhatsApp orang tua ${student.guardian_phone}`:""}</p></div></div><Badge tone={student.archived?"amber":"green"}>{student.archived?"Sudah berhenti les":"Masih les"}</Badge></div>
-    {student.archived&&<p className="notice warning">Murid ini sudah berhenti les. Riwayatnya tetap tersimpan. Jadwal yang dibatalkan dan tautan yang dimatikan tidak aktif lagi saat murid diaktifkan kembali.</p>}
+    <div className="page-heading row between"><div className="row"><span className="avatar large">{student.name.slice(0,1).toUpperCase()}</span><div><h1>{student.name}</h1><p>{student.level}{student.guardian_phone?` · WhatsApp orang tua ${student.guardian_phone}`:""}</p></div></div><Badge tone={student.archived?"amber":"green"}>{student.archived?"Sudah berhenti bimbel":"Masih bimbel"}</Badge></div>
+    {student.archived&&<p className="notice warning">Murid ini sudah berhenti bimbel. Riwayatnya tetap tersimpan. Jadwal yang dibatalkan dan tautan yang dimatikan tidak aktif lagi saat murid diaktifkan kembali.</p>}
 
-    {!student.archived&&packages.length===0&&<section className="card stack" aria-labelledby="paket-pertama"><div><h2 id="paket-pertama">Mulai dengan paket les</h2><p className="muted" style={{marginTop:6,fontSize:".92rem"}}>Paket mencatat berapa pertemuan yang disepakati dan berapa harganya. Setelah itu Anda bisa menambah jadwal dan mencatat pembayaran.</p></div><NewPackageForm studentId={id}/></section>}
+    {!student.archived&&packages.length===0&&<section className="card stack" aria-labelledby="paket-pertama"><div><h2 id="paket-pertama">Mulai dengan paket bimbel</h2><p className="muted" style={{marginTop:6,fontSize:".92rem"}}>Paket mencatat berapa pertemuan yang disepakati dan berapa harganya. Setelah itu Anda bisa menambah jadwal dan mencatat pembayaran.</p></div><NewPackageForm studentId={id}/></section>}
 
     {packages.length>0&&<div className="grid-2"><section className="stack">
       <div className="card stack" aria-labelledby="sisa"><div className="row between"><h2 id="sisa">Sisa pertemuan</h2>{openPacks.length>0&&(due>0n?<Badge tone="amber">Belum dibayar {rupiah(due.toString())}</Badge>:<Badge tone="green">Lunas</Badge>)}</div>
@@ -68,7 +68,7 @@ export default async function StudentDetail({params}:{params:Promise<{id:string}
       </div>)}
       <div><h3 style={{marginBottom:12}}>Data murid</h3><CommandForm action="student.update" fixed={{id}} buttonLabel="Simpan data murid" tone="secondary"><div className="stack-sm"><Field label="Nama murid" name="name" required defaultValue={student.name}/><SelectField label="Kelas" name="level" defaultValue={student.level}><option>SD</option><option>SMP</option><option>SMA</option></SelectField><Field label="WhatsApp orang tua" name="guardian_phone" type="tel" defaultValue={student.guardian_phone}/><TextareaField label="Alamat" name="address" defaultValue={student.address}/><TextareaField label="Catatan" name="notes" defaultValue={student.notes}/></div></CommandForm></div>
       <hr className="divider"/>
-      <CommandForm action="student.archive" fixed={{id,archived:!student.archived}} buttonLabel={student.archived?"Aktifkan murid lagi":"Murid berhenti les"} tone={student.archived?"secondary":"danger"}><p className="record-meta">{student.archived?"Riwayat tetap tersimpan. Buat jadwal dan tautan orang tua yang baru bila perlu.":"Jadwal yang belum berlangsung dibatalkan (pertemuan tidak berkurang), tautan orang tua dimatikan, dan seluruh riwayat tetap tersimpan."}</p></CommandForm>
+      <CommandForm action="student.archive" fixed={{id,archived:!student.archived}} buttonLabel={student.archived?"Aktifkan murid lagi":"Murid berhenti bimbel"} tone={student.archived?"secondary":"danger"}><p className="record-meta">{student.archived?"Riwayat tetap tersimpan. Buat jadwal dan tautan orang tua yang baru bila perlu.":"Jadwal yang belum berlangsung dibatalkan (pertemuan tidak berkurang), tautan orang tua dimatikan, dan seluruh riwayat tetap tersimpan."}</p></CommandForm>
     </div></details></section>
   </div>;
 }

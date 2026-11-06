@@ -1,20 +1,22 @@
-# Platform Les Privat
+# BimbelDekat
 
-Istilah yang dipakai di tampilan aplikasi. Sejak 5 November 2026 istilahnya sengaja diganti ke bahasa sehari-hari karena pemakainya guru les privat dan orang tua pencari guru. **Maknanya tidak berubah** dari [PRD versi 0.2](./PRD_Platform_Les_Privat_v0_2.md); yang berganti hanya katanya. Nama di basis data dan kode (mis. `package`, `quota`, `guardian`) tetap seperti semula. Pesan galat yang datang langsung dari basis data (fungsi SQL lama) masih memakai istilah lama sampai migrasi pesan dibuat.
+Istilah yang dipakai di tampilan aplikasi. Sejak 5 November 2026 istilahnya sengaja diganti ke bahasa sehari-hari karena pemakainya guru bimbel privat dan orang tua pencari guru. **Maknanya tidak berubah** dari [PRD versi 0.2](./PRD_Platform_Les_Privat_v0_2.md); yang berganti hanya katanya. Nama di basis data dan kode (mis. `package`, `quota`, `guardian`) tetap seperti semula. Pesan galat yang datang langsung dari basis data (fungsi SQL lama) masih memakai istilah lama sampai migrasi pesan dibuat.
+
+**Nama dan kata "bimbel".** Aplikasi bernama **BimbelDekat** (dulu "Les Privat"), dan kata *les* di tampilan diganti *bimbel* (mis. "iklan bimbel", "paket bimbel", "guru bimbel"). Kolom _Dulu_ di bawah mencatat istilah lama sebelum perubahan istilah 5 November 2026, jadi masih memuat kata *les*.
 
 ## Language
 
 **Guru**:
-Pengajar les privat mandiri yang menjadi pelanggan utama.
+Pengajar bimbel privat mandiri yang menjadi pelanggan utama.
 _Dulu_: Guru. _Hindari_: Tutor sebagai istilah utama.
 
 **Iklan** (halaman "Iklan saya"):
-Informasi les dan kontak yang sengaja diterbitkan guru agar dilihat orang tua. Iklan baru dan perubahannya dicek tim kami sebelum tayang.
+Informasi bimbel dan kontak yang sengaja diterbitkan guru agar dilihat orang tua. Iklan baru dan perubahannya dicek tim kami sebelum tayang.
 _Dulu_: Profil publik. _Hindari_: Profil guru untuk menyebut catatan pribadi guru.
 
-**Les yang diajarkan**:
-Pilihan les di iklan: pelajaran, kelas, cara belajar (online atau tatap muka), lama, dan tarif sendiri. Satu iklan boleh punya beberapa.
-_Dulu_: Penawaran les. _Hindari_: Paket les untuk menyebut ini; paket adalah kesepakatan dengan satu murid.
+**Bimbel yang diajarkan**:
+Pilihan bimbel di iklan: pelajaran, kelas, cara belajar (online atau tatap muka), lama, dan tarif sendiri. Satu iklan boleh punya beberapa.
+_Dulu_: Penawaran les. _Hindari_: Paket bimbel untuk menyebut ini; paket adalah kesepakatan dengan satu murid.
 
 **Menerima murid baru / Sedang penuh**:
 Keterangan apakah guru masih menerima murid baru. Terpisah dari status tayang iklan.
@@ -29,19 +31,19 @@ Iklan yang sudah dikirim guru dan menunggu pemeriksaan sebelum tayang.
 _Dulu_: Menunggu pemeriksaan.
 
 **Murid**:
-Orang yang ikut les, dengan catatannya sendiri milik guru yang mengajarnya. Orang yang sama bisa punya catatan terpisah pada guru lain.
+Orang yang ikut bimbel, dengan catatannya sendiri milik guru yang mengajarnya. Orang yang sama bisa punya catatan terpisah pada guru lain.
 _Hindari_: Akun murid; murid tidak punya akun.
 
-**Murid berhenti les**:
-Murid yang dikeluarkan dari daftar "Masih les". Riwayat, sisa pertemuan, dan pembayarannya tetap tersimpan; bisa diaktifkan lagi.
+**Murid berhenti bimbel**:
+Murid yang dikeluarkan dari daftar "Masih bimbel". Riwayat, sisa pertemuan, dan pembayarannya tetap tersimpan; bisa diaktifkan lagi.
 _Dulu_: Murid diarsipkan. _Hindari_: Murid dihapus.
 
 **Orang tua**:
-Orang tua atau penanggung jawab murid yang berhubungan dengan guru soal les.
+Orang tua atau penanggung jawab murid yang berhubungan dengan guru soal bimbel.
 _Dulu_: Wali. _Hindari_: Pemegang tautan sebagai sinonim; memegang tautan tidak membuktikan hubungan dengan murid.
 
-**Paket les**:
-Kesepakatan les untuk satu murid: jumlah pertemuan, harga, dan aturan pembatalan. Satu murid boleh punya beberapa paket.
+**Paket bimbel**:
+Kesepakatan bimbel untuk satu murid: jumlah pertemuan, harga, dan aturan pembatalan. Satu murid boleh punya beberapa paket.
 _Dulu_: Paket pertemuan. _Hindari_: Pembayaran sebagai sinonim paket; uang masuk dan jumlah pertemuan adalah dua hal.
 
 **Paket habis**:
@@ -50,7 +52,7 @@ _Hindari_: Paket diakhiri untuk menyebut paket habis.
 
 **Paket diakhiri**:
 Paket yang dihentikan lebih awal atas kesepakatan dengan orang tua; sisa pertemuannya tetap tercatat belum dipakai.
-_Dulu_: Paket ditutup. _Hindari_: Paket habis atau les selesai untuk paket yang masih punya sisa.
+_Dulu_: Paket ditutup. _Hindari_: Paket habis atau bimbel selesai untuk paket yang masih punya sisa.
 
 **Sisa pertemuan**:
 Jumlah pertemuan yang masih menjadi hak murid di satu paket.
@@ -61,7 +63,7 @@ Sisa pertemuan turun karena pertemuan sudah selesai atau pembatalan yang disepak
 _Dulu_: Pemakaian jatah. _Hindari_: Kehadiran sebagai sinonim; pembatalan juga bisa mengurangi.
 
 **Pertemuan**:
-Satu kali les antara guru dan murid. Statusnya akan datang, sudah selesai, atau batal. Memindahkan jadwal tetap pertemuan yang sama.
+Satu kali bimbel antara guru dan murid. Statusnya akan datang, sudah selesai, atau batal. Memindahkan jadwal tetap pertemuan yang sama.
 _Dulu_: Sesi. _Hindari_: Paket untuk menyebut satu pertemuan.
 
 **Sudah selesai**:
@@ -85,9 +87,9 @@ Harga paket dikurangi uang yang sudah diterima.
 _Dulu_: Sisa pembayaran.
 
 **Tautan untuk orang tua**:
-Tautan untuk melihat ringkasan les satu murid tanpa membuat akun. Siapa pun yang memegangnya bisa membaca selama tautan masih berlaku (tujuh hari).
+Tautan untuk melihat ringkasan bimbel satu murid tanpa membuat akun. Siapa pun yang memegangnya bisa membaca selama tautan masih berlaku (tujuh hari).
 _Dulu_: Tautan wali. _Hindari_: Akun orang tua.
 
 **Uji coba awal**:
-Pemakaian aplikasi oleh sejumlah kecil guru pada les nyata untuk mengetahui bagian yang perlu diperbaiki.
+Pemakaian aplikasi oleh sejumlah kecil guru pada bimbel nyata untuk mengetahui bagian yang perlu diperbaiki.
 _Hindari_: Pilot tanpa penjelasan.

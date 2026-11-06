@@ -17,5 +17,5 @@ export function NavLinks({role,restricted,mobile=false}:{role:string;restricted:
     return mobile?<>{render(items)}</>:<nav aria-label="Menu guru" className="nav-links">{render(items)}</nav>;
   }
   if(mobile)return <>{render([...main,...records,akun])}</>;
-  return <nav aria-label="Menu guru" className="nav-links">{render([...main,akun])}<p className="nav-section nav-subsection" id="nav-catatan">Catatan les (opsional)</p><div className="nav-links" role="group" aria-labelledby="nav-catatan">{render(records)}</div></nav>;
+  return <nav aria-label="Menu guru" className="nav-links">{render([...main,akun])}<p className="nav-section nav-subsection" id="nav-catatan">Catatan bimbel (opsional)</p><div className="nav-links" role="group" aria-labelledby="nav-catatan">{render(records)}</div></nav>;
 }

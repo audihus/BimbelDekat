@@ -12,11 +12,11 @@ export function adChecklist(doc: ProfileDocument | null): Checklist {
     { key: "about", label: "Perkenalan diri dan cara mengajar", done: d.about.trim().length >= ABOUT_MIN, hint: `Tulis minimal ${ABOUT_MIN} huruf: pengalaman, cara mengajar, dan murid seperti apa yang cocok.` },
     { key: "phone", label: "Nomor WhatsApp", done: d.phone.replace(/\D/g, "").length >= 9, hint: "Orang tua menghubungi Anda lewat nomor ini." },
     { key: "home", label: "Kota tempat tinggal", done: Boolean(d.province && d.regency), hint: "Pilih provinsi lalu kabupaten/kota dari daftar." },
-    { key: "offers", label: "Minimal satu les yang Anda ajarkan (pelajaran, kelas, tarif)", done: d.offers.length > 0, hint: "Tanpa ini, iklan Anda tidak muncul di hasil pencarian." }
+    { key: "offers", label: "Minimal satu bimbel yang Anda ajarkan (pelajaran, kelas, tarif)", done: d.offers.length > 0, hint: "Tanpa ini, iklan Anda tidak muncul di hasil pencarian." }
   ];
-  // Daerah layanan hanya relevan bila ada les tatap muka: pencarian tatap muka mencocokkan daerah ini.
+  // Daerah layanan hanya relevan bila ada bimbel tatap muka: pencarian tatap muka mencocokkan daerah ini.
   if (d.offers.some(o => o.mode === "offline")) {
-    items.push({ key: "areas", label: "Wilayah yang bisa Anda datangi", done: d.areas.some(a => a.province && a.regency), hint: "Tanpa ini, les tatap muka Anda tidak ditemukan orang tua." });
+    items.push({ key: "areas", label: "Wilayah yang bisa Anda datangi", done: d.areas.some(a => a.province && a.regency), hint: "Tanpa ini, bimbel tatap muka Anda tidak ditemukan orang tua." });
   }
   const done = items.filter(i => i.done).length;
   return { items, percent: Math.round((done / items.length) * 100), complete: done === items.length };

@@ -1,6 +1,6 @@
-# Pedoman desain Les Privat
+# Pedoman desain BimbelDekat
 
-Nuansa: **hangat & ramah**. Pemakainya guru les privat dan orang tua, jadi tampilannya akrab, jelas, dan tidak seperti aplikasi kantor. Pedoman ini diturunkan dengan skill `ui-ux-pro-max` (kueri "local service marketplace warm trust", hasil pertamanya berupa palet ungu dan huruf anak-anak yang **tidak** dipakai karena tidak cocok), lalu kontrasnya dihitung ulang.
+Nuansa: **hangat & ramah**. Pemakainya guru bimbel privat dan orang tua, jadi tampilannya akrab, jelas, dan tidak seperti aplikasi kantor. Pedoman ini diturunkan dengan skill `ui-ux-pro-max` (kueri "local service marketplace warm trust", hasil pertamanya berupa palet ungu dan huruf anak-anak yang **tidak** dipakai karena tidak cocok), lalu kontrasnya dihitung ulang.
 
 ## Warna (token di `:root`, `src/app/globals.css`)
 | Token | Nilai | Pakai untuk |
@@ -34,3 +34,6 @@ Dibuat sendiri (SVG + HTML/CSS) di `src/components/illustrations.tsx` dengan pal
 
 ## Tata letak: yang dilarang
 Tidak ada elemen yang menimpa elemen lain (tanpa margin negatif di antara bagian halaman), dan nomor langkah selalu di dalam kartunya. Tiga langkah tetap tiga kolom sampai layar 800 px, lalu satu kolom (tidak pernah dua kolom dengan satu yatim).
+
+## Dua halaman depan
+`/` untuk orang tua dan `/untuk-guru` untuk guru, dipisah karena tujuan pengunjungnya berbeda. Kerangka sama: **Navbar → Hero → isi → Tanya jawab → Ajakan → Footer**. Navbar menempel di atas dan hanya memuat "Cari bimbel" serta "Untuk guru". Footer dua kolom (Untuk orang tua, Untuk guru) dan hanya menautkan halaman yang benar-benar ada; belum ada halaman Tentang, Kontak, atau Kebijakan Privasi. Judul guru: "Dapatkan murid baru untuk bimbel privat Anda."; judul orang tua: "Cari bimbel privat di dekat rumah Anda."

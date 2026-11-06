@@ -1,6 +1,6 @@
-# Platform Les Privat
+# BimbelDekat
 
-Tempat guru les mandiri memasang iklan dan ditemukan calon murid (profil, penawaran, pilihan wilayah, tombol WhatsApp, tautan yang bisa dibagikan). Pencatatan murid, jadwal (kalender), dan pembayaran tersedia sebagai fitur opsional. Implementasi lokal masih berlangsung; daftar kebutuhan dan keputusan produk ada di [PRD](./PRD_Platform_Les_Privat_v0_2.md).
+Tempat guru bimbel mandiri memasang iklan dan ditemukan calon murid (profil, penawaran, pilihan wilayah, tombol WhatsApp, tautan yang bisa dibagikan). Pencatatan murid, jadwal (kalender), dan pembayaran tersedia sebagai fitur opsional. Implementasi lokal masih berlangsung; daftar kebutuhan dan keputusan produk ada di [PRD](./PRD_Platform_Les_Privat_v0_2.md).
 
 ## Menjalankan di komputer
 

@@ -4,11 +4,12 @@ import { CommandForm } from "@/components/command-form";
 import { ProfileEditor } from "@/components/profile-editor";
 import { adStatus } from "@/lib/ad-checklist";
 import Link from "next/link";
+import { APP_NAME } from "@/lib/brand";
 
 export default async function ProfilePage(){
   const {data}=await requireWorkspace();const profile=data.profile;const status=adStatus(profile);
   return <div className="stack">
-    <div className="page-heading"><p className="eyebrow">Iklan di Les Privat</p><h1>Iklan saya</h1><p>Perkenalkan les Anda kepada orang tua. Iklan baru dan perubahannya dicek tim kami sebelum tayang.</p></div>
+    <div className="page-heading"><p className="eyebrow">Iklan di {APP_NAME}</p><h1>Iklan saya</h1><p>Perkenalkan bimbel Anda kepada orang tua. Iklan baru dan perubahannya dicek tim kami sebelum tayang.</p></div>
     <section className={`card status-card ${status.tone} stack`}>
       <div className="row between"><h2>{status.title}</h2><Badge tone={profile?.visible?"green":"amber"}>{profile?.visible?"Terlihat di pencarian":"Belum terlihat di pencarian"}</Badge></div>
       <p className="muted">{status.detail}</p>

@@ -7,7 +7,7 @@ export function remainingQuota(quota: number, openingUsed: number, deltas: numbe
     throw new Error("Jumlah jatah tidak sah.");
   }
   const remaining = quota - openingUsed + deltas.reduce((total, delta) => total + delta, 0);
-  if (!Number.isSafeInteger(remaining) || remaining < 0) throw new Error("Jatah paket tidak cukup. Catat paket baru untuk les lanjutan.");
+  if (!Number.isSafeInteger(remaining) || remaining < 0) throw new Error("Jatah paket tidak cukup. Catat paket baru untuk bimbel lanjutan.");
   return remaining;
 }
 
@@ -22,7 +22,7 @@ export function paymentBalance(price: string, entries: string[]): { received: st
 export function lessonCharge(status: LessonStatus, cancelledBy?: string, reason?: string): number {
   if (status === "completed") return 1;
   if (status === "scheduled" || status === "cancelled") return 0;
-  if (status !== "cancelled_charged") throw new Error("Status les tidak sah.");
+  if (status !== "cancelled_charged") throw new Error("Status pertemuan tidak sah.");
   if (cancelledBy === "teacher") throw new Error("Pembatalan oleh guru tidak memotong jatah.");
   if (!reason?.trim()) throw new Error("Tuliskan alasan pembatalan dengan potong jatah.");
   return 1;

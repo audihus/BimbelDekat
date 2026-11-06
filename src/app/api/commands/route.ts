@@ -14,7 +14,7 @@ export async function POST(request:Request) {
     const body=z.object({action:z.string().max(100),payload:z.unknown(),requestId:z.uuid()}).parse(await requestBody(request));
     const account=await getAccount();
     if(!account) throw new HttpError("Silakan masuk kembali.",401);
-    if(account.status!=="active" || account.role!=="teacher") throw new HttpError("Akun tidak dapat mengubah catatan les.",403);
+    if(account.status!=="active" || account.role!=="teacher") throw new HttpError("Akun tidak dapat mengubah catatan bimbel.",403);
     const payload=parseCommand(body.action,body.payload);
     // Wilayah hanya diperiksa saat MENULIS profil; pembacaan direktori tidak diperketat agar profil lama tidak hilang.
     if(body.action==="profile.save"||body.action==="profile.submit") {

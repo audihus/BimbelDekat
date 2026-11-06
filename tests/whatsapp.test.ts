@@ -25,9 +25,9 @@ describe("whatsappLink",()=>{
 
 describe("contactMessage",()=>{
   it("menyebut nama guru dan pelajaran pertama bila ada",()=>{
-    expect(contactMessage("Rina","Matematika")).toBe("Halo Rina, saya melihat iklan les Matematika Anda di Les Privat. Apakah masih ada tempat untuk murid baru?");
+    expect(contactMessage("Rina","Matematika")).toBe("Halo Rina, saya melihat iklan bimbel Matematika Anda di BimbelDekat. Apakah masih ada tempat untuk murid baru?");
   });
   it("tetap wajar tanpa pelajaran",()=>{
-    expect(contactMessage("Rina")).toBe("Halo Rina, saya melihat iklan les Anda di Les Privat. Apakah masih ada tempat untuk murid baru?");
+    expect(contactMessage("Rina")).toBe("Halo Rina, saya melihat iklan bimbel Anda di BimbelDekat. Apakah masih ada tempat untuk murid baru?");
   });
 });

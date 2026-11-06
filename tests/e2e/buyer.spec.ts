@@ -72,29 +72,62 @@ test("halaman cari: filter lengkap dilipat secara bawaan dan terbuka bila filter
   await visitor.dispose();
 });
 
-test("halaman depan: ajakan mendaftar untuk guru lebih dulu, pencari tepat di bawahnya, header tanpa Masuk/Daftar",async()=>{
+const headerOf=(html:string)=>html.match(/<header class="public-header">[\s\S]*?<\/header>/)?.[0]??"";
+
+test("dua tampilan terpisah: header memuat Cari bimbel dan Untuk guru, tanpa Masuk atau Daftar",async()=>{
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  for(const path of ["/","/untuk-guru","/cari"]){
+    const header=headerOf(await (await visitor.get(path)).text());
+    expect(header,path).toContain('href="/cari"');
+    expect(header,path).toContain('href="/untuk-guru"');
+    expect(header,path).not.toContain('href="/masuk"');             // arahan: bilah navigasi tanpa Masuk
+    expect(header,path).not.toContain('href="/daftar"');            // dan tanpa Buat profil guru
+    expect(header,path).toContain("BimbelDekat");
+  }
+  await visitor.dispose();
+});
+
+test("halaman depan untuk ORANG TUA: cari bimbel, langkah di dalam kartu, tanya jawab, dan jalan ke halaman guru",async()=>{
   const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
   const html=await (await visitor.get("/")).text();
   const text=visible(html);
-  const header=html.match(/<header class="public-header">[\s\S]*?<\/header>/)?.[0]??"";
-  expect(header).toContain('href="/cari"');
-  expect(header).not.toContain('href="/masuk"');                  // arahan: bilah navigasi tanpa Masuk
-  expect(header).not.toContain('href="/daftar"');                 // dan tanpa Buat profil guru
-  expect(text).toContain("Punya les privat? Biar orang tua yang menemukan Anda.");
+  expect(text).toContain("Cari bimbel privat di dekat rumah Anda.");
+  expect(html).toContain('role="search"');
+  expect(html).toContain('action="/cari"');
+  expect(html).toContain("/cari?q=Matematika");
+  expect(html).toContain("/cari?province=Jawa%20Barat&amp;regency=Kota%20Depok");   // pintasan kota (& ditulis &amp; di HTML)
+  // Tiga langkah: nomor DI DALAM kartu (bukan menggantung di tepinya), tiap kartu punya gambar.
+  const steps=[...html.matchAll(/<article class="card step">([\s\S]*?)<\/article>/g)].map(m=>m[1]);
+  expect(steps).toHaveLength(3);
+  steps.forEach((card,i)=>{expect(card).toContain('class="step-num"');expect(card).toContain('class="step-art"');expect(visible(card)).toContain(String(i+1));});
+  expect(html).toMatch(/class="hero-art" aria-hidden="true"/);
+  // Tanya jawab jujur: tidak menjanjikan verifikasi guru.
+  expect(text).toContain("Apakah guru sudah diverifikasi?");
+  expect(text).toContain("belum memeriksa ijazah");
+  // Ini halaman orang tua: tidak ada ajakan daftar untuk guru selain tautan ke halaman guru.
+  expect(text).not.toContain("Daftarkan diri Anda");
+  expect(html).toContain('href="/untuk-guru"');
+  expect(text).toContain("Anda guru bimbel privat?");
+  await visitor.dispose();
+});
+
+test("halaman untuk GURU: judul baru, tombol daftar, tanpa kotak cari, dan jalan ke halaman orang tua",async()=>{
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const html=await (await visitor.get("/untuk-guru")).text();
+  const text=visible(html);
+  expect(text).toContain("Dapatkan murid baru untuk bimbel privat Anda.");
+  expect(text).toContain("Pasang iklan bimbel Anda. Orang tua di daerah Anda menghubungi lewat WhatsApp.");
   expect(text).toContain("Ingin mendaftarkan diri? Langsung saja.");
   expect(text).toContain("Daftarkan diri Anda");
   expect(html).toContain('href="/daftar"');
   expect(text).toContain("Sudah punya akun?");                    // guru lama tetap punya jalan masuk
   expect(html).toContain('href="/masuk"');
-  expect(html).toContain('role="search"');
-  expect(html).toContain('action="/cari"');
-  expect(html).toContain("/cari?q=Matematika");
-  // Tiga langkah: nomor berada DI DALAM kartu (bukan menggantung di tepinya) dan tiap kartu punya gambar.
+  expect(html).not.toContain('role="search"');                   // pencarian ada di halaman orang tua
+  expect(text).not.toContain("Cari bimbel privat di dekat rumah Anda.");
+  expect(text).toContain("Siapa yang menentukan tarif?");
+  expect(text).not.toMatch(/gratis|tanpa biaya|bebas biaya/i);   // model bisnis belum diputuskan
+  expect(html).toContain('href="/cari"');                         // jalan ke halaman orang tua
   const steps=[...html.matchAll(/<article class="card step">([\s\S]*?)<\/article>/g)].map(m=>m[1]);
   expect(steps).toHaveLength(3);
-  steps.forEach((card,i)=>{expect(card).toContain(`class="step-num"`);expect(card).toContain('class="step-art"');expect(visible(card)).toContain(String(i+1));});
-  expect(html).toContain('class="hero-art"');                       // ilustrasi hero ada dan hanya hiasan
-  expect(html).toMatch(/class="hero-art" aria-hidden="true"/);
-  expect(text.indexOf("Punya les privat?")).toBeLessThan(text.indexOf("Mencari guru les untuk anak Anda?"));   // guru dulu, lalu pencari
   await visitor.dispose();
 });

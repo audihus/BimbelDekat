@@ -39,7 +39,7 @@ test("guru menambah murid, paket, pertemuan lewat tengah malam, dan pembayaran h
   await page.getByRole("link",{name:new RegExp(name)}).click();
 
   // 2. Murid baru belum punya paket: formulir paket terbuka; isi pelajaran dan harga (jumlah pertemuan bawaan 8).
-  await expect(page.getByText("Mulai dengan paket les")).toBeVisible();
+  await expect(page.getByText("Mulai dengan paket bimbel")).toBeVisible();
   await page.getByLabel("Pelajaran").fill("Matematika");
   await page.getByLabel("Harga paket (Rp)").fill("400000");
   await page.getByRole("button",{name:"Simpan paket"}).click();

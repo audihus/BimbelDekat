@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { Copy,Share2,Check } from "lucide-react";
 
-// Tombol bagikan iklan: salin tautan dan kirim lewat WhatsApp (tempat guru les paling sering berbagi).
+// Tombol bagikan iklan: salin tautan dan kirim lewat WhatsApp (tempat guru bimbel paling sering berbagi).
 export function ShareAd({url,name}:{url:string;name:string}){
   const [copied,setCopied]=useState(false);
   async function copy(){try{await navigator.clipboard.writeText(url);setCopied(true);setTimeout(()=>setCopied(false),2500);}catch{window.prompt("Salin tautan iklan Anda:",url);}}
-  const text=`Halo! Saya ${name}, guru les privat. Lihat pelajaran dan tarif les saya di sini: ${url}`;
+  const text=`Halo! Saya ${name}, guru bimbel privat. Lihat pelajaran dan tarif bimbel saya di sini: ${url}`;
   return <div className="stack-sm">
     <p className="token-url" aria-label="Tautan iklan Anda">{url}</p>
     <div className="row">

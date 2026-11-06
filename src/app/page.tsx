@@ -1,56 +1,65 @@
 import Link from "next/link";
-import { Search,UserPlus,ShieldCheck,MessageCircle,Share2,BarChart3,NotebookPen,ArrowRight } from "lucide-react";
-import { PublicHeader,PublicFooter,Badge,Field } from "@/components/ui";
+import { Search,ShieldCheck,MessageCircle,House,ArrowRight } from "lucide-react";
+import { PublicHeader,PublicFooter,Field } from "@/components/ui";
 import { TeacherCard } from "@/components/teacher-card";
-import { HeroArt,StepArt } from "@/components/illustrations";
 import { RegionAreaFilter } from "@/components/region-select";
+import { ParentArt } from "@/components/illustrations";
+import { Steps,Faq,TrustStrip } from "@/components/landing";
 import { publicTeachers } from "@/lib/public-data";
-import type { ProfileDocument } from "@/lib/domain/types";
+import { popularSubjects,popularCities,cityHref } from "@/lib/popular";
+import { APP_NAME } from "@/lib/brand";
 
 export const dynamic="force-dynamic";
 
-// Data fiktif hanya untuk ilustrasi di bagian guru; bukan guru sungguhan.
-const example:ProfileDocument={name:"Contoh Guru",about:"Mengajar matematika SD dan SMP dengan sabar, memakai contoh sehari-hari, dan memberi kabar kemajuan belajar kepada orang tua.",phone:"",province:"Jawa Barat",regency:"Kota Depok",areas:[{province:"Jawa Barat",regency:"Kota Depok",district:"Beji"}],offers:[{subject:"Matematika",level:"SD",mode:"online",duration:60,price:"75000"},{subject:"Matematika",level:"SMP",mode:"offline",duration:90,price:"110000"}]};
-const popular=["Matematika","Bahasa Inggris","IPA","Calistung","Mengaji"];
-const steps=[
-  {icon:UserPlus,title:"Isi profil les Anda",body:"Tulis pelajaran, tarif, dan wilayah yang bisa Anda datangi. Cukup diisi sekali."},
-  {icon:ShieldCheck,title:"Kami cek, lalu iklan tayang",body:"Tim kami memeriksa isi iklan sebelum muncul di pencarian orang tua."},
-  {icon:MessageCircle,title:"Orang tua menghubungi Anda",body:"Mereka menekan satu tombol WhatsApp dan langsung mengobrol dengan Anda."}
+// Halaman depan untuk ORANG TUA yang mencari bimbel. Halaman untuk guru ada di /untuk-guru.
+const trust=[
+  {icon:ShieldCheck,text:"Iklan guru dicek tim kami sebelum tayang"},
+  {icon:MessageCircle,text:"Hubungi guru langsung lewat WhatsApp"},
+  {icon:House,text:"Bimbel online, atau guru datang ke rumah"}
 ];
-const perks=[{icon:Share2,text:"Tautan iklan pribadi yang bisa dibagikan ke grup WhatsApp"},{icon:BarChart3,text:"Lihat berapa kali iklan Anda dibuka dan WhatsApp Anda ditekan"},{icon:NotebookPen,text:"Catat murid dan jadwal bila Anda mau. Boleh tidak dipakai"}];
+const steps=[
+  {kind:"cari" as const,title:"Cari sesuai kebutuhan",body:"Ketik pelajaran dan pilih kota. Bimbel online bisa dicari dari mana saja."},
+  {kind:"peta" as const,title:"Lihat tarif dan wilayah",body:"Kartu guru menunjukkan tarif mulai berapa, wilayah yang didatangi, dan apakah guru masih menerima murid."},
+  {kind:"chat" as const,title:"Hubungi lewat WhatsApp",body:"Satu tombol untuk menanyakan jadwal dan kesepakatan. Anda berhubungan langsung dengan guru."}
+];
+const faq=[
+  {q:"Bagaimana cara membayar guru?",a:`Pembayaran diatur langsung antara Anda dan guru, di luar ${APP_NAME}. Sepakati tarif dan cara bayar sebelum mulai.`},
+  {q:"Apakah guru sudah diverifikasi?",a:`Isi iklan guru ditinjau tim kami sebelum tayang, tetapi kami belum memeriksa ijazah atau latar belakang guru. Tanyakan langsung ke guru, dan sebaiknya bertemu dulu sebelum mulai.`},
+  {q:"Apa bedanya bimbel online dan tatap muka?",a:"Bimbel online dilakukan lewat video, jadi bisa dengan guru dari kota mana saja. Bimbel tatap muka berarti guru datang ke rumah, hanya di wilayah yang tercantum di iklannya."},
+  {q:"Bagaimana kalau di kota saya belum ada guru?",a:"Coba cari bimbel online, atau kurangi pilihan wilayah. Guru baru terus bergabung dan iklannya muncul di hasil pencarian setelah dicek."}
+];
 
 export default async function Home(){
   const {teachers}=await publicTeachers();
   const shown=teachers.slice(0,3);
-  return <><PublicHeader/><main id="main" className="public-main">
-    <section className="hero" aria-labelledby="judul-guru-les">
+  return <><PublicHeader current="orangtua"/><main id="main" className="public-main">
+    <section className="hero" aria-labelledby="judul-cari">
       <div>
-        <p className="eyebrow">Untuk guru les privat</p>
-        <h1 id="judul-guru-les">Punya les privat? Biar orang tua yang menemukan Anda.</h1>
-        <p className="lead">Buat iklan les Anda di sini. Orang tua di daerah Anda bisa melihat pelajaran, tarif, dan wilayah mengajar Anda, lalu langsung menghubungi lewat WhatsApp.</p>
-        <p style={{marginTop:26,fontWeight:750,fontSize:"1.15rem"}}>Ingin mendaftarkan diri? Langsung saja.</p>
-        <div className="row" style={{marginTop:14}}><Link href="/daftar" className="btn big">Daftarkan diri Anda <ArrowRight size={19} aria-hidden="true"/></Link></div>
-        <p className="hero-note">Sudah punya akun? <Link href="/masuk">Masuk</Link></p>
+        <p className="eyebrow">Untuk orang tua dan murid</p>
+        <h1 id="judul-cari">Cari bimbel privat di dekat rumah Anda.</h1>
+        <p className="lead">Pilih pelajaran dan lokasi, lihat tarif dan wilayah mengajar, lalu hubungi guru langsung lewat WhatsApp.</p>
+        <form action="/cari" className="card hero-search" role="search" aria-label="Cari bimbel">
+          <div className="filter-main"><Field label="Pelajaran atau nama guru" name="q" placeholder="Contoh: Matematika"/><RegionAreaFilter/></div>
+          <button type="submit" className="btn big"><Search size={19} aria-hidden="true"/>Cari bimbel</button>
+        </form>
+        <div className="row" style={{marginTop:16,gap:8}}><span className="muted" style={{fontSize:".88rem"}}>Populer:</span>{popularSubjects.slice(0,5).map(s=><Link key={s} className="tag" href={`/cari?q=${encodeURIComponent(s)}`}>{s}</Link>)}</div>
       </div>
-      <HeroArt/>
+      <ParentArt/>
     </section>
 
-    <section className="search-band" aria-labelledby="judul-cari">
-      <form action="/cari" className="card stack" role="search"><h2 id="judul-cari">Mencari guru les untuk anak Anda?</h2><div className="filter-main"><Field label="Pelajaran atau nama guru" name="q" placeholder="Contoh: Matematika"/><RegionAreaFilter/></div><div className="row between"><div className="row" style={{gap:8}}><span className="muted" style={{fontSize:".85rem"}}>Populer:</span>{popular.map(s=><Link key={s} className="tag" href={`/cari?q=${encodeURIComponent(s)}`}>{s}</Link>)}</div><button type="submit" className="btn"><Search size={17} aria-hidden="true"/>Cari guru</button></div></form>
+    <section style={{marginTop:28}} aria-label="Yang perlu Anda tahu"><TrustStrip items={trust}/></section>
+
+    <section style={{marginTop:64}} aria-labelledby="judul-cara"><div className="section-heading"><p className="eyebrow">Cara mencari</p><h2 id="judul-cara">Tiga langkah menemukan guru yang cocok.</h2></div><Steps items={steps}/></section>
+
+    <section className="stack" style={{marginTop:64}} aria-labelledby="judul-pintasan"><div className="section-heading" style={{marginBottom:0}}><p className="eyebrow">Pintasan</p><h2 id="judul-pintasan">Cari menurut pelajaran atau kota.</h2></div>
+      <div><h3 style={{marginBottom:10}}>Pelajaran</h3><div className="link-grid">{popularSubjects.map(s=><Link key={s} className="tag" href={`/cari?q=${encodeURIComponent(s)}`}>{s}</Link>)}</div></div>
+      <div><h3 style={{marginBottom:10}}>Kota</h3><div className="link-grid">{popularCities.map(c=><Link key={c.regency} className="tag" href={cityHref(c)}>{c.regency.replace(/^Kota (Administrasi )?/,"")}</Link>)}</div></div>
     </section>
 
-    <section style={{marginTop:64}} aria-labelledby="judul-cara"><div className="section-heading"><p className="eyebrow">Cara kerjanya untuk guru</p><h2 id="judul-cara">Tiga langkah sampai ada murid yang menghubungi.</h2></div>
-      <div className="steps">{steps.map((item,index)=><article key={item.title} className="card step"><StepArt step={(index+1) as 1|2|3}/><div className="step-head"><span className="step-num" aria-hidden="true">{index+1}</span><h3>{item.title}</h3></div><p className="muted" style={{fontSize:".95rem"}}>{item.body}</p></article>)}</div>
-    </section>
+    {shown.length>0&&<section className="stack" style={{marginTop:64}} aria-labelledby="judul-guru"><div className="row between"><h2 id="judul-guru">Guru di {APP_NAME}</h2><Link href="/cari" className="text-link">Lihat semua guru</Link></div><div className="grid-3">{shown.map(t=><TeacherCard key={t.id} document={t.document} accepting={t.accepting} href={`/guru/${t.id}`} profileId={t.id}/>)}</div></section>}
 
-    <section className="showcase" style={{marginTop:64}} aria-labelledby="judul-contoh"><div className="stack">
-      <div><p className="eyebrow">Iklan Anda di mata orang tua</p><h2 id="judul-contoh" style={{fontSize:"clamp(1.6rem,3.4vw,2.2rem)",marginTop:12}}>Satu kartu yang menjawab pertanyaan orang tua.</h2></div>
-      <p className="lead">Pelajaran, tarif, wilayah yang Anda datangi, dan tombol WhatsApp ada di satu tempat, jadi orang tua tidak perlu bertanya berulang-ulang.</p>
-      <ul className="check-list">{perks.map(p=><li key={p.text}><span className="stat-icon" style={{width:34,height:34,flex:"0 0 34px"}}><p.icon size={17} aria-hidden="true"/></span><span style={{alignSelf:"center"}}>{p.text}</span></li>)}</ul>
-    </div><div className="showcase-art" aria-label="Contoh tampilan iklan guru, memakai data fiktif"><Badge tone="amber">Contoh tampilan, bukan guru sungguhan</Badge><TeacherCard document={example} accepting/></div></section>
+    <section style={{marginTop:64}} aria-labelledby="judul-faq"><div className="section-heading"><p className="eyebrow">Tanya jawab</p><h2 id="judul-faq">Pertanyaan yang sering muncul.</h2></div><Faq items={faq}/></section>
 
-    {shown.length>0&&<section className="stack" style={{marginTop:64}} aria-labelledby="judul-guru"><div className="row between"><h2 id="judul-guru">Guru di Les Privat</h2><Link href="/cari" className="text-link">Lihat semua guru</Link></div><div className="grid-3">{shown.map(t=><TeacherCard key={t.id} document={t.document} accepting={t.accepting} href={`/guru/${t.id}`} profileId={t.id}/>)}</div></section>}
-
-    <section className="cta-band" style={{marginTop:64}} aria-labelledby="judul-akhir"><h2 id="judul-akhir">Siap dicari murid baru?</h2><p>Buat iklan les Anda sekarang. Anda yang menentukan tarif dan jadwal.</p><Link href="/daftar" className="btn big">Daftarkan diri Anda <ArrowRight size={19} aria-hidden="true"/></Link><p style={{fontSize:".92rem"}}>Sudah punya akun? <Link className="plain" href="/masuk">Masuk</Link></p></section>
+    <section className="ribbon" style={{marginTop:64}} aria-labelledby="judul-guru-cta"><div><h2 id="judul-guru-cta">Anda guru bimbel privat?</h2><p className="muted" style={{marginTop:4}}>Pasang iklan Anda di sini dan dapatkan murid baru.</p></div><Link href="/untuk-guru" className="btn">Untuk guru <ArrowRight size={17} aria-hidden="true"/></Link></section>
   </main><PublicFooter/></>;
 }

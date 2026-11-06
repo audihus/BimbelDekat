@@ -82,14 +82,14 @@ export default async function Dashboard(){
     {!needsAd&&<Samples open={false} cta={false}/>}
 
     <section className="card stack" aria-labelledby="catatan">
-      <div className="row between"><div><p className="eyebrow">Boleh dipakai, boleh tidak</p><h2 id="catatan" style={{marginTop:8}}>Catatan les</h2></div><Link href="/murid#tambah" className="btn secondary"><Plus size={16} aria-hidden="true"/>Tambah murid</Link></div>
+      <div className="row between"><div><p className="eyebrow">Boleh dipakai, boleh tidak</p><h2 id="catatan" style={{marginTop:8}}>Catatan bimbel</h2></div><Link href="/murid#tambah" className="btn secondary"><Plus size={16} aria-hidden="true"/>Tambah murid</Link></div>
       {active.length?<>
         <div className="grid-4">{[{label:"Murid aktif",value:String(active.length),icon:Users},{label:"Jadwal mendatang",value:String(scheduled.length),icon:CalendarDays},{label:"Paket hampir habis",value:String(low.length),icon:BookOpen},{label:"Belum dibayar",value:rupiah(due.toString()),icon:Wallet}].map(item=><div className="offer" key={item.label}><div className="row between"><p className="stat-label">{item.label}</p><span className="stat-icon"><item.icon size={18} aria-hidden="true"/></span></div><p className="stat-value" style={{marginTop:8,fontSize:item.label==="Belum dibayar"?"1.3rem":undefined}}>{item.value}</p></div>)}</div>
         <div className="grid-2">
           <div><div className="card-header"><h3>Pertemuan mendatang</h3><Link href="/jadwal" className="text-link">Buka jadwal</Link></div><LessonList lessons={scheduled.slice(0,3)} students={data.students} packages={data.packages} timezone={account.timezone} compact/></div>
           <div><div className="card-header"><h3>Perlu diperpanjang</h3><Badge tone="amber">{low.length} paket</Badge></div>{low.length?<div className="record-list">{low.map(pack=><Link key={pack.id} href={`/murid/${pack.student_id}`} className="record"><span className="avatar"><BookOpen size={19} aria-hidden="true"/></span><div className="grow"><p className="record-name">{data.students.find(s=>s.id===pack.student_id)?.name}</p><p className="record-meta">{pack.name} · {pack.remaining===0?"Pertemuan habis":"Tinggal 1 pertemuan"}</p></div><ArrowRight size={17} aria-hidden="true"/></Link>)}</div>:<p className="muted" style={{fontSize:".9rem"}}>Belum ada paket yang perlu diperpanjang.</p>}</div>
         </div>
-      </>:<p className="muted">Mau mencatat murid, jadwal, dan pembayaran les? Bisa di sini. Boleh juga tidak dipakai; iklan Anda tetap berjalan tanpa ini.</p>}
+      </>:<p className="muted">Mau mencatat murid, jadwal, dan pembayaran bimbel? Bisa di sini. Boleh juga tidak dipakai; iklan Anda tetap berjalan tanpa ini.</p>}
     </section>
   </div>;
 }
