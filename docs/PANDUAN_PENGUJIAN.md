@@ -154,9 +154,19 @@ Di Chrome: tekan `F12`, klik ikon ponsel (Toggle device toolbar), pilih lebar se
 7. Halaman **Jadwal**: kalender tetap; form tambah pertemuan sama singkatnya (murid, tanggal, jam, lama).
 8. Di ponsel (375 px): semua halaman di atas terbaca tanpa gulir ke samping; menu bawah tidak menutup tombol.
 
+### L. Foto profil (di browser, login sebagai guru)
+
+1. Buka **Iklan saya**. Di bagian "Siapa Anda" pilih foto (JPG, PNG, atau WebP). Foto dipotong persegi dari tengah; pratinjau kartu di kanan ikut berubah.
+2. Coba berkas yang bukan gambar (mis. PDF) dan foto sangat besar (belasan MB): harus muncul pesan yang jelas, bukan layar kosong.
+3. Klik **Kirim untuk dicek**. Buka halaman profil guru atau pencarian **tanpa login** (jendela penyamaran): foto belum tampil selama belum disetujui; profil lama tetap tayang.
+4. Masuk sebagai pengelola: foto terlihat di kartu pengajuan. Setujui; muat ulang halaman publik: foto tampil di kartu pencarian dan di profil.
+5. **Hapus foto**, kirim lagi, setujui: kembali ke huruf awal nama.
+6. Foto dari ponsel yang berisi lokasi: unduh gambar dari halaman publik lalu periksa propertinya; data lokasi (EXIF) tidak boleh ada.
+7. Di ponsel (375 px): foto tidak terpotong dan tidak melebihi kartu.
+
 ## 4. Yang belum bisa diuji (belum dibuat)
 
-Kode pemulihan sekali pakai, penjadwalan otomatis penghapusan akun di server produksi, foto profil, lapor profil/bantuan, dan uji pemulihan cadangan. Jangan menganggap fitur-fitur ini ada.
+Kode pemulihan sekali pakai, penjadwalan otomatis penghapusan akun di server produksi (kodenya ada, belum dipasang), saluran bantuan yang tetap (kini memakai email/WhatsApp yang Anda isi di `.env.local`), unduhan foto profil di ekspor data, dan uji pemulihan cadangan. Jangan menganggap fitur-fitur ini ada.
 
 Menjalankan penghapusan akun yang sudah lewat 7 hari secara manual: `node scripts/process-deletions.mjs`.
 

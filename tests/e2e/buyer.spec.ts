@@ -74,9 +74,23 @@ test("halaman cari: filter lengkap dilipat secara bawaan dan terbuka bila filter
 
 const headerOf=(html:string)=>html.match(/<header class="public-header">[\s\S]*?<\/header>/)?.[0]??"";
 
+test("halaman depan: navbar hanya menuju bagian di halaman itu sendiri",async()=>{
+  const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
+  const html=await (await visitor.get("/")).text();
+  const header=headerOf(html);
+  for(const id of ["cara","faq"]){
+    expect(header).toContain(`href="#${id}"`);
+    expect(html,id).toContain(`id="${id}"`);                       // setiap tautan punya sasaran
+  }
+  expect(header).not.toContain('href="/cari"');
+  expect(header).not.toContain('href="/untuk-guru"');
+  expect(header).not.toContain('href="/masuk"');
+  await visitor.dispose();
+});
+
 test("dua tampilan terpisah: header memuat Cari bimbel dan Untuk guru, tanpa Masuk atau Daftar",async()=>{
   const visitor=await request.newContext({baseURL:"http://127.0.0.1:3000"});
-  for(const path of ["/","/untuk-guru","/cari"]){
+  for(const path of ["/untuk-guru","/cari"]){
     const header=headerOf(await (await visitor.get(path)).text());
     expect(header,path).toContain(">Beranda<");                     // permintaan: opsi Beranda di navbar
     expect(header,path).toContain('href="/cari"');
@@ -139,7 +153,7 @@ test("halaman kesiapan produksi: privasi, kontak, robots, sitemap, dan cron yang
   for(const text of ["Kebijakan Privasi","Data yang kami simpan","Layanan pihak lain","Hak guru atas data"])expect(privacy,text).toContain(text);
   const contact=visible(await (await visitor.get("/kontak")).text());
   expect(contact).toContain("Butuh bantuan?");
-  expect(contact).toContain("Melaporkan iklan");
+  expect(contact).toContain("Melaporkan profil guru");
   // Footer di halaman publik menautkan keduanya.
   const home=await (await visitor.get("/")).text();
   expect(home).toContain('href="/privasi"');expect(home).toContain('href="/kontak"');

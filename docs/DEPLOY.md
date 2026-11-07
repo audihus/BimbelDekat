@@ -30,7 +30,7 @@ Penanda: **[Anda]** butuh akun, pembayaran, atau keputusan Anda. **[Repo]** suda
 | `GUARDIAN_TOKEN_SECRET` | acak baru: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
 | `SESSION_ENCRYPTION_KEY` | acak baru, 64 karakter heksadesimal (perintah yang sama) |
 | `CRON_SECRET` | acak baru, minimal 16 karakter (lihat bagian 3) |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | email bantuan (tampil di halaman Kontak dan tombol Laporkan iklan) |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | email bantuan (tampil di halaman Kontak dan tombol Laporkan profil) |
 | `NEXT_PUBLIC_CONTACT_WHATSAPP` | opsional, nomor WhatsApp bantuan |
 
 Nilai `GUARDIAN_TOKEN_SECRET` dan `SESSION_ENCRYPTION_KEY` **tidak boleh** sama dengan yang lokal. Mengganti `SESSION_ENCRYPTION_KEY` setelah ada pengguna membuat semua sesi login tidak berlaku.

@@ -16,6 +16,6 @@ describe("contactChannels",()=>{
 
 describe("reportMailto",()=>{
   it("membuat tautan email dengan judul yang memuat ID iklan",()=>{
-    expect(reportMailto("halo@bimbeldekat.id","abc-123")).toBe("mailto:halo@bimbeldekat.id?subject=Laporan%20iklan%20abc-123");
+    expect(reportMailto("halo@bimbeldekat.id","abc-123")).toBe("mailto:halo@bimbeldekat.id?subject=Laporan%20profil%20guru%20abc-123");
   });
 });

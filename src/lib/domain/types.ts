@@ -8,7 +8,7 @@ export interface Payment { id: string; package_id: string; amount: string; kind:
 export interface GuardianLink { id: string; student_id: string; expires_at: string; revoked_at: string | null }
 export interface Offer { subject: string; level: string; mode: "online" | "offline"; duration: number; price: string }
 export interface Area { province: string; regency: string; district: string }
-export interface ProfileDocument { name: string; about: string; phone: string; province: string; regency: string; areas: Area[]; offers: Offer[] }
+export interface ProfileDocument { name: string; about: string; phone: string; province: string; regency: string; areas: Area[]; offers: Offer[]; photo?: string }
 export interface TeacherProfile { id: string; draft: ProfileDocument; published: ProfileDocument | null; review_status: string; visible: boolean; admin_hidden: boolean; accepting: boolean; review_reason: string }
 export interface PublicTeacher { id: string; document: ProfileDocument; accepting: boolean }
 export interface WorkspaceSnapshot { students: Student[]; packages: Package[]; lessons: Lesson[]; payments: Payment[]; guardian_links: GuardianLink[]; profile: TeacherProfile | null; quota_events: { id: string; package_id: string; delta: number; reason: string; created_at: string }[]; audit_events: { id: string; action: string; reason: string; created_at: string }[] }

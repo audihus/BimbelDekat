@@ -7,20 +7,20 @@ export const metadata={title:"Kebijakan Privasi"};
 // Menjelaskan data yang benar-benar disimpan aplikasi ini. Bila perilaku aplikasi berubah (data baru, layanan pihak ketiga baru), halaman ini harus ikut diubah.
 export default function Privacy(){
   return <><PublicHeader/><main id="main" className="public-main"><article className="legal">
-    <div className="page-heading"><p className="eyebrow">Kebijakan Privasi</p><h1>Data Anda dan cara kami menjaganya.</h1><p>Terakhir diperbarui: 6 November 2026.</p></div>
+    <div className="page-heading"><p className="eyebrow">Kebijakan Privasi</p><h1>Data Anda dan cara kami menjaganya.</h1><p>Terakhir diperbarui: 7 November 2026.</p></div>
 
     <h2>Data yang kami simpan</h2>
     <ul>
       <li><strong>Akun guru:</strong> nama, alamat email, dan kata sandi. Kata sandi tidak disimpan sebagai teks biasa.</li>
-      <li><strong>Iklan guru:</strong> nama, perkenalan, nomor WhatsApp, kota, wilayah, serta bimbel dan tarif. Data ini tampil untuk umum setelah ditinjau tim {APP_NAME}.</li>
-      <li><strong>Catatan bimbel (opsional):</strong> nama dan kelas murid, nomor WhatsApp orang tua, alamat, catatan, paket, jadwal, dan pembayaran. Hanya guru pemilik akun yang dapat membukanya. Pengelola hanya meninjau iklan dan tidak dapat melihat catatan ini.</li>
-      <li><strong>Statistik iklan:</strong> jumlah iklan dibuka dan tombol WhatsApp ditekan. Alamat IP dan identitas pengunjung tidak disimpan.</li>
+      <li><strong>Profil guru:</strong> nama, foto (opsional), perkenalan, nomor WhatsApp, kota, wilayah, serta bimbel dan tarif. Data ini tampil untuk umum setelah ditinjau tim {APP_NAME}.</li>
+      <li><strong>Catatan bimbel (opsional):</strong> nama dan kelas murid, nomor WhatsApp orang tua, alamat, catatan, paket, jadwal, dan pembayaran. Hanya guru pemilik akun yang dapat membukanya. Pengelola hanya meninjau profil guru dan tidak dapat melihat catatan ini.</li>
+      <li><strong>Statistik profil:</strong> jumlah profil dibuka dan tombol WhatsApp ditekan. Alamat IP dan identitas pengunjung tidak disimpan.</li>
       <li><strong>Data teknis:</strong> cookie untuk menjaga login guru, serta catatan galat yang menyamarkan email, nomor telepon, dan alamat. Pembatas percobaan login memakai nilai samaran dari alamat IP dan email, bukan data aslinya.</li>
     </ul>
     <p>Orang tua yang mencari bimbel tidak perlu membuat akun, dan pencarian tidak disimpan sebagai data pribadi.</p>
 
     <h2>Penggunaan data</h2>
-    <p>Data dipakai untuk menampilkan iklan, menjalankan fitur catatan, dan menjaga keamanan. Kami tidak menjual data dan tidak memasang pelacak iklan pihak ketiga.</p>
+    <p>Data dipakai untuk menampilkan profil guru, menjalankan fitur catatan, dan menjaga keamanan. Kami tidak menjual data dan tidak memasang pelacak iklan pihak ketiga.</p>
 
     <h2>Layanan pihak lain</h2>
     <ul>
@@ -35,9 +35,9 @@ export default function Privacy(){
 
     <h2>Hak guru atas data</h2>
     <ul>
-      <li>Mengubah data iklan dan catatan kapan saja.</li>
+      <li>Mengubah data profil dan catatan kapan saja.</li>
       <li>Mengunduh seluruh data di menu Akun.</li>
-      <li>Meminta penghapusan akun di menu Akun. Iklan langsung disembunyikan, dan permintaan dapat dibatalkan dalam 7 hari sebelum akun dihapus. Salinan cadangan dapat tersimpan paling lama 30 hari.</li>
+      <li>Meminta penghapusan akun di menu Akun. Profil langsung disembunyikan, dan permintaan dapat dibatalkan dalam 7 hari sebelum akun dihapus. Salinan cadangan dapat tersimpan paling lama 30 hari.</li>
     </ul>
 
     <h2>Data murid</h2>

@@ -282,6 +282,40 @@ try {
     await assert.rejects(rpc(null, "public.record_ad_event($1::uuid, 'view')", [franId]), "pengunjung tidak boleh memanggil langsung");
     await assert.rejects(queryAs(fran, "select * from public.ad_stats"), "tabel tidak terbuka langsung");
   });
+  await check("foto profil: hanya milik sendiri yang boleh dipakai, tayang hanya setelah disetujui, tertutup bila disembunyikan", async () => {
+    const photoOf = async (actor, kind, id) => { const value = await rpc(actor, `public.${kind}_profile_photo($1::uuid)`, [id]); return value === null ? null : value.replace(/\s/g, ""); };   // encode(..., 'base64') menyisipkan baris baru tiap 76 huruf
+    const photo = Buffer.alloc(2000, 7).toString("base64");                 // isi tidak diperiksa SQL; keabsahan JPEG dijaga src/lib/jpeg.ts
+    const franPhoto = await rpc(fran, "public.save_profile_photo($1)", [photo]);
+    const dewiPhoto = await rpc(dewi, "public.save_profile_photo($1)", [photo]);
+    await assert.rejects(rpc(null, "public.save_profile_photo($1)", [photo]), "pengunjung tidak boleh mengunggah");
+    await assert.rejects(rpc(admin2, "public.save_profile_photo($1)", [photo]), "pengelola bukan guru");
+    await assert.rejects(rpc(fran, "public.save_profile_photo($1)", [Buffer.alloc(150001, 1).toString("base64")]), "terlalu besar");
+    await assert.rejects(rpc(fran, "public.save_profile_photo($1)", ["***bukan base64***"]), "bukan base64");
+    await assert.rejects(queryAs(fran, "select * from private.profile_photos"), "tabel foto tidak terbuka langsung");
+    // Profil tidak boleh menunjuk foto milik guru lain atau ID ngawur, apa pun jalur penulisnya.
+    await assert.rejects(command(fran, "profile.save", { document: { ...doc("Fran Publik"), photo: dewiPhoto } }), "foto milik guru lain");
+    await assert.rejects(command(fran, "profile.save", { document: { ...doc("Fran Publik"), photo: randomUUID() } }), "foto yang tidak ada");
+    await assert.rejects(command(fran, "profile.save", { document: { ...doc("Fran Publik"), photo: "bukan-uuid" } }), "format salah");
+    // Diajukan, tetapi profil lama masih yang tayang: foto belum boleh terlihat publik.
+    await command(fran, "profile.submit", { document: { ...doc("Fran Publik"), photo: franPhoto } });
+    assert.equal(await photoOf(null, "public", franPhoto), null, "belum disetujui");
+    assert.equal(await photoOf(fran, "private", franPhoto), photo, "pemilik melihat draf");
+    assert.equal(await photoOf(admin2, "private", franPhoto), photo, "pengelola melihat foto yang ditinjau");
+    assert.equal(await photoOf(dewi, "private", franPhoto), null, "guru lain tidak melihat draf");
+    assert.equal(await photoOf(dewi, "private", dewiPhoto), photo, "guru melihat fotonya sendiri sebelum dipakai");
+    assert.equal(await photoOf(admin2, "private", dewiPhoto), null, "pengelola tidak melihat foto yang belum dipakai profil mana pun");
+    await moderate(admin2, (await profileOf(fran)).id, "approve", "ok");
+    assert.equal(await photoOf(null, "public", franPhoto), photo, "tayang setelah disetujui");
+    assert.equal((await rpc(null, "public.public_teachers()")).find(item => item.document.name === "Fran Publik").document.photo, franPhoto);
+    assert.equal(await photoOf(null, "public", dewiPhoto), null, "foto yang tidak dipakai profil tayang tidak terbuka");
+    await moderate(admin2, (await profileOf(fran)).id, "hide", "Uji sembunyi");
+    assert.equal(await photoOf(null, "public", franPhoto), null, "tertutup saat profil disembunyikan");
+    await moderate(admin2, (await profileOf(fran)).id, "unhide", "Pulih");
+    assert.equal(await photoOf(null, "public", franPhoto), photo);
+    // Menghapus foto dari draf tidak mengubah profil tayang sampai disetujui lagi.
+    await command(fran, "profile.submit", { document: doc("Fran Publik") });
+    assert.equal(await photoOf(null, "public", franPhoto), photo, "profil tayang tetap memakai foto lama selama perubahan ditinjau");
+  });
   console.log(`\n${count} database checks passed.`);
 } catch (error) {
   console.error(`FAIL database: ${error.message}`);

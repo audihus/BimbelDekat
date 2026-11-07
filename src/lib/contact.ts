@@ -15,4 +15,4 @@ export function contactChannels(env: Record<string, string | undefined> = {
   };
 }
 
-export const reportMailto = (email: string, profileId: string) => `mailto:${email}?subject=${encodeURIComponent(`Laporan iklan ${profileId}`)}`;
+export const reportMailto = (email: string, profileId: string) => `mailto:${email}?subject=${encodeURIComponent(`Laporan profil guru ${profileId}`)}`;

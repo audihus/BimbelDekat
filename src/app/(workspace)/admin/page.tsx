@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { requireAccount } from "@/lib/session";
 import { serverSupabase } from "@/lib/supabase/server";
-import { Badge,Empty } from "@/components/ui";
+import { Badge,Empty,TeacherAvatar } from "@/components/ui";
+import { draftPhotoSrc } from "@/lib/photo";
 import { ModerationForm,type Decision } from "@/components/moderation-form";
 import { dateTime,rupiah } from "@/lib/format";
 import type { ProfileDocument,TeacherProfile } from "@/lib/domain/types";
@@ -31,6 +32,7 @@ function decisionsFor(item:QueueItem):Decision[]{
 
 function Summary({title,doc}:{title:string;doc:ProfileDocument}){
   return <div className="offer stack-sm"><p className="eyebrow">{title}</p>
+    {doc.photo&&<TeacherAvatar name={doc.name||"guru"} src={draftPhotoSrc(doc.photo)}/>}
     <p className="record-name">{doc.name||"(tanpa nama)"}</p>
     <p className="record-meta">WhatsApp: {doc.phone||"-"} · Tinggal di {[doc.regency,doc.province].filter(Boolean).join(", ")||"-"}</p>
     <p style={{whiteSpace:"pre-wrap"}}>{doc.about||"(belum ada deskripsi)"}</p>

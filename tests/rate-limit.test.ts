@@ -3,7 +3,7 @@ import { HttpError } from "@/lib/http";
 import { clientIp, enforce, policyFor, rateKey, recordFailure, type RateBucket, type RateRpc } from "@/lib/rate-limit";
 
 const secret = "a".repeat(64);
-const buckets: RateBucket[] = ["login.ip", "login.account", "recover.ip", "recover.email", "sensitive.account", "export.account", "guardian.ip", "ad.ip"];
+const buckets: RateBucket[] = ["login.ip", "login.account", "recover.ip", "recover.email", "sensitive.account", "export.account", "guardian.ip", "ad.ip", "photo.account"];
 const request = (headers: Record<string, string> = {}) => new Request("http://127.0.0.1:3000/api/auth", { headers });
 
 describe("clientIp", () => {

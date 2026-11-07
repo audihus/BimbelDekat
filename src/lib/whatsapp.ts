@@ -16,5 +16,5 @@ export function whatsappLink(phone:string,text:string):string|null{
 
 // Pesan pembuka yang terisi otomatis, supaya orang tua tinggal menekan kirim.
 export function contactMessage(teacherName:string,subject?:string):string{
-  return `Halo ${teacherName}, saya melihat iklan bimbel ${subject?subject+" ":""}Anda di ${APP_NAME}. Apakah masih ada tempat untuk murid baru?`;
+  return `Halo ${teacherName}, saya melihat profil bimbel ${subject?subject+" ":""}Anda di ${APP_NAME}. Apakah masih ada tempat untuk murid baru?`;
 }

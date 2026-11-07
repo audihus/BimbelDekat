@@ -13,7 +13,7 @@ export const areaSchema = z.strictObject({ province: z.string().trim().max(100),
 export const profileSchema = z.strictObject({
   name: z.string().trim().max(150), about: z.string().trim().max(3000), phone: z.string().trim().max(20),
   province: z.string().trim().max(100), regency: z.string().trim().max(100),
-  areas: z.array(areaSchema), offers: z.array(offerSchema)
+  areas: z.array(areaSchema), offers: z.array(offerSchema), photo: z.uuid().optional()
 });
 
 const schemas: Record<string, z.ZodType> = {

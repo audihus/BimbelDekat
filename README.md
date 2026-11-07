@@ -57,7 +57,7 @@ Di Windows, Docker Desktop kadang menahan permintaan pertama ke Supabase lokal (
 
 Aplikasi **belum siap untuk data nyata**. Belum ada tinjauan keamanan independen, dan belum diuji di perangkat nyata. Belum selesai:
 
-- kode pemulihan akun sekali pakai dan foto profil;
+- kode pemulihan akun sekali pakai;
 - membuat proyek Supabase dan Vercel produksi, email produksi, dan uji pemulihan cadangan (langkah di [docs/DEPLOY.md](./docs/DEPLOY.md); kodenya sudah disiapkan: penghapusan akun terjadwal lewat Vercel Cron, halaman Privasi dan Kontak, robots dan sitemap);
 - peninjauan naskah Kebijakan Privasi oleh orang yang paham hukum;
 - pemeriksaan ketersediaan nama BimbelDekat (domain, merek, toko aplikasi).

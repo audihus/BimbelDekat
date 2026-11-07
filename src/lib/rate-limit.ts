@@ -3,7 +3,7 @@ import { isIP } from "node:net";
 import { HttpError } from "@/lib/http";
 import { logEvent } from "@/lib/log";
 
-export type RateBucket = "login.ip" | "login.account" | "recover.ip" | "recover.email" | "sensitive.account" | "export.account" | "guardian.ip" | "ad.ip";
+export type RateBucket = "login.ip" | "login.account" | "recover.ip" | "recover.email" | "sensitive.account" | "export.account" | "guardian.ip" | "ad.ip" | "photo.account";
 export interface RatePolicy { limit: number; windowSeconds: number }
 export type RateRpc = (call: { bucket: string; keyHash: string; limit: number; windowSeconds: number; record: boolean }) => Promise<{ allowed: boolean; retry_after: number }>;
 
@@ -18,7 +18,8 @@ const POLICY: Record<RateBucket, RatePolicy> = {
   "sensitive.account": { limit: 5, windowSeconds: 900 },  // pemeriksaan ulang kata sandi untuk aksi sensitif, per akun
   "export.account": { limit: 3, windowSeconds: 3600 },    // unduh data, per akun
   "guardian.ip": { limit: 60, windowSeconds: 60 },        // pembukaan tautan wali, per IP
-  "ad.ip": { limit: 60, windowSeconds: 60 }               // penghitung tayangan/klik iklan, per IP (hanya menahan penggelembungan angka)
+  "ad.ip": { limit: 60, windowSeconds: 60 },              // penghitung tayangan/klik iklan, per IP (hanya menahan penggelembungan angka)
+  "photo.account": { limit: 10, windowSeconds: 3600 }     // unggah foto profil, per akun (basis data juga membatasi 10 foto tersimpan)
 };
 
 export function policyFor(bucket: RateBucket): RatePolicy { return POLICY[bucket]; }
